@@ -8,18 +8,17 @@ import SimpleCard from '@/components/SimpleCard';
 import Image from 'next/image';
 import { ContentData } from '@/types/content';
 
-type TabType = 'leather' | 'ios' | 'shopify' | 'sns' | '3d-printer';
+// TabType is now derived from the data structure loosely, or kept as a union for safety
+// For simplicity in this refactor, we accept string as activeTab to match dynamic data
+type TabType = string;
 
 export default function PortfolioContent({ data }: { data: ContentData }) {
-    const [activeTab, setActiveTab] = useState<TabType>('leather');
+    // データがない場合のフォールバック（初回ロード時など）
+    const initialTab = data.tabs && data.tabs.length > 0 ? data.tabs[0].id : 'leather';
+    const [activeTab, setActiveTab] = useState<TabType>(initialTab);
 
-    const tabs: { id: TabType; label: string }[] = [
-        { id: 'leather', label: '革製品' },
-        { id: 'ios', label: 'iOSアプリ' },
-        { id: 'shopify', label: 'Shopifyアプリ' },
-        { id: '3d-printer', label: '3Dプリンタ' },
-        { id: 'sns', label: 'SNS' },
-    ];
+    // Use tabs from data
+    const tabs = data.tabs || [];
 
     return (
         <div className="min-h-screen flex flex-col font-sans">
@@ -33,8 +32,8 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id)}
                                 className={`py-4 text-sm font-bold border-b-2 transition-all duration-300 px-2 ${activeTab === tab.id
-                                        ? 'border-accent text-accent'
-                                        : 'border-transparent text-subtext hover:text-foreground'
+                                    ? 'border-accent text-accent'
+                                    : 'border-transparent text-subtext hover:text-foreground'
                                     }`}
                             >
                                 {tab.label}

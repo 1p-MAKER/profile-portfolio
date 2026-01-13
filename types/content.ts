@@ -4,6 +4,12 @@ export interface ContentData {
     shopifyApps: Product[];
     snsAccounts: Product[];
     printImages: string[];
+    tabs: TabItem[];
+}
+
+export interface TabItem {
+    id: 'leather' | 'ios' | 'shopify' | 'sns' | '3d-printer';
+    label: string;
 }
 
 export interface Product {

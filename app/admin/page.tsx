@@ -270,6 +270,47 @@ export default function AdminPage() {
                 </section>
 
                 <section>
+                    <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">タブの表示順設定</h2>
+                    <div className="bg-white p-6 rounded-xl shadow-sm">
+                        <div className="space-y-2">
+                            {/* @ts-ignore: Temporary ignore for rapid prototyping if types aren't perfectly synced yet */}
+                            {data.tabs?.map((tab: any, index: number) => (
+                                <div key={tab.id} className="flex items-center justify-between p-3 bg-stone-50 rounded-lg border border-stone-200">
+                                    <span className="font-bold text-stone-700">{tab.label}</span>
+                                    <div className="flex gap-2">
+                                        <button
+                                            onClick={() => {
+                                                if (index === 0) return;
+                                                const newTabs = [...data.tabs];
+                                                [newTabs[index - 1], newTabs[index]] = [newTabs[index], newTabs[index - 1]];
+                                                setData({ ...data, tabs: newTabs });
+                                            }}
+                                            disabled={index === 0}
+                                            className="p-2 text-sm bg-white border rounded hover:bg-stone-100 disabled:opacity-30"
+                                        >
+                                            ↑
+                                        </button>
+                                        <button
+                                            onClick={() => {
+                                                if (index === data.tabs.length - 1) return;
+                                                const newTabs = [...data.tabs];
+                                                [newTabs[index + 1], newTabs[index]] = [newTabs[index], newTabs[index + 1]];
+                                                setData({ ...data, tabs: newTabs });
+                                            }}
+                                            disabled={index === data.tabs.length - 1}
+                                            className="p-2 text-sm bg-white border rounded hover:bg-stone-100 disabled:opacity-30"
+                                        >
+                                            ↓
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                        <p className="mt-4 text-xs text-stone-500">※矢印ボタンで表示順を入れ替えられます。</p>
+                    </div>
+                </section>
+
+                <section>
                     <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">処理ログ</h2>
                     <div className="bg-black/90 p-4 rounded-xl shadow-inner h-64 overflow-y-auto font-mono text-sm">
                         {logs.length === 0 ? (

@@ -120,8 +120,7 @@ export default function AdminPage() {
 
     if (!data) return <div className="p-8">読み込み中...</div>;
 
-    const updateProduct = (listName: keyof ContentData, index: number, field: string, value: string) => {
-        // @ts-ignore
+    const updateProduct = (listName: 'leatherProducts' | 'shopifyApps' | 'snsAccounts', index: number, field: string, value: string) => {
         const newList = [...data[listName]];
         newList[index] = { ...newList[index], [field]: value };
         setData({ ...data, [listName]: newList });

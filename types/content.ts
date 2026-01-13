@@ -1,6 +1,6 @@
 export interface ContentData {
     leatherProducts: Product[];
-    iosAppIds: string[];
+    iosApps: { id: string; name: string; }[];
     shopifyApps: Product[];
     snsAccounts: Product[];
     printImages: string[];
@@ -16,7 +16,7 @@ export interface FurusatoItem {
 }
 
 export interface TabItem {
-    id: 'leather' | 'ios' | 'shopify' | 'sns' | '3d-printer';
+    id: 'leather' | 'ios' | 'shopify' | 'sns' | '3d-printer' | 'furusato';
     label: string;
 }
 

@@ -66,9 +66,9 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
                     {activeTab === 'ios' && (
                         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                                {data.iosAppIds.map((id) => (
-                                    <div key={id} className="h-full">
-                                        <AppCard appId={id} />
+                                {data.iosApps.map((app) => (
+                                    <div key={app.id} className="h-full">
+                                        <AppCard appId={app.id} />
                                     </div>
                                 ))}
                             </div>

@@ -64,8 +64,8 @@ export default function Home() {
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={`py-4 text-sm font-bold border-b-2 transition-all duration-300 ${activeTab === tab.id
-                    ? 'border-accent text-accent'
-                    : 'border-transparent text-subtext hover:text-foreground'
+                  ? 'border-accent text-accent'
+                  : 'border-transparent text-subtext hover:text-foreground'
                   }`}
               >
                 {tab.label}

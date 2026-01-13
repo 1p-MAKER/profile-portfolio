@@ -55,7 +55,13 @@ const snsAccounts = [
   }
 ];
 
-type TabType = 'leather' | 'ios' | 'shopify' | 'sns';
+const printImages = [
+  '/3d-print/sample1.png',
+  '/3d-print/sample2.png',
+  '/3d-print/sample3.png',
+];
+
+type TabType = 'leather' | 'ios' | 'shopify' | 'sns' | '3d-printer';
 
 export default function Home() {
   // デフォルトは革製品
@@ -65,6 +71,7 @@ export default function Home() {
     { id: 'leather', label: '革製品' },
     { id: 'ios', label: 'iOSアプリ' },
     { id: 'shopify', label: 'Shopifyアプリ' },
+    { id: '3d-printer', label: '3Dプリンタ' },
     { id: 'sns', label: 'SNS' },
   ];
 
@@ -136,6 +143,27 @@ export default function Home() {
                   </div>
                 ))}
               </div>
+            </div>
+          )}
+
+          {activeTab === '3d-printer' && (
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                {printImages.map((src, index) => (
+                  <div key={index} className="relative aspect-square rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                    <Image
+                      src={src}
+                      alt={`3D Print Work ${index + 1}`}
+                      fill
+                      className="object-cover hover:scale-105 transition-transform duration-500"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    />
+                  </div>
+                ))}
+              </div>
+              <p className="text-center text-subtext mt-8 text-sm">
+                作品の一部を掲載しています。
+              </p>
             </div>
           )}
 

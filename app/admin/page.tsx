@@ -9,6 +9,13 @@ export default function AdminPage() {
     const [status, setStatus] = useState<string>('');
     const [isDeploying, setIsDeploying] = useState(false);
 
+    // Furusato Item Input State
+    const [newFurusatoUrl, setNewFurusatoUrl] = useState('');
+    const [newFurusatoTitle, setNewFurusatoTitle] = useState('');
+    const [newFurusatoImage, setNewFurusatoImage] = useState('');
+    const [newFurusatoSite, setNewFurusatoSite] = useState('');
+    const [isFetchingMeta, setIsFetchingMeta] = useState(false);
+
     useEffect(() => {
         fetch('/api/data')
             .then(res => res.json())
@@ -168,6 +175,63 @@ export default function AdminPage() {
         setData({ ...data, [listName]: newList });
     };
 
+    // Furusato Logic
+    const fetchMetadata = async () => {
+        if (!newFurusatoUrl) return;
+        setIsFetchingMeta(true);
+        setStatus('メタデータ取得中...');
+        try {
+            const res = await fetch(`/api/metadata?url=${encodeURIComponent(newFurusatoUrl)}`);
+            const meta = await res.json();
+            if (meta.error) {
+                setStatus('メタデータ取得失敗');
+                addLogEntry(`メタデータ取得エラー: ${meta.error}`);
+            } else {
+                setNewFurusatoTitle(meta.title);
+                setNewFurusatoImage(meta.imageUrl);
+                setNewFurusatoSite(meta.siteName);
+                setStatus('メタデータ取得成功');
+            }
+        } catch (e) {
+            setStatus('メタデータ取得エラー');
+            console.error(e);
+        }
+        setIsFetchingMeta(false);
+    };
+
+    const addFurusatoItem = () => {
+        if (!data) return;
+        const newItem = {
+            title: newFurusatoTitle,
+            url: newFurusatoUrl,
+            imageUrl: newFurusatoImage,
+            siteName: newFurusatoSite
+        };
+        const currentItems = data.furusatoItems || [];
+        setData({ ...data, furusatoItems: [...currentItems, newItem] });
+
+        // Reset inputs
+        setNewFurusatoUrl('');
+        setNewFurusatoTitle('');
+        setNewFurusatoImage('');
+        setNewFurusatoSite('');
+        setStatus('アイテムを追加しました（保存ボタンを押してください）');
+    };
+
+    const removeFurusatoItem = (index: number) => {
+        if (!data || !data.furusatoItems) return;
+        const newList = [...data.furusatoItems];
+        newList.splice(index, 1);
+        setData({ ...data, furusatoItems: newList });
+    };
+
+    const updateFurusatoItem = (index: number, field: string, value: string) => {
+        if (!data || !data.furusatoItems) return;
+        const newList = [...data.furusatoItems];
+        newList[index] = { ...newList[index], [field]: value };
+        setData({ ...data, furusatoItems: newList });
+    };
+
     return (
         <div className="min-h-screen bg-stone-50 p-8 pb-32">
             <header className="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md shadow-sm z-50 p-4 flex justify-between items-center">
@@ -287,6 +351,96 @@ export default function AdminPage() {
                     <button onClick={() => addProduct('shopifyApps')} className="w-full py-3 border-2 border-dashed border-stone-300 text-stone-500 rounded-xl hover:bg-stone-50 transition-colors">
                         + アイテムを追加
                     </button>
+                </section>
+
+                {/* Furusato Nozei Section */}
+                <section>
+                    <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">ふるさと納税リスト</h2>
+
+                    {/* Add New Item Form */}
+                    <div className="bg-stone-100 p-6 rounded-xl mb-8 border border-stone-200">
+                        <h3 className="font-bold mb-4 text-stone-700">新規追加</h3>
+                        <div className="flex gap-2 mb-4">
+                            <input
+                                className="flex-grow border p-2 rounded"
+                                value={newFurusatoUrl}
+                                onChange={(e) => setNewFurusatoUrl(e.target.value)}
+                                placeholder="URLを入力して自動取得"
+                            />
+                            <button
+                                onClick={fetchMetadata}
+                                disabled={isFetchingMeta || !newFurusatoUrl}
+                                className="bg-stone-600 text-white px-4 py-2 rounded hover:bg-stone-700 disabled:opacity-50"
+                            >
+                                {isFetchingMeta ? '...' : '情報取得'}
+                            </button>
+                        </div>
+
+                        {(newFurusatoTitle || newFurusatoImage) && (
+                            <div className="bg-white p-4 rounded border border-stone-200 mb-4 flex gap-4 items-start">
+                                {newFurusatoImage && (
+                                    <div className="relative w-24 h-24 flex-shrink-0 bg-stone-100 rounded overflow-hidden">
+                                        <Image src={newFurusatoImage} alt="preview" fill className="object-cover" />
+                                    </div>
+                                )}
+                                <div className="flex-grow space-y-2">
+                                    <input
+                                        className="w-full border p-2 rounded text-sm"
+                                        value={newFurusatoTitle}
+                                        onChange={(e) => setNewFurusatoTitle(e.target.value)}
+                                        placeholder="タイトル"
+                                    />
+                                    <input
+                                        className="w-full border p-2 rounded text-sm"
+                                        value={newFurusatoSite}
+                                        onChange={(e) => setNewFurusatoSite(e.target.value)}
+                                        placeholder="サイト名"
+                                    />
+                                </div>
+                            </div>
+                        )}
+
+                        <button
+                            onClick={addFurusatoItem}
+                            disabled={!newFurusatoTitle}
+                            className="w-full bg-accent text-white py-3 rounded-lg hover:bg-accent/90 disabled:opacity-50 font-bold"
+                        >
+                            リストに追加
+                        </button>
+                    </div>
+
+                    {/* Furusato Items List */}
+                    <div className="grid grid-cols-1 gap-4">
+                        {data.furusatoItems && data.furusatoItems.map((item, index) => (
+                            <div key={index} className="bg-white p-4 rounded-xl shadow-sm flex gap-4 border border-stone-100">
+                                <div className="relative w-32 aspect-video bg-stone-100 rounded overflow-hidden flex-shrink-0">
+                                    {item.imageUrl ? (
+                                        <Image src={item.imageUrl} alt={item.title} fill className="object-cover" />
+                                    ) : (
+                                        <div className="flex items-center justify-center h-full text-xs text-stone-400">No Image</div>
+                                    )}
+                                </div>
+                                <div className="flex-grow grid gap-2">
+                                    <input
+                                        className="border p-2 rounded text-sm font-bold"
+                                        value={item.title}
+                                        onChange={(e) => updateFurusatoItem(index, 'title', e.target.value)}
+                                    />
+                                    <input
+                                        className="border p-2 rounded text-xs text-stone-500"
+                                        value={item.url}
+                                        onChange={(e) => updateFurusatoItem(index, 'url', e.target.value)}
+                                    />
+                                </div>
+                                <button
+                                    onClick={() => removeFurusatoItem(index)}
+                                    className="text-red-500 hover:bg-red-50 p-2 rounded self-start"
+                                >
+                                    ✕
+                                </button>
+                            </div>
+                        ))}
+                    </div>
                 </section>
 
                 <section>

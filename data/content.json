@@ -1,10 +1,16 @@
 {
   "leatherProducts": [
     {
-      "title": "しぜんのしるし",
-      "description": "「自然と共に生きる」をテーマにした革製品ブランド。厳選された素材と手仕事による温もりをお届けします。",
+      "title": "しぜんのしるしweb shop",
+      "description": "沖縄の革職人夫婦によるお店です。\n等身大で表現をしていきたいという想いから\n「しぜんのしるし」は生まれました。",
       "url": "https://shizennoshirushi.com/",
       "category": "Leather Craft"
+    },
+    {
+      "title": "しぜんのしるし とは",
+      "description": "商品は全て手づくり。\n素材の裁断から縫製、仕上げまで\n全てを夫婦二人で行っています。",
+      "url": "https://shizennoshirushi.com/pages/about",
+      "category": "New"
     }
   ],
   "iosAppIds": [
@@ -32,13 +38,13 @@
   "snsAccounts": [
     {
       "title": "Instagram",
-      "description": "日々の制作風景や、最新の作品情報を写真でお届けしています。",
+      "description": "個人の活動記録です。",
       "url": "https://www.instagram.com/1pei_okinawa",
       "category": "SNS"
     },
     {
       "title": "X (Twitter)",
-      "description": "アプリ開発の進捗や技術的なつぶやき、最新のお知らせを発信中。",
+      "description": "沖縄の革職人夫婦によるお店です。\n等身大で表現をしていきたいという想いから\n「しぜんのしるし」は生まれました。",
       "url": "https://x.com/DevCat123",
       "category": "SNS"
     }

@@ -532,7 +532,6 @@ export default function AdminPage() {
                     <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">タブの表示順設定</h2>
                     <div className="bg-white p-6 rounded-xl shadow-sm">
                         <div className="space-y-2">
-                            {/* @ts-ignore: Temporary ignore for rapid prototyping if types aren't perfectly synced yet */}
                             {data.tabs?.map((tab: TabItem, index: number) => (
                                 <div key={tab.id} className="flex items-center justify-between p-3 bg-stone-50 rounded-lg border border-stone-200">
                                     <span className="font-bold text-stone-700">{tab.label}</span>

@@ -74,6 +74,11 @@
     {
       "id": "shopify",
       "label": "Shopifyアプリ"
+    },
+    {
+      "id": "furusato",
+      "label": "ふるさと納税"
     }
-  ]
+  ],
+  "furusatoItems": []
 }

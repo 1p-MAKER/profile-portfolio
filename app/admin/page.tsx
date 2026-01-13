@@ -56,9 +56,10 @@ export default function AdminPage() {
                 setStatus('保存に失敗しました');
                 addLogEntry('エラー: データの保存に失敗しました');
             }
-        } catch (e) {
+        } catch (e: unknown) {
             setStatus('エラーが発生しました');
-            addLogEntry(`エラー: ${e}`);
+            const msg = e instanceof Error ? e.message : String(e);
+            addLogEntry(`エラー: ${msg}`);
         }
         setTimeout(() => setStatus(''), 3000);
     };
@@ -82,9 +83,10 @@ export default function AdminPage() {
                 throw new Error('データの自動保存に失敗しました');
             }
             addLogEntry('データの自動保存完了。');
-        } catch (e: any) {
+        } catch (e: unknown) {
             setStatus('保存エラー');
-            addLogEntry(`エラー: ${e.message}`);
+            const msg = e instanceof Error ? e.message : String(e);
+            addLogEntry(`エラー: ${msg}`);
             setIsDeploying(false);
             return;
         }
@@ -106,9 +108,10 @@ export default function AdminPage() {
                 setStatus('公開に失敗しました');
                 addLogEntry('エラー: 公開処理に失敗しました。詳細は上記サーバログを確認してください。');
             }
-        } catch (e) {
+        } catch (e: unknown) {
             setStatus('エラーが発生しました');
-            addLogEntry(`通信エラー: ${e}`);
+            const msg = e instanceof Error ? e.message : String(e);
+            addLogEntry(`通信エラー: ${msg}`);
         }
         setIsDeploying(false);
     };
@@ -150,9 +153,10 @@ export default function AdminPage() {
             } else {
                 addLogEntry('画像アップロードに失敗しました');
             }
-        } catch (e) {
+        } catch (e: unknown) {
             setStatus('アップロード失敗');
-            addLogEntry(`エラー: ${e}`);
+            const msg = e instanceof Error ? e.message : String(e);
+            addLogEntry(`エラー: ${msg}`);
         }
     };
 
@@ -192,7 +196,7 @@ export default function AdminPage() {
                 setNewFurusatoSite(meta.siteName);
                 setStatus('メタデータ取得成功');
             }
-        } catch (e) {
+        } catch (e: unknown) {
             setStatus('メタデータ取得エラー');
             console.error(e);
         }

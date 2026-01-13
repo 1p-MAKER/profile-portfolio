@@ -50,8 +50,9 @@ export async function GET(request: Request) {
             siteName: siteName || ''
         });
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Metadata fetch error:', error);
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        const msg = error instanceof Error ? error.message : String(error);
+        return NextResponse.json({ error: msg }, { status: 500 });
     }
 }

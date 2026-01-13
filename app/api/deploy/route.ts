@@ -14,10 +14,11 @@ export async function POST() {
         // 0. Pull latest changes to avoid conflicts
         addLog('Executing: git pull origin master');
         try {
-            const { stdout: pullOut, stderr: pullErr } = await execPromise('git pull origin master');
+            const { stdout: pullOut } = await execPromise('git pull origin master');
             if (pullOut) addLog(`Pull output: ${pullOut}`);
-        } catch (e: any) {
-            addLog(`Pull warning (non-fatal): ${e.message}`);
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            addLog(`Pull warning (non-fatal): ${msg}`);
         }
 
         // 1. Add all changes
@@ -29,8 +30,9 @@ export async function POST() {
         try {
             await execPromise('git commit -m "content: update via admin tool"');
             addLog('Commit successful');
-        } catch (e: any) {
-            if (e.stdout?.includes('nothing to commit')) {
+        } catch (e: unknown) {
+            const isClean = e instanceof Error && 'stdout' in e && (e as any).stdout?.includes('nothing to commit');
+            if (isClean) {
                 addLog('Nothing to commit (clean working tree)');
             } else {
                 throw e;
@@ -50,19 +52,24 @@ export async function POST() {
             // Vercel CLI often outputs to stderr for status updates
             if (vercelOut) addLog(`Vercel output: ${vercelOut}`);
             if (vercelErr) addLog(`Vercel status: ${vercelErr}`);
-        } catch (e: any) {
-            addLog(`Vercel deployment warning: ${e.message}`);
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            addLog(`Vercel deployment warning: ${msg}`);
             // vercel command might fail if not logged in, but we try anyway
         }
 
         addLog('Deployment process completed successfully.');
         return NextResponse.json({ success: true, message: 'Deployed successfully!', logs });
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Deployment error:', error);
-        addLog(`FATAL ERROR: ${error.message}`);
-        if (error.stderr) addLog(`STDERR: ${error.stderr}`);
-        if (error.stdout) addLog(`STDOUT: ${error.stdout}`);
+        const msg = error instanceof Error ? error.message : String(error);
+        addLog(`FATAL ERROR: ${msg}`);
+
+        if (typeof error === 'object' && error !== null) {
+            if ('stderr' in error) addLog(`STDERR: ${(error as any).stderr}`);
+            if ('stdout' in error) addLog(`STDOUT: ${(error as any).stdout}`);
+        }
 
         return NextResponse.json({ error: 'Deployment failed', logs }, { status: 500 });
     }

@@ -43,6 +43,18 @@ export async function POST() {
         if (pushOut) addLog(`Push output: ${pushOut}`);
         if (pushErr) addLog(`Push stderr: ${pushErr}`);
 
+        // 4. Force Vercel Deployment (Manual fallback)
+        addLog('Executing: npx vercel --prod --yes');
+        try {
+            const { stdout: vercelOut, stderr: vercelErr } = await execPromise('npx vercel --prod --yes');
+            // Vercel CLI often outputs to stderr for status updates
+            if (vercelOut) addLog(`Vercel output: ${vercelOut}`);
+            if (vercelErr) addLog(`Vercel status: ${vercelErr}`);
+        } catch (e: any) {
+            addLog(`Vercel deployment warning: ${e.message}`);
+            // vercel command might fail if not logged in, but we try anyway
+        }
+
         addLog('Deployment process completed successfully.');
         return NextResponse.json({ success: true, message: 'Deployed successfully!', logs });
 

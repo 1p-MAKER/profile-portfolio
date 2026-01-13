@@ -1,0 +1,214 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { ContentData, Product } from '@/types/content';
+import Image from 'next/image';
+
+export default function AdminPage() {
+    const [data, setData] = useState<ContentData | null>(null);
+    const [status, setStatus] = useState<string>('');
+    const [isDeploying, setIsDeploying] = useState(false);
+
+    useEffect(() => {
+        fetch('/api/data')
+            .then(res => res.json())
+            .then(data => setData(data));
+    }, []);
+
+    const handleSave = async () => {
+        setStatus('保存中...');
+        try {
+            const res = await fetch('/api/data', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            if (res.ok) setStatus('保存しました！');
+            else setStatus('保存に失敗しました');
+        } catch (e) {
+            setStatus('エラーが発生しました');
+        }
+        setTimeout(() => setStatus(''), 3000);
+    };
+
+    const handleDeploy = async () => {
+        if (!confirm('本当に公開しますか？\n（Gitへのコミットとプッシュが行われます）')) return;
+
+        setIsDeploying(true);
+        setStatus('公開処理中... 1分ほどお待ちください');
+
+        try {
+            const res = await fetch('/api/deploy', { method: 'POST' });
+            if (res.ok) setStatus('公開リクエストを送信しました！');
+            else setStatus('公開に失敗しました');
+        } catch (e) {
+            setStatus('エラーが発生しました');
+        }
+        setIsDeploying(false);
+    };
+
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (!e.target.files || !e.target.files[0] || !data) return;
+
+        const file = e.target.files[0];
+        const formData = new FormData();
+        formData.append('file', file);
+
+        setStatus('アップロード中...');
+
+        try {
+            const res = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData
+            });
+            const result = await res.json();
+
+            if (result.success) {
+                setData({
+                    ...data,
+                    printImages: [...data.printImages, result.path]
+                });
+                setStatus('画像をアップロードしました（保存ボタンを押してください）');
+            }
+        } catch (e) {
+            setStatus('アップロード失敗');
+        }
+    };
+
+    if (!data) return <div className="p-8">読み込み中...</div>;
+
+    const updateProduct = (listName: keyof ContentData, index: number, field: string, value: string) => {
+        // @ts-ignore
+        const newList = [...data[listName]];
+        newList[index] = { ...newList[index], [field]: value };
+        setData({ ...data, [listName]: newList });
+    };
+
+    const addProduct = (listName: 'leatherProducts' | 'shopifyApps' | 'snsAccounts') => {
+        const newProduct: Product = { title: 'New Item', description: '', url: '', category: 'New' };
+        setData({ ...data, [listName]: [...data[listName], newProduct] });
+    };
+
+    const removeProduct = (listName: 'leatherProducts' | 'shopifyApps' | 'snsAccounts', index: number) => {
+        const newList = [...data[listName]];
+        newList.splice(index, 1);
+        setData({ ...data, [listName]: newList });
+    };
+
+    return (
+        <div className="min-h-screen bg-stone-50 p-8 pb-32">
+            <header className="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md shadow-sm z-50 p-4 flex justify-between items-center">
+                <h1 className="text-xl font-bold text-primary">ポートフォリオ管理画面</h1>
+                <div className="flex gap-4 items-center">
+                    <span className="text-sm font-bold text-accent">{status}</span>
+                    <button
+                        onClick={handleSave}
+                        className="bg-primary text-white px-6 py-2 rounded-full hover:bg-primary/90 transition-colors"
+                    >
+                        保存する
+                    </button>
+                    <button
+                        onClick={handleDeploy}
+                        disabled={isDeploying}
+                        className="bg-red-500 text-white px-6 py-2 rounded-full hover:bg-red-600 transition-colors disabled:opacity-50"
+                    >
+                        {isDeploying ? '公開中...' : '公開する'}
+                    </button>
+                </div>
+            </header>
+
+            <div className="max-w-4xl mx-auto mt-20 space-y-12">
+
+                {/* 3D Printer Gallery Section */}
+                <section>
+                    <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">3Dプリンタ画像</h2>
+                    <div className="bg-white p-6 rounded-xl shadow-sm">
+                        <div className="grid grid-cols-3 gap-4 mb-6">
+                            {data.printImages.map((src, index) => (
+                                <div key={index} className="relative group aspect-square rounded-lg overflow-hidden bg-stone-100">
+                                    <Image src={src} alt="gallery" fill className="object-cover" />
+                                    <button
+                                        onClick={() => {
+                                            const newImages = [...data.printImages];
+                                            newImages.splice(index, 1);
+                                            setData({ ...data, printImages: newImages });
+                                        }}
+                                        className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                                    >
+                                        ✕
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                        <label className="cursor-pointer bg-stone-200 hover:bg-stone-300 text-stone-700 px-4 py-2 rounded-lg inline-block transition-colors">
+                            <span>+ 画像を追加する</span>
+                            <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
+                        </label>
+                    </div>
+                </section>
+
+                {/* Leather Products Section */}
+                <section>
+                    <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">革製品リスト</h2>
+                    {data.leatherProducts.map((item, index) => (
+                        <div key={index} className="bg-white p-6 rounded-xl shadow-sm mb-4">
+                            <div className="grid gap-3">
+                                <input className="border p-2 rounded" value={item.title} onChange={(e) => updateProduct('leatherProducts', index, 'title', e.target.value)} placeholder="タイトル" />
+                                <input className="border p-2 rounded" value={item.url} onChange={(e) => updateProduct('leatherProducts', index, 'url', e.target.value)} placeholder="URL" />
+                                <textarea className="border p-2 rounded h-24" value={item.description} onChange={(e) => updateProduct('leatherProducts', index, 'description', e.target.value)} placeholder="説明" />
+                                <div className="flex justify-end">
+                                    <button onClick={() => removeProduct('leatherProducts', index)} className="text-red-500 text-sm">削除</button>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                    <button onClick={() => addProduct('leatherProducts')} className="w-full py-3 border-2 border-dashed border-stone-300 text-stone-500 rounded-xl hover:bg-stone-50 transition-colors">
+                        + アイテムを追加
+                    </button>
+                </section>
+
+                {/* SNS Section */}
+                <section>
+                    <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">SNSリスト</h2>
+                    {data.snsAccounts.map((item, index) => (
+                        <div key={index} className="bg-white p-6 rounded-xl shadow-sm mb-4">
+                            <div className="grid gap-3">
+                                <input className="border p-2 rounded" value={item.title} onChange={(e) => updateProduct('snsAccounts', index, 'title', e.target.value)} placeholder="タイトル" />
+                                <input className="border p-2 rounded" value={item.url} onChange={(e) => updateProduct('snsAccounts', index, 'url', e.target.value)} placeholder="URL" />
+                                <textarea className="border p-2 rounded h-24" value={item.description} onChange={(e) => updateProduct('snsAccounts', index, 'description', e.target.value)} placeholder="説明" />
+                                <div className="flex justify-end">
+                                    <button onClick={() => removeProduct('snsAccounts', index)} className="text-red-500 text-sm">削除</button>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                    <button onClick={() => addProduct('snsAccounts')} className="w-full py-3 border-2 border-dashed border-stone-300 text-stone-500 rounded-xl hover:bg-stone-50 transition-colors">
+                        + アイテムを追加
+                    </button>
+                </section>
+
+                {/* Shopify Section */}
+                <section>
+                    <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">Shopifyアプリリスト</h2>
+                    {data.shopifyApps.map((item, index) => (
+                        <div key={index} className="bg-white p-6 rounded-xl shadow-sm mb-4">
+                            <div className="grid gap-3">
+                                <input className="border p-2 rounded" value={item.title} onChange={(e) => updateProduct('shopifyApps', index, 'title', e.target.value)} placeholder="タイトル" />
+                                <input className="border p-2 rounded" value={item.url} onChange={(e) => updateProduct('shopifyApps', index, 'url', e.target.value)} placeholder="URL" />
+                                <textarea className="border p-2 rounded h-24" value={item.description} onChange={(e) => updateProduct('shopifyApps', index, 'description', e.target.value)} placeholder="説明" />
+                                <div className="flex justify-end">
+                                    <button onClick={() => removeProduct('shopifyApps', index)} className="text-red-500 text-sm">削除</button>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                    <button onClick={() => addProduct('shopifyApps')} className="w-full py-3 border-2 border-dashed border-stone-300 text-stone-500 rounded-xl hover:bg-stone-50 transition-colors">
+                        + アイテムを追加
+                    </button>
+                </section>
+
+                <div className="h-20"></div>
+            </div>
+        </div>
+    );
+}

@@ -6,6 +6,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import AppCard from '@/components/AppCard';
 import SimpleCard from '@/components/SimpleCard';
+import Image from 'next/image';
 
 const iosAppIds = [
   '6757658561', // 電卓 履歴が見える計算機
@@ -87,8 +88,8 @@ export default function Home() {
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={`py-4 text-sm font-bold border-b-2 transition-all duration-300 px-2 ${activeTab === tab.id
-                    ? 'border-accent text-accent'
-                    : 'border-transparent text-subtext hover:text-foreground'
+                  ? 'border-accent text-accent'
+                  : 'border-transparent text-subtext hover:text-foreground'
                   }`}
               >
                 {tab.label}

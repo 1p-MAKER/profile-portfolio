@@ -1,51 +1,51 @@
 {
-    "leatherProducts": [
-        {
-            "title": "自然のしるし",
-            "description": "「自然と共に生きる」をテーマにした革製品ブランド。厳選された素材と手仕事による温もりをお届けします。",
-            "url": "https://shizennoshirushi.com/",
-            "category": "Leather Craft"
-        }
-    ],
-    "iosAppIds": [
-        "6757658561",
-        "6757254650",
-        "6757659840",
-        "6757323152",
-        "6757323158",
-        "6757378881",
-        "6757212814",
-        "6756815912",
-        "6756455336",
-        "6756898858",
-        "6756509171",
-        "6757683057"
-    ],
-    "shopifyApps": [
-        {
-            "title": "Coming Soon",
-            "description": "Shopifyアプリは現在開発中です。公開までしばらくお待ちください。",
-            "url": "#",
-            "category": "Shopify App"
-        }
-    ],
-    "snsAccounts": [
-        {
-            "title": "Instagram",
-            "description": "日々の制作風景や、最新の作品情報を写真でお届けしています。",
-            "url": "https://www.instagram.com/1pei_okinawa",
-            "category": "SNS"
-        },
-        {
-            "title": "X (Twitter)",
-            "description": "アプリ開発の進捗や技術的なつぶやき、最新のお知らせを発信中。",
-            "url": "https://x.com/DevCat123",
-            "category": "SNS"
-        }
-    ],
-    "printImages": [
-        "/3d-print/sample1.png",
-        "/3d-print/sample2.png",
-        "/3d-print/sample3.png"
-    ]
+  "leatherProducts": [
+    {
+      "title": "しぜんのしるし",
+      "description": "「自然と共に生きる」をテーマにした革製品ブランド。厳選された素材と手仕事による温もりをお届けします。",
+      "url": "https://shizennoshirushi.com/",
+      "category": "Leather Craft"
+    }
+  ],
+  "iosAppIds": [
+    "6757658561",
+    "6757254650",
+    "6757659840",
+    "6757323152",
+    "6757323158",
+    "6757378881",
+    "6757212814",
+    "6756815912",
+    "6756455336",
+    "6756898858",
+    "6756509171",
+    "6757683057"
+  ],
+  "shopifyApps": [
+    {
+      "title": "Coming Soon",
+      "description": "Shopifyアプリは現在開発中です。公開までしばらくお待ちください。",
+      "url": "#",
+      "category": "Shopify App"
+    }
+  ],
+  "snsAccounts": [
+    {
+      "title": "Instagram",
+      "description": "日々の制作風景や、最新の作品情報を写真でお届けしています。",
+      "url": "https://www.instagram.com/1pei_okinawa",
+      "category": "SNS"
+    },
+    {
+      "title": "X (Twitter)",
+      "description": "アプリ開発の進捗や技術的なつぶやき、最新のお知らせを発信中。",
+      "url": "https://x.com/DevCat123",
+      "category": "SNS"
+    }
+  ],
+  "printImages": [
+    "/3d-print/sample1.png",
+    "/3d-print/sample2.png",
+    "/3d-print/sample3.png"
+  ]
 }

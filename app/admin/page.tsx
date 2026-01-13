@@ -46,12 +46,32 @@ export default function AdminPage() {
     };
 
     const handleDeploy = async () => {
-        if (!confirm('本当に公開しますか？\n（Gitへのコミットとプッシュが行われます）')) return;
+        if (!confirm('本当に公開しますか？\n（編集内容は自動で保存され、Gitへのコミットとプッシュが行われます）')) return;
 
         setIsDeploying(true);
         setStatus('公開処理中... ログを確認してください');
         addLogEntry('公開（デプロイ）処理を開始...');
 
+        // Step 1: 自動保存
+        addLogEntry('デプロイ前の自動保存を実行中...');
+        try {
+            const saveRes = await fetch('/api/data', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            if (!saveRes.ok) {
+                throw new Error('データの自動保存に失敗しました');
+            }
+            addLogEntry('データの自動保存完了。');
+        } catch (e: any) {
+            setStatus('保存エラー');
+            addLogEntry(`エラー: ${e.message}`);
+            setIsDeploying(false);
+            return;
+        }
+
+        // Step 2: デプロイ実行
         try {
             const res = await fetch('/api/deploy', { method: 'POST' });
             const result = await res.json();

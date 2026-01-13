@@ -42,12 +42,12 @@
   ],
   "tabs": [
     {
-      "id": "leather",
-      "label": "革製品"
-    },
-    {
       "id": "ios",
       "label": "iOSアプリ"
+    },
+    {
+      "id": "leather",
+      "label": "革製品"
     },
     {
       "id": "3d-printer",

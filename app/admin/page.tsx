@@ -455,29 +455,40 @@ export default function AdminPage() {
                                         </button>
                                     </div>
 
-                                    {(newFurusatoTitle || newFurusatoImage) && (
-                                        <div className="bg-white p-4 rounded border border-stone-200 mb-4 flex gap-4 items-start">
-                                            {newFurusatoImage && (
-                                                <div className="relative w-24 h-24 flex-shrink-0 bg-stone-100 rounded overflow-hidden">
+                                    {/* Always show manual inputs or when URL is entered */}
+                                    <div className="bg-white p-4 rounded border border-stone-200 mb-4 flex gap-4 items-start">
+                                        <div className="flex-shrink-0 space-y-2">
+                                            {newFurusatoImage ? (
+                                                <div className="relative w-24 h-24 bg-stone-100 rounded overflow-hidden">
                                                     <Image src={newFurusatoImage} alt="preview" fill className="object-cover" />
                                                 </div>
+                                            ) : (
+                                                <div className="w-24 h-24 bg-stone-100 rounded flex items-center justify-center text-xs text-stone-400">
+                                                    No Image
+                                                </div>
                                             )}
-                                            <div className="flex-grow space-y-2">
-                                                <input
-                                                    className="w-full border p-2 rounded text-sm"
-                                                    value={newFurusatoTitle}
-                                                    onChange={(e) => setNewFurusatoTitle(e.target.value)}
-                                                    placeholder="タイトル"
-                                                />
-                                                <input
-                                                    className="w-full border p-2 rounded text-sm"
-                                                    value={newFurusatoSite}
-                                                    onChange={(e) => setNewFurusatoSite(e.target.value)}
-                                                    placeholder="サイト名"
-                                                />
-                                            </div>
+                                            <input
+                                                className="w-24 text-xs border p-1 rounded"
+                                                value={newFurusatoImage}
+                                                onChange={(e) => setNewFurusatoImage(e.target.value)}
+                                                placeholder="画像URL"
+                                            />
                                         </div>
-                                    )}
+                                        <div className="flex-grow space-y-2">
+                                            <input
+                                                className="w-full border p-2 rounded text-sm"
+                                                value={newFurusatoTitle}
+                                                onChange={(e) => setNewFurusatoTitle(e.target.value)}
+                                                placeholder="タイトル (必須)"
+                                            />
+                                            <input
+                                                className="w-full border p-2 rounded text-sm"
+                                                value={newFurusatoSite}
+                                                onChange={(e) => setNewFurusatoSite(e.target.value)}
+                                                placeholder="サイト名"
+                                            />
+                                        </div>
+                                    </div>
 
                                     <button
                                         onClick={addFurusatoItem}

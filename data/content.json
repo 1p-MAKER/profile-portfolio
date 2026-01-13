@@ -30,7 +30,7 @@
   "shopifyApps": [
     {
       "title": "Coming Soon",
-      "description": "Shopifyアプリは現在開発中です。公開までしばらくお待ちください。",
+      "description": "Shopifyアプリを開発予定です。",
       "url": "#",
       "category": "Shopify App"
     }
@@ -44,7 +44,7 @@
     },
     {
       "title": "X (Twitter)",
-      "description": "沖縄の革職人夫婦によるお店です。\n等身大で表現をしていきたいという想いから\n「しぜんのしるし」は生まれました。",
+      "description": "アプリの開発記録や最新情報です。",
       "url": "https://x.com/DevCat123",
       "category": "SNS"
     }
@@ -64,16 +64,16 @@
       "label": "iOSアプリ"
     },
     {
-      "id": "shopify",
-      "label": "Shopifyアプリ"
-    },
-    {
       "id": "3d-printer",
       "label": "3Dプリンタ"
     },
     {
       "id": "sns",
       "label": "SNS"
+    },
+    {
+      "id": "shopify",
+      "label": "Shopifyアプリ"
     }
   ]
 }

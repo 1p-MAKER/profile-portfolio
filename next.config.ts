@@ -5,11 +5,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: '*.mzstatic.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'furusato.jal.co.jp',
+        hostname: '**',
       },
     ],
   },

@@ -66,7 +66,20 @@
       "label": "ふるさと納税"
     }
   ],
-  "furusatoItems": [],
+  "furusatoItems": [
+    {
+      "title": "【しぜんのしるし】cometR コンパクトな三つ折り財布(ブラック)牛革・日本製(BR002-1)｜JALふるさと納税サイト",
+      "url": "https://furusato.jal.co.jp/goods/detail/ef07157e72819da157c3b6b3df326a1d?srsltid=AfmBOorVBYJYq49bricqnsFJEstTWDtR0Hu4QkYeGQcGiY-15Gu4AHdV",
+      "imageUrl": "https://furusato.jal.co.jp/img/common/ogimage.jpg",
+      "siteName": "JALふるさと納税"
+    },
+    {
+      "title": "【しぜんのしるし】cometR コンパクトな三つ折り財布(ワインレッド)牛革・日本製(BR001-1) - 沖縄県豊見城市｜ふるさとチョイス - ふるさと納税サイト",
+      "url": "https://www.furusato-tax.jp/product/detail/47212/6232716?srsltid=AfmBOor7IdNBC7l-PKQimehODzS9DMw8Wjw1Nzyde9riSb4GHeNxJ3sk",
+      "imageUrl": "https://img.furusato-tax.jp/img/x/product/details/20240716/sd1_30eec522fa11ccf1c245d0dbef32101eb943a190.jpg",
+      "siteName": "ふるさとチョイス"
+    }
+  ],
   "iosApps": [
     {
       "id": "6756815912",

@@ -52,7 +52,7 @@ export default function AppCard({ appId }: AppCardProps) {
 
     return (
         <a href={data.trackViewUrl} target="_blank" rel="noopener noreferrer" className="block group h-full">
-            <div className="bg-white rounded-2xl overflow-hidden border border-stone-200 shadow-sm transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-lg h-full flex flex-col">
+            <div className="bg-white dark:bg-stone-800 rounded-2xl overflow-hidden border border-stone-200 dark:border-stone-700 shadow-sm transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-lg h-full flex flex-col">
                 <div className="p-6 flex flex-col h-full">
                     <div className="flex items-start gap-4 mb-4">
                         <Image
@@ -86,9 +86,9 @@ export default function AppCard({ appId }: AppCardProps) {
 
 function AppCardSkeleton() {
     return (
-        <div className="bg-white rounded-2xl p-6 border border-stone-100 h-full flex flex-col gap-4 animate-pulse">
+        <div className="bg-white dark:bg-stone-800 rounded-2xl p-6 border border-stone-100 dark:border-stone-700 h-full flex flex-col gap-4 animate-pulse">
             <div className="flex items-start gap-4">
-                <div className="w-20 h-20 bg-stone-200 rounded-2xl flex-shrink-0"></div>
+                <div className="w-20 h-20 bg-stone-200 dark:bg-stone-700 rounded-2xl flex-shrink-0"></div>
                 <div className="flex-1 space-y-2 mt-1">
                     <div className="h-5 w-3/4 bg-stone-200 rounded"></div>
                     <div className="h-4 w-1/3 bg-stone-200 rounded"></div>

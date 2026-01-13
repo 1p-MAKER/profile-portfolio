@@ -10,8 +10,8 @@ interface SimpleCardProps {
 export default function SimpleCard({ title, description, url, category }: SimpleCardProps) {
     return (
         <a href={url} target="_blank" rel="noopener noreferrer" className="block group h-full">
-            <div className="bg-white rounded-2xl p-8 border border-stone-200 shadow-sm transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-lg h-full flex flex-col items-start hover:border-accent/30">
-                <span className="inline-block text-[10px] bg-stone-100 px-2 py-0.5 rounded-full text-subtext uppercase tracking-wider mb-4 group-hover:bg-accent/10 group-hover:text-accent transition-colors">
+            <div className="bg-white dark:bg-stone-800 rounded-2xl p-8 border border-stone-200 dark:border-stone-700 shadow-sm transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-lg h-full flex flex-col items-start hover:border-accent/30">
+                <span className="inline-block text-[10px] bg-stone-100 dark:bg-stone-700 px-2 py-0.5 rounded-full text-subtext uppercase tracking-wider mb-4 group-hover:bg-accent/10 group-hover:text-accent transition-colors">
                     {category}
                 </span>
                 <h3 className="font-bold text-xl mb-3 group-hover:text-accent transition-colors">{title}</h3>

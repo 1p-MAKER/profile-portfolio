@@ -476,6 +476,58 @@ export default function AdminPage() {
                     </div>
                 </section>
 
+                {/* iOS Apps Section */}
+                <section>
+                    <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">iOSアプリリスト</h2>
+                    <div className="bg-white p-6 rounded-xl shadow-sm mb-6">
+                        <div className="space-y-3">
+                            {data.iosAppIds.map((id, index) => (
+                                <div key={`${id}-${index}`} className="flex items-center justify-between bg-stone-50 p-3 rounded-lg border border-stone-200">
+                                    <div className="font-mono text-stone-700 font-bold">{id}</div>
+                                    <div className="flex items-center gap-2">
+                                        <button
+                                            onClick={() => moveAppId(index, 'up')}
+                                            disabled={index === 0}
+                                            className="p-2 text-sm bg-white border rounded hover:bg-stone-100 disabled:opacity-30"
+                                        >
+                                            ↑
+                                        </button>
+                                        <button
+                                            onClick={() => moveAppId(index, 'down')}
+                                            disabled={index === data.iosAppIds.length - 1}
+                                            className="p-2 text-sm bg-white border rounded hover:bg-stone-100 disabled:opacity-30"
+                                        >
+                                            ↓
+                                        </button>
+                                        <button
+                                            onClick={() => removeAppId(index)}
+                                            className="text-red-500 hover:bg-red-50 p-2 rounded ml-2"
+                                        >
+                                            ✕
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="flex gap-2 bg-stone-100 p-4 rounded-xl border border-stone-200">
+                        <input
+                            className="flex-grow border p-2 rounded"
+                            value={newAppId}
+                            onChange={(e) => setNewAppId(e.target.value)}
+                            placeholder="App Store IDを入力 (例: 1234567890)"
+                        />
+                        <button
+                            onClick={addAppId}
+                            disabled={!newAppId}
+                            className="bg-stone-600 text-white px-6 py-2 rounded hover:bg-stone-700 disabled:opacity-50 font-bold"
+                        >
+                            追加
+                        </button>
+                    </div>
+                </section>
+
                 <section>
                     <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">タブの表示順設定</h2>
                     <div className="bg-white p-6 rounded-xl shadow-sm">

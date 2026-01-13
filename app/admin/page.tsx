@@ -12,7 +12,18 @@ export default function AdminPage() {
     useEffect(() => {
         fetch('/api/data')
             .then(res => res.json())
-            .then(data => setData(data));
+            .then(fetchedData => {
+                if (!fetchedData.tabs) {
+                    fetchedData.tabs = [
+                        { id: 'leather', label: '革製品' },
+                        { id: 'ios', label: 'iOSアプリ' },
+                        { id: 'shopify', label: 'Shopifyアプリ' },
+                        { id: '3d-printer', label: '3Dプリンタ' },
+                        { id: 'sns', label: 'SNS' },
+                    ];
+                }
+                setData(fetchedData);
+            });
     }, []);
 
     const [logs, setLogs] = useState<string[]>([]);

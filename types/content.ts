@@ -4,7 +4,15 @@ export interface ContentData {
     shopifyApps: Product[];
     snsAccounts: Product[];
     printImages: string[];
+    furusatoItems: FurusatoItem[];
     tabs: TabItem[];
+}
+
+export interface FurusatoItem {
+    title: string;
+    url: string;
+    imageUrl: string;
+    siteName?: string;
 }
 
 export interface TabItem {

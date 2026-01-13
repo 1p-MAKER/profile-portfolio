@@ -5,6 +5,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import AppCard from '@/components/AppCard';
 import SimpleCard from '@/components/SimpleCard';
+import FurusatoCard from '@/components/FurusatoCard';
 import Image from 'next/image';
 import { ContentData } from '@/types/content';
 
@@ -129,9 +130,33 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
                         </div>
                     )}
                 </div>
-            </main>
+                    )}
 
-            <Footer />
+                {activeTab === 'furusato' && (
+                    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {data.furusatoItems && data.furusatoItems.map((item, index) => (
+                                <div key={index} className="h-full">
+                                    <FurusatoCard
+                                        title={item.title}
+                                        url={item.url}
+                                        imageUrl={item.imageUrl}
+                                        siteName={item.siteName}
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                        {(!data.furusatoItems || data.furusatoItems.length === 0) && (
+                            <p className="text-center text-stone-500 py-12">
+                                現在掲載されている返礼品はありません。
+                            </p>
+                        )}
+                    </div>
+                )}
         </div>
+            </main >
+
+        <Footer />
+        </div >
     );
 }

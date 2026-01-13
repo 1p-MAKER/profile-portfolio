@@ -226,7 +226,10 @@ export default function AdminPage() {
                     {data.leatherProducts.map((item, index) => (
                         <div key={index} className="bg-white p-6 rounded-xl shadow-sm mb-4">
                             <div className="grid gap-3">
-                                <input className="border p-2 rounded" value={item.title} onChange={(e) => updateProduct('leatherProducts', index, 'title', e.target.value)} placeholder="タイトル" />
+                                <div className="grid grid-cols-2 gap-3">
+                                    <input className="border p-2 rounded" value={item.title} onChange={(e) => updateProduct('leatherProducts', index, 'title', e.target.value)} placeholder="タイトル" />
+                                    <input className="border p-2 rounded" value={item.category} onChange={(e) => updateProduct('leatherProducts', index, 'category', e.target.value)} placeholder="カテゴリ (例: Leather Craft)" />
+                                </div>
                                 <input className="border p-2 rounded" value={item.url} onChange={(e) => updateProduct('leatherProducts', index, 'url', e.target.value)} placeholder="URL" />
                                 <textarea className="border p-2 rounded h-24" value={item.description} onChange={(e) => updateProduct('leatherProducts', index, 'description', e.target.value)} placeholder="説明" />
                                 <div className="flex justify-end">
@@ -246,7 +249,10 @@ export default function AdminPage() {
                     {data.snsAccounts.map((item, index) => (
                         <div key={index} className="bg-white p-6 rounded-xl shadow-sm mb-4">
                             <div className="grid gap-3">
-                                <input className="border p-2 rounded" value={item.title} onChange={(e) => updateProduct('snsAccounts', index, 'title', e.target.value)} placeholder="タイトル" />
+                                <div className="grid grid-cols-2 gap-3">
+                                    <input className="border p-2 rounded" value={item.title} onChange={(e) => updateProduct('snsAccounts', index, 'title', e.target.value)} placeholder="タイトル" />
+                                    <input className="border p-2 rounded" value={item.category} onChange={(e) => updateProduct('snsAccounts', index, 'category', e.target.value)} placeholder="カテゴリ (例: SNS)" />
+                                </div>
                                 <input className="border p-2 rounded" value={item.url} onChange={(e) => updateProduct('snsAccounts', index, 'url', e.target.value)} placeholder="URL" />
                                 <textarea className="border p-2 rounded h-24" value={item.description} onChange={(e) => updateProduct('snsAccounts', index, 'description', e.target.value)} placeholder="説明" />
                                 <div className="flex justify-end">
@@ -266,7 +272,10 @@ export default function AdminPage() {
                     {data.shopifyApps.map((item, index) => (
                         <div key={index} className="bg-white p-6 rounded-xl shadow-sm mb-4">
                             <div className="grid gap-3">
-                                <input className="border p-2 rounded" value={item.title} onChange={(e) => updateProduct('shopifyApps', index, 'title', e.target.value)} placeholder="タイトル" />
+                                <div className="grid grid-cols-2 gap-3">
+                                    <input className="border p-2 rounded" value={item.title} onChange={(e) => updateProduct('shopifyApps', index, 'title', e.target.value)} placeholder="タイトル" />
+                                    <input className="border p-2 rounded" value={item.category} onChange={(e) => updateProduct('shopifyApps', index, 'category', e.target.value)} placeholder="カテゴリ (例: Shopify App)" />
+                                </div>
                                 <input className="border p-2 rounded" value={item.url} onChange={(e) => updateProduct('shopifyApps', index, 'url', e.target.value)} placeholder="URL" />
                                 <textarea className="border p-2 rounded h-24" value={item.description} onChange={(e) => updateProduct('shopifyApps', index, 'description', e.target.value)} placeholder="説明" />
                                 <div className="flex justify-end">

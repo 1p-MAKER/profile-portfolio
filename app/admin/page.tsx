@@ -16,6 +16,9 @@ export default function AdminPage() {
     const [newFurusatoSite, setNewFurusatoSite] = useState('');
     const [isFetchingMeta, setIsFetchingMeta] = useState(false);
 
+    // iOS App Input State
+    const [newAppId, setNewAppId] = useState('');
+
     useEffect(() => {
         fetch('/api/data')
             .then(res => res.json())
@@ -177,6 +180,32 @@ export default function AdminPage() {
         const newList = [...data[listName]];
         newList.splice(index, 1);
         setData({ ...data, [listName]: newList });
+    };
+
+    // iOS App Logic
+    const addAppId = () => {
+        if (!data || !newAppId) return;
+        setData({ ...data, iosAppIds: [...data.iosAppIds, newAppId] });
+        setNewAppId('');
+        setStatus('アプリIDを追加しました（保存ボタンを押してください）');
+    };
+
+    const removeAppId = (index: number) => {
+        if (!data) return;
+        const newList = [...data.iosAppIds];
+        newList.splice(index, 1);
+        setData({ ...data, iosAppIds: newList });
+    };
+
+    const moveAppId = (index: number, direction: 'up' | 'down') => {
+        if (!data) return;
+        const newList = [...data.iosAppIds];
+        if (direction === 'up' && index > 0) {
+            [newList[index - 1], newList[index]] = [newList[index], newList[index - 1]];
+        } else if (direction === 'down' && index < newList.length - 1) {
+            [newList[index + 1], newList[index]] = [newList[index], newList[index + 1]];
+        }
+        setData({ ...data, iosAppIds: newList });
     };
 
     // Furusato Logic

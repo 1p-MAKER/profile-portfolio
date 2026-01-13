@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { ContentData, Product } from '@/types/content';
+import { ContentData, Product, TabItem } from '@/types/content';
 import Image from 'next/image';
 
 export default function AdminPage() {
@@ -452,7 +452,7 @@ export default function AdminPage() {
                     <div className="bg-white p-6 rounded-xl shadow-sm">
                         <div className="space-y-2">
                             {/* @ts-ignore: Temporary ignore for rapid prototyping if types aren't perfectly synced yet */}
-                            {data.tabs?.map((tab: any, index: number) => (
+                            {data.tabs?.map((tab: TabItem, index: number) => (
                                 <div key={tab.id} className="flex items-center justify-between p-3 bg-stone-50 rounded-lg border border-stone-200">
                                     <span className="font-bold text-stone-700">{tab.label}</span>
                                     <div className="flex gap-2">

@@ -31,7 +31,7 @@ export async function POST() {
             await execPromise('git commit -m "content: update via admin tool"');
             addLog('Commit successful');
         } catch (e: unknown) {
-            const isClean = e instanceof Error && 'stdout' in e && (e as any).stdout?.includes('nothing to commit');
+            const isClean = e instanceof Error && 'stdout' in e && (e as { stdout: string }).stdout?.includes('nothing to commit');
             if (isClean) {
                 addLog('Nothing to commit (clean working tree)');
             } else {
@@ -67,8 +67,8 @@ export async function POST() {
         addLog(`FATAL ERROR: ${msg}`);
 
         if (typeof error === 'object' && error !== null) {
-            if ('stderr' in error) addLog(`STDERR: ${(error as any).stderr}`);
-            if ('stdout' in error) addLog(`STDOUT: ${(error as any).stdout}`);
+            if ('stderr' in error) addLog(`STDERR: ${(error as { stderr: string }).stderr}`);
+            if ('stdout' in error) addLog(`STDOUT: ${(error as { stdout: string }).stdout}`);
         }
 
         return NextResponse.json({ error: 'Deployment failed', logs }, { status: 500 });

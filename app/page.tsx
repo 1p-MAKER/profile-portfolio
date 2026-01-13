@@ -40,7 +40,22 @@ const shopifyApps = [
   }
 ];
 
-type TabType = 'leather' | 'ios' | 'shopify';
+const snsAccounts = [
+  {
+    title: 'Instagram',
+    description: '日々の制作風景や、最新の作品情報を写真でお届けしています。',
+    url: 'https://www.instagram.com/1pei_okinawa',
+    category: 'SNS',
+  },
+  {
+    title: 'X (Twitter)',
+    description: 'アプリ開発の進捗や技術的なつぶやき、最新のお知らせを発信中。',
+    url: 'https://x.com/DevCat123',
+    category: 'SNS',
+  }
+];
+
+type TabType = 'leather' | 'ios' | 'shopify' | 'sns';
 
 export default function Home() {
   // デフォルトは革製品
@@ -50,22 +65,23 @@ export default function Home() {
     { id: 'leather', label: '革製品' },
     { id: 'ios', label: 'iOSアプリ' },
     { id: 'shopify', label: 'Shopifyアプリ' },
+    { id: 'sns', label: 'SNS' },
   ];
 
   return (
     <div className="min-h-screen flex flex-col font-sans">
       <Header />
 
-      <nav className="sticky top-16 z-40 bg-background/95 backdrop-blur-sm border-b border-stone-200">
+      <nav className="sticky top-16 z-40 bg-background/95 backdrop-blur-sm border-b border-stone-200 overflow-x-auto">
         <div className="container mx-auto px-4">
-          <div className="flex justify-center gap-8">
+          <div className="flex justify-start md:justify-center gap-6 min-w-max pb-px">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`py-4 text-sm font-bold border-b-2 transition-all duration-300 ${activeTab === tab.id
-                  ? 'border-accent text-accent'
-                  : 'border-transparent text-subtext hover:text-foreground'
+                className={`py-4 text-sm font-bold border-b-2 transition-all duration-300 px-2 ${activeTab === tab.id
+                    ? 'border-accent text-accent'
+                    : 'border-transparent text-subtext hover:text-foreground'
                   }`}
               >
                 {tab.label}
@@ -116,6 +132,23 @@ export default function Home() {
                       description={product.description}
                       url={product.url}
                       category={product.category}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'sns' && (
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {snsAccounts.map((account, index) => (
+                  <div key={index} className="h-full">
+                    <SimpleCard
+                      title={account.title}
+                      description={account.description}
+                      url={account.url}
+                      category={account.category}
                     />
                   </div>
                 ))}

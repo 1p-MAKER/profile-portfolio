@@ -15,18 +15,32 @@ export default function AdminPage() {
             .then(data => setData(data));
     }, []);
 
+    const [logs, setLogs] = useState<string[]>([]);
+
+    const addLogEntry = (msg: string) => {
+        const timestamp = new Date().toLocaleTimeString('ja-JP');
+        setLogs(prev => [`[${timestamp}] ${msg}`, ...prev]);
+    };
+
     const handleSave = async () => {
         setStatus('保存中...');
+        addLogEntry('保存処理を開始しました');
         try {
             const res = await fetch('/api/data', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             });
-            if (res.ok) setStatus('保存しました！');
-            else setStatus('保存に失敗しました');
+            if (res.ok) {
+                setStatus('保存しました！');
+                addLogEntry('データの保存に成功しました');
+            } else {
+                setStatus('保存に失敗しました');
+                addLogEntry('エラー: データの保存に失敗しました');
+            }
         } catch (e) {
             setStatus('エラーが発生しました');
+            addLogEntry(`エラー: ${e}`);
         }
         setTimeout(() => setStatus(''), 3000);
     };
@@ -35,14 +49,28 @@ export default function AdminPage() {
         if (!confirm('本当に公開しますか？\n（Gitへのコミットとプッシュが行われます）')) return;
 
         setIsDeploying(true);
-        setStatus('公開処理中... 1分ほどお待ちください');
+        setStatus('公開処理中... ログを確認してください');
+        addLogEntry('公開（デプロイ）処理を開始...');
 
         try {
             const res = await fetch('/api/deploy', { method: 'POST' });
-            if (res.ok) setStatus('公開リクエストを送信しました！');
-            else setStatus('公開に失敗しました');
+            const result = await res.json();
+
+            // サーバーからのログを表示
+            if (result.logs && Array.isArray(result.logs)) {
+                result.logs.forEach((log: string) => addLogEntry(`SERVER: ${log}`));
+            }
+
+            if (res.ok) {
+                setStatus('公開リクエスト完了！');
+                addLogEntry('公開リクエストが正常に完了しました。Vercelでの反映を待ってください。');
+            } else {
+                setStatus('公開に失敗しました');
+                addLogEntry('エラー: 公開処理に失敗しました。詳細は上記サーバログを確認してください。');
+            }
         } catch (e) {
             setStatus('エラーが発生しました');
+            addLogEntry(`通信エラー: ${e}`);
         }
         setIsDeploying(false);
     };
@@ -55,6 +83,7 @@ export default function AdminPage() {
         formData.append('file', file);
 
         setStatus('アップロード中...');
+        addLogEntry(`画像アップロード開始: ${file.name}`);
 
         try {
             const res = await fetch('/api/upload', {
@@ -64,14 +93,28 @@ export default function AdminPage() {
             const result = await res.json();
 
             if (result.success) {
-                setData({
+                const newData = {
                     ...data,
                     printImages: [...data.printImages, result.path]
-                });
+                };
+                setData(newData);
                 setStatus('画像をアップロードしました（保存ボタンを押してください）');
+                addLogEntry(`画像アップロード成功: ${result.path}`);
+
+                // 自動保存もしてしまう
+                await fetch('/api/data', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(newData)
+                });
+                addLogEntry('アップロード後のデータを自動保存しました');
+
+            } else {
+                addLogEntry('画像アップロードに失敗しました');
             }
         } catch (e) {
             setStatus('アップロード失敗');
+            addLogEntry(`エラー: ${e}`);
         }
     };
 
@@ -205,6 +248,21 @@ export default function AdminPage() {
                     <button onClick={() => addProduct('shopifyApps')} className="w-full py-3 border-2 border-dashed border-stone-300 text-stone-500 rounded-xl hover:bg-stone-50 transition-colors">
                         + アイテムを追加
                     </button>
+                </section>
+
+                <section>
+                    <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">処理ログ</h2>
+                    <div className="bg-black/90 p-4 rounded-xl shadow-inner h-64 overflow-y-auto font-mono text-sm">
+                        {logs.length === 0 ? (
+                            <div className="text-gray-500">まだログはありません...</div>
+                        ) : (
+                            logs.map((log, i) => (
+                                <div key={i} className="text-green-400 border-b border-gray-800 pb-1 mb-1 last:border-0">
+                                    {log}
+                                </div>
+                            ))
+                        )}
+                    </div>
                 </section>
 
                 <div className="h-20"></div>

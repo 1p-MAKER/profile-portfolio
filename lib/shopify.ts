@@ -10,11 +10,14 @@ if (!domain || !storefrontAccessToken) {
 const endpoint = `https://${domain}/api/2024-01/graphql.json`;
 
 async function shopifyFetch<T>(query: string, variables: Record<string, any> = {}): Promise<T> {
+    // 環境変数は上でチェック済みなので、ここでは確実に存在する
+    const token = storefrontAccessToken!;
+
     const response = await fetch(endpoint, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-Shopify-Storefront-Access-Token': storefrontAccessToken,
+            'X-Shopify-Storefront-Access-Token': token,
         },
         body: JSON.stringify({ query, variables }),
     });

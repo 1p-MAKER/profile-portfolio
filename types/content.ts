@@ -1,5 +1,5 @@
 export interface ContentData {
-    leatherProducts: Product[];
+    leatherProducts: ShopifyLeatherProduct[];
     iosApps: IosApp[];
     shopifyApps: Product[];
     snsAccounts: Product[];
@@ -9,6 +9,13 @@ export interface ContentData {
     videoProductionVideos: YouTubeVideo[];
     tabs: TabItem[];
     settings: Settings;
+}
+
+// Shopify商品（革製品用）
+export interface ShopifyLeatherProduct {
+    handle: string;
+    isFeatured?: boolean;
+    category: string;
 }
 
 export interface IosApp {

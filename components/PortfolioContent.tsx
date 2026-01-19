@@ -6,6 +6,7 @@ import AppCard from '@/components/AppCard';
 import SimpleCard from './SimpleCard';
 import FurusatoCard from '@/components/FurusatoCard';
 import YouTubeEmbed from './YouTubeEmbed';
+import ShopifyProductCard from '@/components/ShopifyProductCard';
 import Image from 'next/image';
 import { ContentData } from '@/types/content';
 
@@ -114,7 +115,14 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
                                             </div>
                                         );
                                     }
-                                    if (item.type === 'leather' || item.type === 'shopify' || item.type === 'sns') {
+                                    if (item.type === 'leather') {
+                                        return (
+                                            <div key={`featured-leather-${index}`} className="h-full">
+                                                <ShopifyProductCard handle={item.data.handle} />
+                                            </div>
+                                        );
+                                    }
+                                    if (item.type === 'shopify' || item.type === 'sns') {
                                         return (
                                             <div key={`featured-${item.type}-${index}`} className="h-full">
                                                 <SimpleCard
@@ -166,12 +174,7 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {data.leatherProducts.map((product, index) => (
                                     <div key={index} className="h-full">
-                                        <SimpleCard
-                                            title={product.title}
-                                            description={product.description}
-                                            url={product.url}
-                                            category={product.category}
-                                        />
+                                        <ShopifyProductCard handle={product.handle} />
                                     </div>
                                 ))}
                             </div>

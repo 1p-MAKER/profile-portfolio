@@ -147,6 +147,7 @@ export async function getProduct(handle: string): Promise<ShopifyProduct | null>
  * @returns チェックアウトURL
  */
 export async function createCheckout(variantId: string): Promise<string | null> {
+  // Strategy 1: Try Storefront API Mutation first (Best UX)
   const mutation = `
     mutation checkoutCreate($input: CheckoutCreateInput!) {
       checkoutCreate(input: $input) {
@@ -174,14 +175,28 @@ export async function createCheckout(variantId: string): Promise<string | null> 
   try {
     const data = await shopifyFetch<CheckoutCreateResponse>(mutation, { input });
 
-    if (data.checkoutCreate.checkoutUserErrors.length > 0) {
-      console.error('Checkout errors:', data.checkoutCreate.checkoutUserErrors);
-      return null;
+    if (data.checkoutCreate.checkoutUserErrors.length === 0) {
+      return data.checkoutCreate.checkout.webUrl;
     }
 
-    return data.checkoutCreate.checkout.webUrl;
+    console.warn('Checkout API returned errors, falling back to permalink:', data.checkoutCreate.checkoutUserErrors);
   } catch (error) {
-    console.error('Error creating checkout:', error);
-    return null;
+    console.warn('Checkout mutation failed, falling back to permalink:', error);
   }
+
+  // Strategy 2: Direct Cart Permalink (Fallback)
+  // Format: https://{STORE_DOMAIN}/cart/{VARIANT_ID}:1
+  // Variant ID is typically "gid://shopify/ProductVariant/123456789" -> we need "123456789"
+  try {
+    const numericId = variantId.split('/').pop();
+    if (numericId && domain) {
+      const permalink = `https://${domain}/cart/${numericId}:1`;
+      console.log('[Shopify] Generated Permalink:', permalink);
+      return permalink;
+    }
+  } catch (e) {
+    console.error('[Shopify] Failed to generate permalink:', e);
+  }
+
+  return null;
 }

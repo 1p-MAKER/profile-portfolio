@@ -51,13 +51,22 @@ export default function ShopifyProductCard({ handle }: ShopifyProductCardProps) 
         if (!product || !product.variants.edges[0]) return;
 
         setPurchasing(true);
-        const variantId = product.variants.edges[0].node.id;
-        const checkoutUrl = await createCheckout(variantId);
+        try {
+            const variantId = product.variants.edges[0].node.id;
+            console.log(`[ShopifyDebug] Creating checkout for variant: ${variantId}`);
 
-        if (checkoutUrl) {
-            window.location.href = checkoutUrl;
-        } else {
-            alert('購入画面への移動に失敗しました。もう一度お試しください。');
+            const checkoutUrl = await createCheckout(variantId);
+            console.log(`[ShopifyDebug] Checkout URL: ${checkoutUrl}`);
+
+            if (checkoutUrl) {
+                window.location.href = checkoutUrl;
+            } else {
+                alert('購入画面への移動に失敗しました。もう一度お試しください。');
+                setPurchasing(false);
+            }
+        } catch (e) {
+            console.error('[ShopifyDebug] Purchase Error:', e);
+            alert('エラーが発生しました。');
             setPurchasing(false);
         }
     };

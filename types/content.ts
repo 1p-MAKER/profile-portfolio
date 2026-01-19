@@ -7,6 +7,7 @@ export interface ContentData {
     furusatoItems: FurusatoItem[];
     youtubeVideos: YouTubeVideo[];
     videoProductionVideos: YouTubeVideo[];
+    audioTracks: AudioTrack[];
     tabs: TabItem[];
     settings: Settings;
 }
@@ -39,8 +40,15 @@ export interface YouTubeVideo {
     isFeatured?: boolean;
 }
 
+export interface AudioTrack {
+    id: string;
+    title: string;
+    url: string;
+    description: string;
+}
+
 export interface TabItem {
-    id: 'home' | 'leather' | 'ios' | 'shopify' | 'sns' | '3d-printer' | 'furusato' | 'youtube' | 'videoProduction';
+    id: 'home' | 'leather' | 'ios' | 'shopify' | 'sns' | '3d-printer' | 'furusato' | 'youtube' | 'videoProduction' | 'audio';
     label: string;
 }
 
@@ -58,5 +66,6 @@ export interface Settings {
     profileTagline?: string;
     featuredIntro?: string;
     videoProductionIntro?: string;
+    audioIntro?: string;
     xUsername?: string;
 }

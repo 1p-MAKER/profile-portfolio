@@ -215,7 +215,8 @@
     {
       "id": "1768796867024",
       "url": "https://www.youtube.com/shorts/Ycmi1yfMZsk",
-      "title": "Toe - Goodbye (Drum Cover) #フィンガードラム #toe #fingerdrumming"
+      "title": "Toe - Goodbye (Drum Cover) #フィンガードラム #toe #fingerdrumming",
+      "isFeatured": true
     }
   ],
   "iosApps": [
@@ -230,7 +231,8 @@
     },
     {
       "id": "6757323152",
-      "name": "韻Finder"
+      "name": "韻Finder",
+      "isFeatured": true
     },
     {
       "id": "6756455336",

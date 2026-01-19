@@ -77,6 +77,10 @@
       "label": "革製品"
     },
     {
+      "id": "videoProduction",
+      "label": "動画制作"
+    },
+    {
       "id": "sns",
       "label": "SNS"
     },
@@ -95,10 +99,6 @@
     {
       "id": "shopify",
       "label": "Shopifyアプリ"
-    },
-    {
-      "id": "videoProduction",
-      "label": "動画制作"
     }
   ],
   "settings": {

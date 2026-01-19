@@ -1,4 +1,5 @@
 import PortfolioContent from '@/components/PortfolioContent';
+import Header from '@/components/Header';
 import { promises as fs } from 'fs';
 import path from 'path';
 
@@ -18,12 +19,18 @@ async function getData() {
       iosAppIds: [],
       shopifyApps: [],
       snsAccounts: [],
-      printImages: []
+      printImages: [],
+      settings: {}
     };
   }
 }
 
 export default async function Home() {
   const data = await getData();
-  return <PortfolioContent data={data} />;
+  return (
+    <>
+      <Header profileName={data.settings?.profileName} profileTagline={data.settings?.profileTagline} />
+      <PortfolioContent data={data} />
+    </>
+  );
 }

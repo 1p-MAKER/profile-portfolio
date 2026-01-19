@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import AppCard from '@/components/AppCard';
 import SimpleCard from './SimpleCard';
@@ -28,7 +27,7 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
     // Featured items collection
     const getFeaturedItems = () => {
         const items: Array<{
-            type: 'ios' | 'leather' | 'shopify' | 'sns' | 'youtube' | 'furusato';
+            type: 'ios' | 'leather' | 'shopify' | 'sns' | 'youtube' | 'furusato' | 'videoProduction';
             data: any;
         }> = [];
 
@@ -62,12 +61,16 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
             items.push({ type: 'furusato', data: item });
         });
 
+        // Video Production Videos
+        data.videoProductionVideos?.filter(v => v.isFeatured).forEach(v => {
+            items.push({ type: 'videoProduction', data: v });
+        });
+
         return items;
     };
 
     return (
         <div className="min-h-screen flex flex-col font-sans">
-            <Header />
 
             <nav className="sticky top-16 z-40 bg-background/95 backdrop-blur-sm border-b border-stone-200 overflow-x-auto">
                 <div className="container mx-auto px-4">
@@ -90,9 +93,17 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
 
             <main className="flex-grow container mx-auto px-4 py-12">
                 <div className="min-h-[50vh]">
-                    {/* Home/Featured Tab */}
                     {activeTab === 'home' && (
                         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                            {/* Featured Intro Text */}
+                            {data.settings?.featuredIntro && (
+                                <div className="max-w-3xl mx-auto mb-12">
+                                    <p className="text-stone-600 whitespace-pre-wrap leading-relaxed text-center">
+                                        {data.settings.featuredIntro}
+                                    </p>
+                                </div>
+                            )}
+
                             <h2 className="text-3xl font-bold mb-8 text-center">Featured Works</h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {getFeaturedItems().map((item, index) => {
@@ -115,9 +126,9 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
                                             </div>
                                         );
                                     }
-                                    if (item.type === 'youtube') {
+                                    if (item.type === 'youtube' || item.type === 'videoProduction') {
                                         return (
-                                            <div key={`featured-youtube-${index}`} className="h-full">
+                                            <div key={`featured-${item.type}-${index}`} className="h-full">
                                                 <div className="bg-white dark:bg-stone-800 rounded-2xl overflow-hidden shadow-sm border border-stone-200 dark:border-stone-700">
                                                     <YouTubeEmbed url={item.data.url} />
                                                     <div className="p-4">
@@ -275,6 +286,34 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
                                 ))}
                             </div>
                             {(!data.youtubeVideos || data.youtubeVideos.length === 0) && (
+                                <p className="text-center text-stone-500 py-12">
+                                    まだ動画が登録されていません。
+                                </p>
+                            )}
+                        </div>
+                    )}
+
+                    {/* Video Production Tab */}
+                    {activeTab === 'videoProduction' && (
+                        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                            {data.settings?.videoProductionIntro && (
+                                <p className="text-center text-stone-600 mb-8">
+                                    {data.settings.videoProductionIntro}
+                                </p>
+                            )}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {data.videoProductionVideos && data.videoProductionVideos.map((video) => (
+                                    <div key={video.id} className="h-full">
+                                        <div className="bg-white dark:bg-stone-800 rounded-2xl overflow-hidden shadow-sm border border-stone-200 dark:border-stone-700">
+                                            <YouTubeEmbed url={video.url} />
+                                            <div className="p-4">
+                                                <h3 className="font-bold text-lg">{video.title}</h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                            {(!data.videoProductionVideos || data.videoProductionVideos.length === 0) && (
                                 <p className="text-center text-stone-500 py-12">
                                     まだ動画が登録されていません。
                                 </p>

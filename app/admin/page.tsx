@@ -27,8 +27,17 @@ export default function AdminPage() {
     const [newYouTubeUrl, setNewYouTubeUrl] = useState('');
     const [newYouTubeTitle, setNewYouTubeTitle] = useState('');
 
+    // Video Production Input State
+    const [newVideoProductionUrl, setNewVideoProductionUrl] = useState('');
+    const [newVideoProductionTitle, setNewVideoProductionTitle] = useState('');
+
     // Settings State
     const [xUsername, setXUsername] = useState('');
+    const [siteTitle, setSiteTitle] = useState('');
+    const [profileName, setProfileName] = useState('');
+    const [profileTagline, setProfileTagline] = useState('');
+    const [featuredIntro, setFeaturedIntro] = useState('');
+    const [videoProductionIntro, setVideoProductionIntro] = useState('');
 
     useEffect(() => {
         fetch('/api/data')
@@ -49,6 +58,11 @@ export default function AdminPage() {
                 if (fetchedData.settings?.xUsername) {
                     setXUsername(fetchedData.settings.xUsername);
                 }
+                if (fetchedData.settings?.siteTitle) setSiteTitle(fetchedData.settings.siteTitle);
+                if (fetchedData.settings?.profileName) setProfileName(fetchedData.settings.profileName);
+                if (fetchedData.settings?.profileTagline) setProfileTagline(fetchedData.settings.profileTagline);
+                if (fetchedData.settings?.featuredIntro) setFeaturedIntro(fetchedData.settings.featuredIntro);
+                if (fetchedData.settings?.videoProductionIntro) setVideoProductionIntro(fetchedData.settings.videoProductionIntro);
             });
     }, []);
 
@@ -806,33 +820,211 @@ export default function AdminPage() {
                         {/* Settings Section */}
                         {activeAdminTab === 'settings' && (
                             <section>
-                                <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">設定</h2>
-                                <div className="bg-white p-6 rounded-xl shadow-sm">
-                                    <div className="mb-6">
+                                <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">サイト設定</h2>
+                                <div className="bg-white p-6 rounded-xl shadow-sm space-y-6">
+                                    <div>
                                         <label className="block text-sm font-bold text-stone-700 mb-2">
-                                            X (Twitter) ユーザー名
+                                            サイトタイトル (Site Title)
                                         </label>
-                                        <div className="flex gap-2">
-                                            <span className="flex items-center text-stone-500 text-lg">@</span>
-                                            <input
-                                                type="text"
-                                                className="flex-grow border p-2 rounded"
-                                                value={xUsername}
-                                                onChange={(e) => {
-                                                    setXUsername(e.target.value);
-                                                    if (data?.settings) {
-                                                        setData({ ...data, settings: { ...data.settings, xUsername: e.target.value } });
-                                                    } else {
-                                                        setData({ ...data!, settings: { xUsername: e.target.value } });
-                                                    }
-                                                }}
-                                                placeholder="DevCat123"
-                                            />
-                                        </div>
-                                        <p className="mt-2 text-xs text-stone-500">
-                                            Xタブに表示するタイムラインのユーザー名を設定します。
+                                        <input
+                                            type="text"
+                                            className="w-full border p-2 rounded"
+                                            value={siteTitle}
+                                            onChange={(e) => {
+                                                setSiteTitle(e.target.value);
+                                                setData({ ...data!, settings: { ...data!.settings, siteTitle: e.target.value } });
+                                            }}
+                                            placeholder="Dev cat's ポートフォリオ"
+                                        />
+                                        <p className="mt-1 text-xs text-stone-500">
+                                            ブラウザタブに表示されるタイトルです。
                                         </p>
                                     </div>
+
+                                    <div>
+                                        <label className="block text-sm font-bold text-stone-700 mb-2">
+                                            ヘッダー名前 (Profile Name)
+                                        </label>
+                                        <input
+                                            type="text"
+                                            className="w-full border p-2 rounded"
+                                            value={profileName}
+                                            onChange={(e) => {
+                                                setProfileName(e.target.value);
+                                                setData({ ...data!, settings: { ...data!.settings, profileName: e.target.value } });
+                                            }}
+                                            placeholder="Dev cat's Archive"
+                                        />
+                                        <p className="mt-1 text-xs text-stone-500">
+                                            ヘッダーに表示される名前です。
+                                        </p>
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-bold text-stone-700 mb-2">
+                                            ヘッダー一言 (Tagline)
+                                        </label>
+                                        <input
+                                            type="text"
+                                            className="w-full border p-2 rounded"
+                                            value={profileTagline}
+                                            onChange={(e) => {
+                                                setProfileTagline(e.target.value);
+                                                setData({ ...data!, settings: { ...data!.settings, profileTagline: e.target.value } });
+                                            }}
+                                            placeholder="ロジックと情熱の、結び目を管理する。"
+                                        />
+                                        <p className="mt-1 text-xs text-stone-500">
+                                            ヘッダー右側に表示される一言です。
+                                        </p>
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-bold text-stone-700 mb-2">
+                                            Featured導入文 (Featured Intro)
+                                        </label>
+                                        <textarea
+                                            className="w-full border p-3 rounded h-48 font-sans"
+                                            value={featuredIntro}
+                                            onChange={(e) => {
+                                                setFeaturedIntro(e.target.value);
+                                                setData({ ...data!, settings: { ...data!.settings, featuredIntro: e.target.value } });
+                                            }}
+                                            placeholder="ようこそ。私は Dev cat と申します..."
+                                        />
+                                        <p className="mt-1 text-xs text-stone-500">
+                                            Featured Worksセクションの上部に表示される導入文です。改行が反映されます。
+                                        </p>
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-bold text-stone-700 mb-2">
+                                            動画制作タブ導入文 (Video Production Intro)
+                                        </label>
+                                        <textarea
+                                            className="w-full border p-3 rounded h-24 font-sans"
+                                            value={videoProductionIntro}
+                                            onChange={(e) => {
+                                                setVideoProductionIntro(e.target.value);
+                                                setData({ ...data!, settings: { ...data!.settings, videoProductionIntro: e.target.value } });
+                                            }}
+                                            placeholder="過去に制作した動画です"
+                                        />
+                                        <p className="mt-1 text-xs text-stone-500">
+                                            動画制作タブに表示される説明文です。
+                                        </p>
+                                    </div>
+                                </div>
+                            </section>
+                        )}
+
+                        {/* Video Production Section */}
+                        {activeAdminTab === 'videoProduction' && (
+                            <section>
+                                <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">動画制作リスト</h2>
+
+                                {/* Add New Video Form */}
+                                <div className="bg-stone-100 p-6 rounded-xl mb-8 border border-stone-200">
+                                    <h3 className="font-bold mb-4 text-stone-700">新規追加</h3>
+                                    <div className="flex gap-2 mb-4">
+                                        <input
+                                            className="flex-grow border p-2 rounded"
+                                            value={newVideoProductionUrl}
+                                            onChange={(e) => setNewVideoProductionUrl(e.target.value)}
+                                            placeholder="YouTube URLを入力"
+                                        />
+                                        <button
+                                            onClick={async () => {
+                                                if (!newVideoProductionUrl) return;
+                                                setIsFetchingMeta(true);
+                                                setStatus('メタデータ取得中...');
+                                                try {
+                                                    const res = await fetch(`/api/metadata?url=${encodeURIComponent(newVideoProductionUrl)}`);
+                                                    const meta = await res.json();
+                                                    if (meta.error) {
+                                                        setStatus('メタデータ取得失敗');
+                                                    } else {
+                                                        setNewVideoProductionTitle(meta.title);
+                                                        setStatus('メタデータ取得成功');
+                                                    }
+                                                } catch (e: unknown) {
+                                                    setStatus('メタデータ取得エラー');
+                                                }
+                                                setIsFetchingMeta(false);
+                                            }}
+                                            disabled={isFetchingMeta || !newVideoProductionUrl}
+                                            className="bg-stone-600 text-white px-4 py-2 rounded hover:bg-stone-700 disabled:opacity-50"
+                                        >
+                                            {isFetchingMeta ? '...' : '情報取得'}
+                                        </button>
+                                    </div>
+
+                                    <div className="mb-4">
+                                        <input
+                                            className="w-full border p-2 rounded"
+                                            value={newVideoProductionTitle}
+                                            onChange={(e) => setNewVideoProductionTitle(e.target.value)}
+                                            placeholder="動画タイトル"
+                                        />
+                                    </div>
+
+                                    <button
+                                        onClick={() => {
+                                            if (!data || !newVideoProductionTitle) return;
+                                            const newVideo = {
+                                                id: Date.now().toString(),
+                                                url: newVideoProductionUrl,
+                                                title: newVideoProductionTitle
+                                            };
+                                            const currentVideos = data.videoProductionVideos || [];
+                                            setData({ ...data, videoProductionVideos: [...currentVideos, newVideo] });
+                                            setNewVideoProductionUrl('');
+                                            setNewVideoProductionTitle('');
+                                            setStatus('動画を追加しました（保存ボタンを押してください）');
+                                        }}
+                                        disabled={!newVideoProductionTitle}
+                                        className="w-full bg-accent text-white py-3 rounded-lg hover:bg-accent/90 disabled:opacity-50 font-bold"
+                                    >
+                                        リストに追加
+                                    </button>
+                                </div>
+
+                                {/* Video List */}
+                                <div className="grid grid-cols-1 gap-4">
+                                    {data.videoProductionVideos && data.videoProductionVideos.map((video) => (
+                                        <div key={video.id} className="bg-white p-4 rounded-xl shadow-sm flex gap-4 border border-stone-100 items-center">
+                                            <div className="flex-grow">
+                                                <p className="font-bold text-sm mb-1">{video.title}</p>
+                                                <p className="text-xs text-stone-500 break-all">{video.url}</p>
+                                            </div>
+                                            <button
+                                                onClick={() => {
+                                                    const index = data.videoProductionVideos?.findIndex(v => v.id === video.id) ?? -1;
+                                                    if (index >= 0) {
+                                                        const newList = [...data.videoProductionVideos!] as any[];
+                                                        newList[index] = { ...newList[index], isFeatured: !newList[index].isFeatured };
+                                                        setData({ ...data!, videoProductionVideos: newList } as any);
+                                                    }
+                                                }}
+                                                className={`px-3 py-1 rounded text-sm font-bold ${video.isFeatured ? 'bg-yellow-500 text-white' : 'bg-gray-200 text-gray-600'}`}
+                                            >
+                                                ★
+                                            </button>
+                                            <button
+                                                onClick={() => {
+                                                    if (!data || !data.videoProductionVideos) return;
+                                                    const newList = data.videoProductionVideos.filter(v => v.id !== video.id);
+                                                    setData({ ...data, videoProductionVideos: newList });
+                                                }}
+                                                className="text-red-500 hover:bg-red-50 p-2 rounded"
+                                            >
+                                                ✕
+                                            </button>
+                                        </div>
+                                    ))}
+                                    {(!data.videoProductionVideos || data.videoProductionVideos.length === 0) && (
+                                        <p className="text-center text-stone-500 py-8">まだ動画が登録されていません。</p>
+                                    )}
                                 </div>
                             </section>
                         )}

@@ -23,6 +23,10 @@ export default function AdminPage() {
     // iOS App Input State
     const [newAppId, setNewAppId] = useState('');
 
+    // YouTube Video Input State
+    const [newYouTubeUrl, setNewYouTubeUrl] = useState('');
+    const [newYouTubeTitle, setNewYouTubeTitle] = useState('');
+
     useEffect(() => {
         fetch('/api/data')
             .then(res => res.json())
@@ -282,6 +286,51 @@ export default function AdminPage() {
         newList[index] = { ...newList[index], [field]: value };
         setData({ ...data, furusatoItems: newList });
     };
+
+    // YouTube Logic
+    const fetchYouTubeMeta = async () => {
+        if (!newYouTubeUrl) return;
+        setIsFetchingMeta(true);
+        setStatus('メタデータ取得中...');
+        try {
+            const res = await fetch(`/api/metadata?url=${encodeURIComponent(newYouTubeUrl)}`);
+            const meta = await res.json();
+            if (meta.error) {
+                setStatus('メタデータ取得失敗');
+                addLogEntry(`メタデータ取得エラー: ${meta.error}`);
+            } else {
+                setNewYouTubeTitle(meta.title);
+                setStatus('メタデータ取得成功');
+            }
+        } catch (e: unknown) {
+            setStatus('メタデータ取得エラー');
+            console.error(e);
+        }
+        setIsFetchingMeta(false);
+    };
+
+    const addYouTubeVideo = () => {
+        if (!data || !newYouTubeTitle) return;
+        const newVideo = {
+            id: Date.now().toString(),
+            url: newYouTubeUrl,
+            title: newYouTubeTitle
+        };
+        const currentVideos = data.youtubeVideos || [];
+        setData({ ...data, youtubeVideos: [...currentVideos, newVideo] });
+
+        // Reset inputs
+        setNewYouTubeUrl('');
+        setNewYouTubeTitle('');
+        setStatus('動画を追加しました（保存ボタンを押してください）');
+    };
+
+    const removeYouTubeVideo = (id: string) => {
+        if (!data || !data.youtubeVideos) return;
+        const newList = data.youtubeVideos.filter(v => v.id !== id);
+        setData({ ...data, youtubeVideos: newList });
+    };
+
 
     return (
         <div className="min-h-screen bg-stone-50 p-8 pb-32">
@@ -589,6 +638,71 @@ export default function AdminPage() {
                                     >
                                         追加
                                     </button>
+                                </div>
+                            </section>
+                        )}
+
+                        {/* YouTube Section */}
+                        {activeAdminTab === 'youtube' && (
+                            <section>
+                                <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">YouTube動画リスト</h2>
+
+                                {/* Add New Video Form */}
+                                <div className="bg-stone-100 p-6 rounded-xl mb-8 border border-stone-200">
+                                    <h3 className="font-bold mb-4 text-stone-700">新規追加</h3>
+                                    <div className="flex gap-2 mb-4">
+                                        <input
+                                            className="flex-grow border p-2 rounded"
+                                            value={newYouTubeUrl}
+                                            onChange={(e) => setNewYouTubeUrl(e.target.value)}
+                                            placeholder="YouTube URLを入力"
+                                        />
+                                        <button
+                                            onClick={fetchYouTubeMeta}
+                                            disabled={isFetchingMeta || !newYouTubeUrl}
+                                            className="bg-stone-600 text-white px-4 py-2 rounded hover:bg-stone-700 disabled:opacity-50"
+                                        >
+                                            {isFetchingMeta ? '...' : '情報取得'}
+                                        </button>
+                                    </div>
+
+                                    <div className="mb-4">
+                                        <input
+                                            className="w-full border p-2 rounded"
+                                            value={newYouTubeTitle}
+                                            onChange={(e) => setNewYouTubeTitle(e.target.value)}
+                                            placeholder="動画タイトル"
+                                        />
+                                    </div>
+
+                                    <button
+                                        onClick={addYouTubeVideo}
+                                        disabled={!newYouTubeTitle}
+                                        className="w-full bg-accent text-white py-3 rounded-lg hover:bg-accent/90 disabled:opacity-50 font-bold"
+                                    >
+                                        リストに追加
+                                    </button>
+                                </div>
+
+                                {/* Video List */}
+                                <div className="grid grid-cols-1 gap-4">
+                                    {data.youtubeVideos && data.youtubeVideos.map((video) => (
+                                        <div key={video.id} className="bg-white p-4 rounded-xl shadow-sm flex gap-4 border border-stone-100 items-center">
+                                            <div className="flex-grow">
+                                                <p className="font-bold text-sm mb-1">{video.title}</p>
+                                                <p className="text-xs text-stone-500 break-all">{video.url}</p>
+                                            </div>
+                                            <button
+                                                onClick={() => removeYouTubeVideo(video.id)}
+                                                className="text-red-500 hover:bg-red-50 p-2 rounded"
+                                            >
+                                                ✕
+                                            </button>
+                                        </div>
+                                    ))}
+                                    {(!data.youtubeVideos || data.youtubeVideos.length === 0) && (
+                                        <p className="text-center text-stone-500 py-8">まだ動画が登録されていません。</p>
+                                    )}
                                 </div>
                             </section>
                         )}

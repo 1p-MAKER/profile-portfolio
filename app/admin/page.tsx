@@ -723,678 +723,678 @@ export default function AdminPage() {
                             </section>
                         )}
 
-                    {/* SNS Section */}
-                    {/* SNS Section */}
-                    {activeAdminTab === 'sns' && (
-                        <section>
-                            <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">SNSリスト</h2>
-                            {data.snsAccounts.map((item, index) => (
-                                <div key={index} className="bg-white p-6 rounded-xl shadow-sm mb-4">
-                                    <div className="grid gap-3">
-                                        <div className="grid grid-cols-2 gap-3">
-                                            <input className="border p-2 rounded" value={item.title} onChange={(e) => updateGeneralProduct('snsAccounts', index, 'title', e.target.value)} placeholder="タイトル" />
-                                            <input className="border p-2 rounded" value={item.category} onChange={(e) => updateGeneralProduct('snsAccounts', index, 'category', e.target.value)} placeholder="カテゴリ (例: SNS)" />
-                                        </div>
-                                        <input className="border p-2 rounded" value={item.url} onChange={(e) => updateGeneralProduct('snsAccounts', index, 'url', e.target.value)} placeholder="URL" />
-                                        <textarea className="border p-2 rounded h-24" value={item.description} onChange={(e) => updateGeneralProduct('snsAccounts', index, 'description', e.target.value)} placeholder="説明" />
-                                        <div className="flex justify-end gap-2">
-                                            <button
-                                                onClick={() => toggleFeatured('snsAccounts', index)}
-                                                className={`px-3 py-1 rounded text-sm font-bold ${item.isFeatured ? 'bg-yellow-500 text-white' : 'bg-gray-200 text-gray-600'}`}
-                                            >
-                                                ★ {item.isFeatured ? 'Featured' : 'Pick Up'}
-                                            </button>
-                                            <button onClick={() => removeGeneralProduct('snsAccounts', index)} className="text-red-500 text-sm">削除</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                            <button onClick={() => addGeneralProduct('snsAccounts')} className="w-full py-3 border-2 border-dashed border-stone-300 text-stone-500 rounded-xl hover:bg-stone-50 transition-colors">
-                                + アイテムを追加
-                            </button>
-                        </section>
-                    )}
+                        {/* SNS Section */}
+                        {activeAdminTab === 'sns' && (
+                            <section>
+                                <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">SNSリスト</h2>
+                                <div className="bg-white p-6 rounded-xl shadow-sm mb-4">
+                                    <h3 className="text-lg font-bold mb-4">SNSアカウント一覧</h3>
+                                    <p className="text-xs text-stone-500 mb-4">ドラッグ&ドロップで並び替えられます</p>
 
-                    {/* Shopify Section */}
-                    {/* Shopify Section */}
-                    {activeAdminTab === 'shopify' && (
-                        <section>
-                            <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">Shopifyアプリリスト</h2>
-                            {data.shopifyApps.map((item, index) => (
-                                <div key={index} className="bg-white p-6 rounded-xl shadow-sm mb-4">
-                                    <div className="grid gap-3">
-                                        <div className="grid grid-cols-2 gap-3">
-                                            <input className="border p-2 rounded" value={item.title} onChange={(e) => updateGeneralProduct('shopifyApps', index, 'title', e.target.value)} placeholder="タイトル" />
-                                            <input className="border p-2 rounded" value={item.category} onChange={(e) => updateGeneralProduct('shopifyApps', index, 'category', e.target.value)} placeholder="カテゴリ (例: Shopify App)" />
-                                        </div>
-                                        <input className="border p-2 rounded" value={item.url} onChange={(e) => updateGeneralProduct('shopifyApps', index, 'url', e.target.value)} placeholder="URL" />
-                                        <textarea className="border p-2 rounded h-24" value={item.description} onChange={(e) => updateGeneralProduct('shopifyApps', index, 'description', e.target.value)} placeholder="説明" />
-                                        <div className="flex justify-end gap-2">
-                                            <button
-                                                onClick={() => toggleFeatured('shopifyApps', index)}
-                                                className={`px-3 py-1 rounded text-sm font-bold ${item.isFeatured ? 'bg-yellow-500 text-white' : 'bg-gray-200 text-gray-600'}`}
-                                            >
-                                                ★ {item.isFeatured ? 'Featured' : 'Pick Up'}
-                                            </button>
-                                            <button onClick={() => removeGeneralProduct('shopifyApps', index)} className="text-red-500 text-sm">削除</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                            <button onClick={() => addGeneralProduct('shopifyApps')} className="w-full py-3 border-2 border-dashed border-stone-300 text-stone-500 rounded-xl hover:bg-stone-50 transition-colors">
-                                + アイテムを追加
-                            </button>
-                        </section>
-                    )}
-
-                    {/* Furusato Nozei Section */}
-                    {activeAdminTab === 'furusato' && (
-                        <section>
-                            <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">ふるさと納税リスト</h2>
-
-                            {/* Add New Item Form */}
-                            <div className="bg-stone-100 p-6 rounded-xl mb-8 border border-stone-200">
-                                <h3 className="font-bold mb-4 text-stone-700">新規追加</h3>
-                                <div className="flex gap-2 mb-4">
-                                    <input
-                                        className="flex-grow border p-2 rounded"
-                                        value={newFurusatoUrl}
-                                        onChange={(e) => setNewFurusatoUrl(e.target.value)}
-                                        placeholder="URLを入力して自動取得"
-                                    />
-                                    <button
-                                        onClick={fetchMetadata}
-                                        disabled={isFetchingMeta || !newFurusatoUrl}
-                                        className="bg-stone-600 text-white px-4 py-2 rounded hover:bg-stone-700 disabled:opacity-50"
-                                    >
-                                        {isFetchingMeta ? '...' : '情報取得'}
-                                    </button>
-                                </div>
-
-                                {/* Always show manual inputs or when URL is entered */}
-                                <div className="bg-white p-4 rounded border border-stone-200 mb-4 flex gap-4 items-start">
-                                    <div className="flex-shrink-0 space-y-2">
-                                        {newFurusatoImage ? (
-                                            <div className="relative w-24 h-24 bg-stone-100 rounded overflow-hidden">
-                                                <Image src={newFurusatoImage} alt="preview" fill className="object-cover" />
-                                            </div>
-                                        ) : (
-                                            <div className="w-24 h-24 bg-stone-100 rounded flex items-center justify-center text-xs text-stone-400">
-                                                No Image
+                                    <DraggableList
+                                        items={data.snsAccounts || []}
+                                        onReorder={(newList) => setData({ ...data, snsAccounts: newList })}
+                                        renderItem={(item, index) => (
+                                            <div className="p-4 bg-stone-50 rounded-lg border border-stone-200">
+                                                <div className="grid gap-3">
+                                                    <div className="grid grid-cols-2 gap-3">
+                                                        <input className="border p-2 rounded" value={item.title} onChange={(e) => updateGeneralProduct('snsAccounts', index, 'title', e.target.value)} placeholder="タイトル" />
+                                                        <input className="border p-2 rounded" value={item.category} onChange={(e) => updateGeneralProduct('snsAccounts', index, 'category', e.target.value)} placeholder="カテゴリ (例: SNS)" />
+                                                    </div>
+                                                    <input className="border p-2 rounded" value={item.url} onChange={(e) => updateGeneralProduct('snsAccounts', index, 'url', e.target.value)} placeholder="URL" />
+                                                    <textarea className="border p-2 rounded h-24" value={item.description} onChange={(e) => updateGeneralProduct('snsAccounts', index, 'description', e.target.value)} placeholder="説明" />
+                                                    <div className="flex justify-end gap-2">
+                                                        <button
+                                                            onClick={() => toggleFeatured('snsAccounts', index)}
+                                                            className={`px-3 py-1 rounded text-sm font-bold ${item.isFeatured ? 'bg-yellow-500 text-white' : 'bg-gray-200 text-gray-600'}`}
+                                                        >
+                                                            {item.isFeatured ? '★ Featured' : '☆ Pick Up'}
+                                                        </button>
+                                                        <button onClick={() => removeGeneralProduct('snsAccounts', index)} className="text-red-500 text-sm">削除</button>
+                                                    </div>
+                                                </div>
                                             </div>
                                         )}
-                                        <input
-                                            className="w-24 text-xs border p-1 rounded"
-                                            value={newFurusatoImage}
-                                            onChange={(e) => setNewFurusatoImage(e.target.value)}
-                                            placeholder="画像URL"
-                                        />
-                                    </div>
-                                    <div className="flex-grow space-y-2">
-                                        <input
-                                            className="w-full border p-2 rounded text-sm"
-                                            value={newFurusatoTitle}
-                                            onChange={(e) => setNewFurusatoTitle(e.target.value)}
-                                            placeholder="タイトル (必須)"
-                                        />
-                                        <input
-                                            className="w-full border p-2 rounded text-sm"
-                                            value={newFurusatoSite}
-                                            onChange={(e) => setNewFurusatoSite(e.target.value)}
-                                            placeholder="サイト名"
-                                        />
-                                    </div>
+                                        itemKey={(item, idx) => `sns-${idx}-${item.url}`}
+                                    />
+
+                                    <button onClick={() => addGeneralProduct('snsAccounts')} className="mt-4 w-full py-3 border-2 border-dashed border-stone-300 text-stone-500 rounded-xl hover:bg-stone-50 transition-colors">
+                                        + アイテムを追加
+                                    </button>
                                 </div>
+                            </section>
+                        )}
 
-                                <button
-                                    onClick={addFurusatoItem}
-                                    disabled={!newFurusatoTitle}
-                                    className="w-full bg-accent text-white py-3 rounded-lg hover:bg-accent/90 disabled:opacity-50 font-bold"
-                                >
-                                    リストに追加
+                        {/* Shopify Section */}
+                        {/* Shopify Section */}
+                        {activeAdminTab === 'shopify' && (
+                            <section>
+                                <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">Shopifyアプリリスト</h2>
+                                {data.shopifyApps.map((item, index) => (
+                                    <div key={index} className="bg-white p-6 rounded-xl shadow-sm mb-4">
+                                        <div className="grid gap-3">
+                                            <div className="grid grid-cols-2 gap-3">
+                                                <input className="border p-2 rounded" value={item.title} onChange={(e) => updateGeneralProduct('shopifyApps', index, 'title', e.target.value)} placeholder="タイトル" />
+                                                <input className="border p-2 rounded" value={item.category} onChange={(e) => updateGeneralProduct('shopifyApps', index, 'category', e.target.value)} placeholder="カテゴリ (例: Shopify App)" />
+                                            </div>
+                                            <input className="border p-2 rounded" value={item.url} onChange={(e) => updateGeneralProduct('shopifyApps', index, 'url', e.target.value)} placeholder="URL" />
+                                            <textarea className="border p-2 rounded h-24" value={item.description} onChange={(e) => updateGeneralProduct('shopifyApps', index, 'description', e.target.value)} placeholder="説明" />
+                                            <div className="flex justify-end gap-2">
+                                                <button
+                                                    onClick={() => toggleFeatured('shopifyApps', index)}
+                                                    className={`px-3 py-1 rounded text-sm font-bold ${item.isFeatured ? 'bg-yellow-500 text-white' : 'bg-gray-200 text-gray-600'}`}
+                                                >
+                                                    ★ {item.isFeatured ? 'Featured' : 'Pick Up'}
+                                                </button>
+                                                <button onClick={() => removeGeneralProduct('shopifyApps', index)} className="text-red-500 text-sm">削除</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                                <button onClick={() => addGeneralProduct('shopifyApps')} className="w-full py-3 border-2 border-dashed border-stone-300 text-stone-500 rounded-xl hover:bg-stone-50 transition-colors">
+                                    + アイテムを追加
                                 </button>
-                            </div>
+                            </section>
+                        )}
 
-                            {/* Furusato Items List */}
-                            <div className="grid grid-cols-1 gap-4">
-                                {data.furusatoItems && data.furusatoItems.map((item, index) => (
-                                    <div key={index} className="bg-white p-4 rounded-xl shadow-sm flex gap-4 border border-stone-100">
-                                        <div className="relative w-32 aspect-video bg-stone-100 rounded overflow-hidden flex-shrink-0">
-                                            {item.imageUrl ? (
-                                                <Image src={item.imageUrl} alt={item.title} fill className="object-cover" />
+                        {/* Furusato Nozei Section */}
+                        {activeAdminTab === 'furusato' && (
+                            <section>
+                                <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">ふるさと納税リスト</h2>
+
+                                {/* Add New Item Form */}
+                                <div className="bg-stone-100 p-6 rounded-xl mb-8 border border-stone-200">
+                                    <h3 className="font-bold mb-4 text-stone-700">新規追加</h3>
+                                    <div className="flex gap-2 mb-4">
+                                        <input
+                                            className="flex-grow border p-2 rounded"
+                                            value={newFurusatoUrl}
+                                            onChange={(e) => setNewFurusatoUrl(e.target.value)}
+                                            placeholder="URLを入力して自動取得"
+                                        />
+                                        <button
+                                            onClick={fetchMetadata}
+                                            disabled={isFetchingMeta || !newFurusatoUrl}
+                                            className="bg-stone-600 text-white px-4 py-2 rounded hover:bg-stone-700 disabled:opacity-50"
+                                        >
+                                            {isFetchingMeta ? '...' : '情報取得'}
+                                        </button>
+                                    </div>
+
+                                    {/* Always show manual inputs or when URL is entered */}
+                                    <div className="bg-white p-4 rounded border border-stone-200 mb-4 flex gap-4 items-start">
+                                        <div className="flex-shrink-0 space-y-2">
+                                            {newFurusatoImage ? (
+                                                <div className="relative w-24 h-24 bg-stone-100 rounded overflow-hidden">
+                                                    <Image src={newFurusatoImage} alt="preview" fill className="object-cover" />
+                                                </div>
                                             ) : (
-                                                <div className="flex items-center justify-center h-full text-xs text-stone-400">No Image</div>
+                                                <div className="w-24 h-24 bg-stone-100 rounded flex items-center justify-center text-xs text-stone-400">
+                                                    No Image
+                                                </div>
                                             )}
-                                        </div>
-                                        <div className="flex-grow grid gap-2">
                                             <input
-                                                className="border p-2 rounded text-sm font-bold"
-                                                value={item.title}
-                                                onChange={(e) => updateFurusatoItem(index, 'title', e.target.value)}
+                                                className="w-24 text-xs border p-1 rounded"
+                                                value={newFurusatoImage}
+                                                onChange={(e) => setNewFurusatoImage(e.target.value)}
+                                                placeholder="画像URL"
+                                            />
+                                        </div>
+                                        <div className="flex-grow space-y-2">
+                                            <input
+                                                className="w-full border p-2 rounded text-sm"
+                                                value={newFurusatoTitle}
+                                                onChange={(e) => setNewFurusatoTitle(e.target.value)}
+                                                placeholder="タイトル (必須)"
                                             />
                                             <input
-                                                className="border p-2 rounded text-xs text-stone-500"
-                                                value={item.url}
-                                                onChange={(e) => updateFurusatoItem(index, 'url', e.target.value)}
+                                                className="w-full border p-2 rounded text-sm"
+                                                value={newFurusatoSite}
+                                                onChange={(e) => setNewFurusatoSite(e.target.value)}
+                                                placeholder="サイト名"
                                             />
                                         </div>
-                                        <button
-                                            onClick={() => toggleFeatured('furusatoItems', index)}
-                                            className={`px-3 py-1 rounded text-sm font-bold ${item.isFeatured ? 'bg-yellow-500 text-white' : 'bg-gray-200 text-gray-600'}`}
-                                        >
-                                            ★
-                                        </button>
-                                        <button
-                                            onClick={() => removeFurusatoItem(index)}
-                                            className="text-red-500 hover:bg-red-50 p-2 rounded self-start"
-                                        >
-                                            ✕
-                                        </button>
-                                    </div>
-                                ))}
-                            </div>
-                        </section>
-                    )}
-
-                    {/* iOS Apps Section */}
-                    {activeAdminTab === 'ios' && (
-                        <section>
-                            <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">iOSアプリリスト</h2>
-                            <div className="bg-white p-6 rounded-xl shadow-sm mb-6">
-                                <div className="space-y-3">
-
-                                    {data.iosApps.map((app, index) => (
-                                        <div key={`${app.id}-${index}`} className="flex items-center justify-between bg-stone-50 p-3 rounded-lg border border-stone-200">
-                                            <div className="flex flex-col">
-                                                <span className="font-bold text-stone-800">{app.name}</span>
-                                                <span className="font-mono text-xs text-stone-500">ID: {app.id}</span>
-                                            </div>
-                                            <div className="flex items-center gap-2">
-                                                <button
-                                                    onClick={() => toggleFeatured('iosApps', index)}
-                                                    className={`px-3 py-1 rounded text-sm font-bold ${app.isFeatured ? 'bg-yellow-500 text-white' : 'bg-gray-200 text-gray-600'}`}
-                                                >
-                                                    ★ {app.isFeatured ? 'Featured' : 'Pick Up'}
-                                                </button>
-                                                <button
-                                                    onClick={() => moveAppId(index, 'up')}
-                                                    disabled={index === 0}
-                                                    className="p-2 text-sm bg-white border rounded hover:bg-stone-100 disabled:opacity-30"
-                                                >
-                                                    ↑
-                                                </button>
-                                                <button
-                                                    onClick={() => moveAppId(index, 'down')}
-                                                    disabled={index === data.iosApps.length - 1}
-                                                    className="p-2 text-sm bg-white border rounded hover:bg-stone-100 disabled:opacity-30"
-                                                >
-                                                    ↓
-                                                </button>
-                                                <button
-                                                    onClick={() => removeAppId(index)}
-                                                    className="text-red-500 hover:bg-red-50 p-2 rounded ml-2"
-                                                >
-                                                    ✕
-                                                </button>
-                                            </div>
-                                        </div>
-                                    ))}
-
-                                </div>
-                            </div>
-
-                            <div className="flex gap-2 bg-stone-100 p-4 rounded-xl border border-stone-200">
-                                <input
-                                    className="flex-grow border p-2 rounded"
-                                    value={newAppId}
-                                    onChange={(e) => setNewAppId(e.target.value)}
-                                    placeholder="App Store IDを入力 (例: 1234567890)"
-                                />
-                                <button
-                                    onClick={addAppId}
-                                    disabled={!newAppId}
-                                    className="bg-stone-600 text-white px-6 py-2 rounded hover:bg-stone-700 disabled:opacity-50 font-bold"
-                                >
-                                    追加
-                                </button>
-                            </div>
-                        </section>
-                    )}
-
-                    {/* YouTube Section */}
-                    {activeAdminTab === 'youtube' && (
-                        <section>
-                            <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">YouTube動画リスト</h2>
-
-                            {/* Add New Video Form */}
-                            <div className="bg-stone-100 p-6 rounded-xl mb-8 border border-stone-200">
-                                <h3 className="font-bold mb-4 text-stone-700">新規追加</h3>
-                                <div className="flex gap-2 mb-4">
-                                    <input
-                                        className="flex-grow border p-2 rounded"
-                                        value={newYouTubeUrl}
-                                        onChange={(e) => setNewYouTubeUrl(e.target.value)}
-                                        placeholder="YouTube URLを入力"
-                                    />
-                                    <button
-                                        onClick={fetchYouTubeMeta}
-                                        disabled={isFetchingMeta || !newYouTubeUrl}
-                                        className="bg-stone-600 text-white px-4 py-2 rounded hover:bg-stone-700 disabled:opacity-50"
-                                    >
-                                        {isFetchingMeta ? '...' : '情報取得'}
-                                    </button>
-                                </div>
-
-                                <div className="mb-4">
-                                    <input
-                                        className="w-full border p-2 rounded"
-                                        value={newYouTubeTitle}
-                                        onChange={(e) => setNewYouTubeTitle(e.target.value)}
-                                        placeholder="動画タイトル"
-                                    />
-                                </div>
-
-                                <button
-                                    onClick={addYouTubeVideo}
-                                    disabled={!newYouTubeTitle}
-                                    className="w-full bg-accent text-white py-3 rounded-lg hover:bg-accent/90 disabled:opacity-50 font-bold"
-                                >
-                                    リストに追加
-                                </button>
-                            </div>
-
-                            {/* Video List */}
-                            <div className="grid grid-cols-1 gap-4">
-                                {data.youtubeVideos && data.youtubeVideos.map((video) => (
-                                    <div key={video.id} className="bg-white p-4 rounded-xl shadow-sm flex gap-4 border border-stone-100 items-center">
-                                        <div className="flex-grow">
-                                            <p className="font-bold text-sm mb-1">{video.title}</p>
-                                            <p className="text-xs text-stone-500 break-all">{video.url}</p>
-                                        </div>
-                                        <button
-                                            onClick={() => {
-                                                const index = data.youtubeVideos?.findIndex(v => v.id === video.id) ?? -1;
-                                                if (index >= 0) toggleFeatured('youtubeVideos', index);
-                                            }}
-                                            className={`px-3 py-1 rounded text-sm font-bold ${video.isFeatured ? 'bg-yellow-500 text-white' : 'bg-gray-200 text-gray-600'}`}
-                                        >
-                                            ★
-                                        </button>
-                                        <button
-                                            onClick={() => removeYouTubeVideo(video.id)}
-                                            className="text-red-500 hover:bg-red-50 p-2 rounded"
-                                        >
-                                            ✕
-                                        </button>
-                                    </div>
-                                ))}
-                                {(!data.youtubeVideos || data.youtubeVideos.length === 0) && (
-                                    <p className="text-center text-stone-500 py-8">まだ動画が登録されていません。</p>
-                                )}
-                            </div>
-                        </section>
-                    )}
-
-
-
-                    {/* Settings Section */}
-                    {activeAdminTab === 'settings' && (
-                        <section>
-                            <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">サイト設定</h2>
-                            <div className="bg-white p-6 rounded-xl shadow-sm space-y-6">
-
-                                {/* Profile Image Upload */}
-                                <div className="p-4 border border-stone-200 rounded-lg bg-stone-50">
-                                    <h3 className="font-bold mb-4">プロフィール写真 (Hero Section)</h3>
-                                    <div className="flex items-center gap-6">
-                                        <div className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-stone-200 shadow-sm">
-                                            <Image
-                                                src="/profile/profile.jpg"
-                                                alt="Current Profile"
-                                                width={96}
-                                                height={96}
-                                                className="object-cover"
-                                                onError={(e) => { (e.target as HTMLImageElement).src = '/profile-icon.png' }}
-                                                key={Date.now()}
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="cursor-pointer bg-white border border-stone-300 hover:bg-stone-50 text-stone-700 px-4 py-2 rounded-lg inline-block transition-colors">
-                                                <span>写真を変更する</span>
-                                                <input
-                                                    type="file"
-                                                    accept="image/*"
-                                                    className="hidden"
-                                                    onChange={handleProfileUpload}
-                                                />
-                                            </label>
-                                            <p className="text-xs text-stone-500 mt-2">
-                                                推奨: 正方形 (jpg/png)<br />
-                                                反映されない場合はページをリロードしてください。
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <label className="block text-sm font-bold text-stone-700 mb-2">
-                                        サイトタイトル (Site Title)
-                                    </label>
-                                    <input
-                                        type="text"
-                                        className="w-full border p-2 rounded"
-                                        value={siteTitle}
-                                        onChange={(e) => {
-                                            setSiteTitle(e.target.value);
-                                            setData({ ...data!, settings: { ...data!.settings, siteTitle: e.target.value } });
-                                        }}
-                                        placeholder="Dev cat's ポートフォリオ"
-                                    />
-                                    <p className="mt-1 text-xs text-stone-500">
-                                        ブラウザタブに表示されるタイトルです。
-                                    </p>
-                                </div>
-
-                                <div>
-                                    <label className="block text-sm font-bold text-stone-700 mb-2">
-                                        ヘッダー名前 (Profile Name)
-                                    </label>
-                                    <input
-                                        type="text"
-                                        className="w-full border p-2 rounded"
-                                        value={profileName}
-                                        onChange={(e) => {
-                                            setProfileName(e.target.value);
-                                            setData({ ...data!, settings: { ...data!.settings, profileName: e.target.value } });
-                                        }}
-                                        placeholder="Dev cat's Archive"
-                                    />
-                                    <p className="mt-1 text-xs text-stone-500">
-                                        ヘッダーに表示される名前です。
-                                    </p>
-                                </div>
-
-                                <div>
-                                    <label className="block text-sm font-bold text-stone-700 mb-2">
-                                        ヘッダー一言 (Tagline)
-                                    </label>
-                                    <input
-                                        type="text"
-                                        className="w-full border p-2 rounded"
-                                        value={profileTagline}
-                                        onChange={(e) => {
-                                            setProfileTagline(e.target.value);
-                                            setData({ ...data!, settings: { ...data!.settings, profileTagline: e.target.value } });
-                                        }}
-                                        placeholder="ロジックと情熱の、結び目を管理する。"
-                                    />
-                                    <p className="mt-1 text-xs text-stone-500">
-                                        ヘッダー右側に表示される一言です。
-                                    </p>
-                                </div>
-
-                                <div>
-                                    <label className="block text-sm font-bold text-stone-700 mb-2">
-                                        Featured導入文 (Featured Intro)
-                                    </label>
-                                    <textarea
-                                        className="w-full border p-3 rounded h-48 font-sans"
-                                        value={featuredIntro}
-                                        onChange={(e) => {
-                                            setFeaturedIntro(e.target.value);
-                                            setData({ ...data!, settings: { ...data!.settings, featuredIntro: e.target.value } });
-                                        }}
-                                        placeholder="ようこそ。私は Dev cat と申します..."
-                                    />
-                                    <p className="mt-1 text-xs text-stone-500">
-                                        Featured Worksセクションの上部に表示される導入文です。改行が反映されます。
-                                    </p>
-                                </div>
-
-                                <div>
-                                    <label className="block text-sm font-bold text-stone-700 mb-2">
-                                        動画編集タブ導入文 (Video Production Intro)
-                                    </label>
-                                    <textarea
-                                        className="w-full border p-3 rounded h-24 font-sans"
-                                        value={videoProductionIntro}
-                                        onChange={(e) => {
-                                            setVideoProductionIntro(e.target.value);
-                                            setData({ ...data!, settings: { ...data!.settings, videoProductionIntro: e.target.value } });
-                                        }}
-                                        placeholder="過去に制作した動画です"
-                                    />
-                                    <p className="mt-1 text-xs text-stone-500">
-                                        動画編集タブに表示される説明文です。
-                                    </p>
-                                </div>
-
-                                <div>
-                                    <label className="block text-sm font-bold text-stone-700 mb-2">
-                                        BGMタブ導入文 (Audio Intro)
-                                    </label>
-                                    <textarea
-                                        className="w-full border p-3 rounded h-24 font-sans"
-                                        value={audioIntro}
-                                        onChange={(e) => {
-                                            setAudioIntro(e.target.value);
-                                            setData({ ...data!, settings: { ...data!.settings, audioIntro: e.target.value } });
-                                        }}
-                                        placeholder="DTMで制作したBGM素材です。楽器演奏と打ち込みを組み合わせて作成しています。"
-                                    />
-                                    <p className="mt-1 text-xs text-stone-500">
-                                        BGMタブに表示される説明文です。
-                                    </p>
-                                </div>
-                            </div>
-                        </section>
-                    )}
-
-                    {/* Video Production Section */}
-                    {activeAdminTab === 'videoProduction' && (
-                        <section>
-                            <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">動画編集リスト</h2>
-
-                            {/* Add New Video Form */}
-                            <div className="bg-stone-100 p-6 rounded-xl mb-8 border border-stone-200">
-                                <h3 className="font-bold mb-4 text-stone-700">新規追加</h3>
-                                <div className="flex gap-2 mb-4">
-                                    <input
-                                        className="flex-grow border p-2 rounded"
-                                        value={newVideoProductionUrl}
-                                        onChange={(e) => setNewVideoProductionUrl(e.target.value)}
-                                        placeholder="YouTube URLを入力"
-                                    />
-                                    <button
-                                        onClick={async () => {
-                                            if (!newVideoProductionUrl) return;
-                                            setIsFetchingMeta(true);
-                                            setStatus('メタデータ取得中...');
-                                            try {
-                                                const res = await fetch(`/api/metadata?url=${encodeURIComponent(newVideoProductionUrl)}`);
-                                                const meta = await res.json();
-                                                if (meta.error) {
-                                                    setStatus('メタデータ取得失敗');
-                                                } else {
-                                                    setNewVideoProductionTitle(meta.title);
-                                                    setStatus('メタデータ取得成功');
-                                                }
-                                            } catch (e: unknown) {
-                                                setStatus('メタデータ取得エラー');
-                                            }
-                                            setIsFetchingMeta(false);
-                                        }}
-                                        disabled={isFetchingMeta || !newVideoProductionUrl}
-                                        className="bg-stone-600 text-white px-4 py-2 rounded hover:bg-stone-700 disabled:opacity-50"
-                                    >
-                                        {isFetchingMeta ? '...' : '情報取得'}
-                                    </button>
-                                </div>
-
-                                <div className="mb-4">
-                                    <input
-                                        className="w-full border p-2 rounded"
-                                        value={newVideoProductionTitle}
-                                        onChange={(e) => setNewVideoProductionTitle(e.target.value)}
-                                        placeholder="動画タイトル"
-                                    />
-                                </div>
-
-                                <button
-                                    onClick={() => {
-                                        if (!data || !newVideoProductionTitle) return;
-                                        const newVideo = {
-                                            id: Date.now().toString(),
-                                            url: newVideoProductionUrl,
-                                            title: newVideoProductionTitle
-                                        };
-                                        const currentVideos = data.videoProductionVideos || [];
-                                        setData({ ...data, videoProductionVideos: [...currentVideos, newVideo] });
-                                        setNewVideoProductionUrl('');
-                                        setNewVideoProductionTitle('');
-                                        setStatus('動画を追加しました（保存ボタンを押してください）');
-                                    }}
-                                    disabled={!newVideoProductionTitle}
-                                    className="w-full bg-accent text-white py-3 rounded-lg hover:bg-accent/90 disabled:opacity-50 font-bold"
-                                >
-                                    リストに追加
-                                </button>
-                            </div>
-
-                            {/* Video List */}
-                            <div className="grid grid-cols-1 gap-4">
-                                {data.videoProductionVideos && data.videoProductionVideos.map((video) => (
-                                    <div key={video.id} className="bg-white p-4 rounded-xl shadow-sm flex gap-4 border border-stone-100 items-center">
-                                        <div className="flex-grow">
-                                            <p className="font-bold text-sm mb-1">{video.title}</p>
-                                            <p className="text-xs text-stone-500 break-all">{video.url}</p>
-                                        </div>
-                                        <button
-                                            onClick={() => {
-                                                const index = data.videoProductionVideos?.findIndex(v => v.id === video.id) ?? -1;
-                                                if (index >= 0) {
-                                                    const newList = [...data.videoProductionVideos!] as any[];
-                                                    newList[index] = { ...newList[index], isFeatured: !newList[index].isFeatured };
-                                                    setData({ ...data!, videoProductionVideos: newList } as any);
-                                                }
-                                            }}
-                                            className={`px-3 py-1 rounded text-sm font-bold ${video.isFeatured ? 'bg-yellow-500 text-white' : 'bg-gray-200 text-gray-600'}`}
-                                        >
-                                            ★
-                                        </button>
-                                        <button
-                                            onClick={() => {
-                                                if (!data || !data.videoProductionVideos) return;
-                                                const newList = data.videoProductionVideos.filter(v => v.id !== video.id);
-                                                setData({ ...data, videoProductionVideos: newList });
-                                            }}
-                                            className="text-red-500 hover:bg-red-50 p-2 rounded"
-                                        >
-                                            ✕
-                                        </button>
-                                    </div>
-                                ))}
-                                {(!data.videoProductionVideos || data.videoProductionVideos.length === 0) && (
-                                    <p className="text-center text-stone-500 py-8">まだ動画が登録されていません。</p>
-                                )}
-                            </div>
-                        </section>
-                    )}
-
-
-                    {/* Audio (BGM) Section */}
-                    {activeAdminTab === 'audio' && (
-                        <section>
-                            <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">BGM管理</h2>
-
-                            {/* Add New Audio Form */}
-                            <div className="bg-stone-100 p-6 rounded-xl mb-8 border border-stone-200">
-                                <h3 className="font-bold mb-4 text-stone-700">新規BGM追加</h3>
-
-                                <div className="space-y-4">
-                                    <input
-                                        type="text"
-                                        className="w-full border p-2 rounded"
-                                        value={newAudioTitle}
-                                        onChange={(e) => setNewAudioTitle(e.target.value)}
-                                        placeholder="タイトル (必須)"
-                                    />
-
-                                    <textarea
-                                        className="w-full border p-2 rounded h-20"
-                                        value={newAudioDescription}
-                                        onChange={(e) => setNewAudioDescription(e.target.value)}
-                                        placeholder="説明 (任意)"
-                                    />
-
-                                    <div className="border p-4 rounded bg-white">
-                                        <input
-                                            type="file"
-                                            accept="audio/*"
-                                            onChange={(e) => {
-                                                if (e.target.files && e.target.files[0]) {
-                                                    setNewAudioFile(e.target.files[0]);
-                                                }
-                                            }}
-                                        />
-                                        <p className="text-xs text-stone-500 mt-2">※ MP3ファイルのみ対応しています。</p>
                                     </div>
 
                                     <button
-                                        onClick={handleAudioUpload}
-                                        disabled={isUploadingAudio || !newAudioTitle || !newAudioFile}
+                                        onClick={addFurusatoItem}
+                                        disabled={!newFurusatoTitle}
                                         className="w-full bg-accent text-white py-3 rounded-lg hover:bg-accent/90 disabled:opacity-50 font-bold"
                                     >
-                                        {isUploadingAudio ? 'アップロード中...' : 'アップロードしてリストに追加'}
+                                        リストに追加
                                     </button>
                                 </div>
-                            </div>
 
-                            {/* Audio List */}
-                            <div className="grid grid-cols-1 gap-4">
-                                {data.audioTracks && data.audioTracks.map((track) => (
-                                    <div key={track.id} className="bg-white p-4 rounded-xl shadow-sm border border-stone-100">
-                                        <div className="flex justify-between items-start mb-2">
-                                            <div>
-                                                <p className="font-bold text-lg">{track.title}</p>
-                                                <p className="text-stone-500 text-sm">{track.description}</p>
+                                {/* Furusato Items List */}
+                                <div className="grid grid-cols-1 gap-4">
+                                    {data.furusatoItems && data.furusatoItems.map((item, index) => (
+                                        <div key={index} className="bg-white p-4 rounded-xl shadow-sm flex gap-4 border border-stone-100">
+                                            <div className="relative w-32 aspect-video bg-stone-100 rounded overflow-hidden flex-shrink-0">
+                                                {item.imageUrl ? (
+                                                    <Image src={item.imageUrl} alt={item.title} fill className="object-cover" />
+                                                ) : (
+                                                    <div className="flex items-center justify-center h-full text-xs text-stone-400">No Image</div>
+                                                )}
+                                            </div>
+                                            <div className="flex-grow grid gap-2">
+                                                <input
+                                                    className="border p-2 rounded text-sm font-bold"
+                                                    value={item.title}
+                                                    onChange={(e) => updateFurusatoItem(index, 'title', e.target.value)}
+                                                />
+                                                <input
+                                                    className="border p-2 rounded text-xs text-stone-500"
+                                                    value={item.url}
+                                                    onChange={(e) => updateFurusatoItem(index, 'url', e.target.value)}
+                                                />
                                             </div>
                                             <button
-                                                onClick={() => removeAudioTrack(track.id)}
+                                                onClick={() => toggleFeatured('furusatoItems', index)}
+                                                className={`px-3 py-1 rounded text-sm font-bold ${item.isFeatured ? 'bg-yellow-500 text-white' : 'bg-gray-200 text-gray-600'}`}
+                                            >
+                                                ★
+                                            </button>
+                                            <button
+                                                onClick={() => removeFurusatoItem(index)}
+                                                className="text-red-500 hover:bg-red-50 p-2 rounded self-start"
+                                            >
+                                                ✕
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            </section>
+                        )}
+
+                        {/* iOS Apps Section */}
+                        {activeAdminTab === 'ios' && (
+                            <section>
+                                <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">iOSアプリリスト</h2>
+                                <div className="bg-white p-6 rounded-xl shadow-sm mb-6">
+                                    <h3 className="text-lg font-bold mb-4">アプリリスト</h3>
+                                    <p className="text-xs text-stone-500 mb-4">ドラッグ&ドロップで並び替えられます</p>
+
+                                    <DraggableList
+                                        items={data.iosApps || []}
+                                        onReorder={(newList) => setData({ ...data, iosApps: newList })}
+                                        renderItem={(app, index) => (
+                                            <div className="flex items-center justify-between bg-stone-50 p-3 rounded-lg border border-stone-200">
+                                                <div className="flex flex-col">
+                                                    <span className="font-bold text-stone-800">{app.name}</span>
+                                                    <span className="font-mono text-xs text-stone-500">ID: {app.id}</span>
+                                                </div>
+                                                <div className="flex items-center gap-2">
+                                                    <button
+                                                        onClick={() => toggleFeatured('iosApps', index)}
+                                                        className={`px-3 py-1 rounded text-sm font-bold ${app.isFeatured ? 'bg-yellow-500 text-white' : 'bg-gray-200 text-gray-600'}`}
+                                                    >
+                                                        {app.isFeatured ? '★ Featured' : '☆ Pick Up'}
+                                                    </button>
+                                                    <button
+                                                        onClick={() => removeAppId(index)}
+                                                        className="text-red-500 hover:bg-red-50 p-2 rounded"
+                                                    >
+                                                        ✕
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        )}
+                                        itemKey={(app, idx) => `${app.id}-${idx}`}
+                                    />
+                                </div>
+
+                                <div className="flex gap-2 bg-stone-100 p-4 rounded-xl border border-stone-200">
+                                    <input
+                                        className="flex-grow border p-2 rounded"
+                                        value={newAppId}
+                                        onChange={(e) => setNewAppId(e.target.value)}
+                                        placeholder="App Store IDを入力 (例: 1234567890)"
+                                    />
+                                    <button
+                                        onClick={addAppId}
+                                        disabled={!newAppId}
+                                        className="bg-stone-600 text-white px-6 py-2 rounded hover:bg-stone-700 disabled:opacity-50 font-bold"
+                                    >
+                                        追加
+                                    </button>
+                                </div>
+                            </section>
+                        )}
+
+                        {/* YouTube Section */}
+                        {activeAdminTab === 'youtube' && (
+                            <section>
+                                <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">YouTube動画リスト</h2>
+
+                                {/* Add New Video Form */}
+                                <div className="bg-stone-100 p-6 rounded-xl mb-8 border border-stone-200">
+                                    <h3 className="font-bold mb-4 text-stone-700">新規追加</h3>
+                                    <div className="flex gap-2 mb-4">
+                                        <input
+                                            className="flex-grow border p-2 rounded"
+                                            value={newYouTubeUrl}
+                                            onChange={(e) => setNewYouTubeUrl(e.target.value)}
+                                            placeholder="YouTube URLを入力"
+                                        />
+                                        <button
+                                            onClick={fetchYouTubeMeta}
+                                            disabled={isFetchingMeta || !newYouTubeUrl}
+                                            className="bg-stone-600 text-white px-4 py-2 rounded hover:bg-stone-700 disabled:opacity-50"
+                                        >
+                                            {isFetchingMeta ? '...' : '情報取得'}
+                                        </button>
+                                    </div>
+
+                                    <div className="mb-4">
+                                        <input
+                                            className="w-full border p-2 rounded"
+                                            value={newYouTubeTitle}
+                                            onChange={(e) => setNewYouTubeTitle(e.target.value)}
+                                            placeholder="動画タイトル"
+                                        />
+                                    </div>
+
+                                    <button
+                                        onClick={addYouTubeVideo}
+                                        disabled={!newYouTubeTitle}
+                                        className="w-full bg-accent text-white py-3 rounded-lg hover:bg-accent/90 disabled:opacity-50 font-bold"
+                                    >
+                                        リストに追加
+                                    </button>
+                                </div>
+
+                                {/* Video List */}
+                                <div className="grid grid-cols-1 gap-4">
+                                    {data.youtubeVideos && data.youtubeVideos.map((video) => (
+                                        <div key={video.id} className="bg-white p-4 rounded-xl shadow-sm flex gap-4 border border-stone-100 items-center">
+                                            <div className="flex-grow">
+                                                <p className="font-bold text-sm mb-1">{video.title}</p>
+                                                <p className="text-xs text-stone-500 break-all">{video.url}</p>
+                                            </div>
+                                            <button
+                                                onClick={() => {
+                                                    const index = data.youtubeVideos?.findIndex(v => v.id === video.id) ?? -1;
+                                                    if (index >= 0) toggleFeatured('youtubeVideos', index);
+                                                }}
+                                                className={`px-3 py-1 rounded text-sm font-bold ${video.isFeatured ? 'bg-yellow-500 text-white' : 'bg-gray-200 text-gray-600'}`}
+                                            >
+                                                ★
+                                            </button>
+                                            <button
+                                                onClick={() => removeYouTubeVideo(video.id)}
                                                 className="text-red-500 hover:bg-red-50 p-2 rounded"
                                             >
                                                 ✕
                                             </button>
                                         </div>
-                                        <audio controls src={track.url} className="w-full mt-2" />
-                                        <p className="text-xs text-stone-400 mt-2 break-all">{track.url}</p>
+                                    ))}
+                                    {(!data.youtubeVideos || data.youtubeVideos.length === 0) && (
+                                        <p className="text-center text-stone-500 py-8">まだ動画が登録されていません。</p>
+                                    )}
+                                </div>
+                            </section>
+                        )}
+
+
+
+                        {/* Settings Section */}
+                        {activeAdminTab === 'settings' && (
+                            <section>
+                                <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">サイト設定</h2>
+                                <div className="bg-white p-6 rounded-xl shadow-sm space-y-6">
+
+                                    {/* Profile Image Upload */}
+                                    <div className="p-4 border border-stone-200 rounded-lg bg-stone-50">
+                                        <h3 className="font-bold mb-4">プロフィール写真 (Hero Section)</h3>
+                                        <div className="flex items-center gap-6">
+                                            <div className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-stone-200 shadow-sm">
+                                                <Image
+                                                    src="/profile/profile.jpg"
+                                                    alt="Current Profile"
+                                                    width={96}
+                                                    height={96}
+                                                    className="object-cover"
+                                                    onError={(e) => { (e.target as HTMLImageElement).src = '/profile-icon.png' }}
+                                                    key={Date.now()}
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="cursor-pointer bg-white border border-stone-300 hover:bg-stone-50 text-stone-700 px-4 py-2 rounded-lg inline-block transition-colors">
+                                                    <span>写真を変更する</span>
+                                                    <input
+                                                        type="file"
+                                                        accept="image/*"
+                                                        className="hidden"
+                                                        onChange={handleProfileUpload}
+                                                    />
+                                                </label>
+                                                <p className="text-xs text-stone-500 mt-2">
+                                                    推奨: 正方形 (jpg/png)<br />
+                                                    反映されない場合はページをリロードしてください。
+                                                </p>
+                                            </div>
+                                        </div>
                                     </div>
-                                ))}
-                                {(!data.audioTracks || data.audioTracks.length === 0) && (
-                                    <p className="text-center text-stone-500 py-8">まだBGMが登録されていません。</p>
+
+                                    <div>
+                                        <label className="block text-sm font-bold text-stone-700 mb-2">
+                                            サイトタイトル (Site Title)
+                                        </label>
+                                        <input
+                                            type="text"
+                                            className="w-full border p-2 rounded"
+                                            value={siteTitle}
+                                            onChange={(e) => {
+                                                setSiteTitle(e.target.value);
+                                                setData({ ...data!, settings: { ...data!.settings, siteTitle: e.target.value } });
+                                            }}
+                                            placeholder="Dev cat's ポートフォリオ"
+                                        />
+                                        <p className="mt-1 text-xs text-stone-500">
+                                            ブラウザタブに表示されるタイトルです。
+                                        </p>
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-bold text-stone-700 mb-2">
+                                            ヘッダー名前 (Profile Name)
+                                        </label>
+                                        <input
+                                            type="text"
+                                            className="w-full border p-2 rounded"
+                                            value={profileName}
+                                            onChange={(e) => {
+                                                setProfileName(e.target.value);
+                                                setData({ ...data!, settings: { ...data!.settings, profileName: e.target.value } });
+                                            }}
+                                            placeholder="Dev cat's Archive"
+                                        />
+                                        <p className="mt-1 text-xs text-stone-500">
+                                            ヘッダーに表示される名前です。
+                                        </p>
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-bold text-stone-700 mb-2">
+                                            ヘッダー一言 (Tagline)
+                                        </label>
+                                        <input
+                                            type="text"
+                                            className="w-full border p-2 rounded"
+                                            value={profileTagline}
+                                            onChange={(e) => {
+                                                setProfileTagline(e.target.value);
+                                                setData({ ...data!, settings: { ...data!.settings, profileTagline: e.target.value } });
+                                            }}
+                                            placeholder="ロジックと情熱の、結び目を管理する。"
+                                        />
+                                        <p className="mt-1 text-xs text-stone-500">
+                                            ヘッダー右側に表示される一言です。
+                                        </p>
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-bold text-stone-700 mb-2">
+                                            Featured導入文 (Featured Intro)
+                                        </label>
+                                        <textarea
+                                            className="w-full border p-3 rounded h-48 font-sans"
+                                            value={featuredIntro}
+                                            onChange={(e) => {
+                                                setFeaturedIntro(e.target.value);
+                                                setData({ ...data!, settings: { ...data!.settings, featuredIntro: e.target.value } });
+                                            }}
+                                            placeholder="ようこそ。私は Dev cat と申します..."
+                                        />
+                                        <p className="mt-1 text-xs text-stone-500">
+                                            Featured Worksセクションの上部に表示される導入文です。改行が反映されます。
+                                        </p>
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-bold text-stone-700 mb-2">
+                                            動画編集タブ導入文 (Video Production Intro)
+                                        </label>
+                                        <textarea
+                                            className="w-full border p-3 rounded h-24 font-sans"
+                                            value={videoProductionIntro}
+                                            onChange={(e) => {
+                                                setVideoProductionIntro(e.target.value);
+                                                setData({ ...data!, settings: { ...data!.settings, videoProductionIntro: e.target.value } });
+                                            }}
+                                            placeholder="過去に制作した動画です"
+                                        />
+                                        <p className="mt-1 text-xs text-stone-500">
+                                            動画編集タブに表示される説明文です。
+                                        </p>
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-bold text-stone-700 mb-2">
+                                            BGMタブ導入文 (Audio Intro)
+                                        </label>
+                                        <textarea
+                                            className="w-full border p-3 rounded h-24 font-sans"
+                                            value={audioIntro}
+                                            onChange={(e) => {
+                                                setAudioIntro(e.target.value);
+                                                setData({ ...data!, settings: { ...data!.settings, audioIntro: e.target.value } });
+                                            }}
+                                            placeholder="DTMで制作したBGM素材です。楽器演奏と打ち込みを組み合わせて作成しています。"
+                                        />
+                                        <p className="mt-1 text-xs text-stone-500">
+                                            BGMタブに表示される説明文です。
+                                        </p>
+                                    </div>
+                                </div>
+                            </section>
+                        )}
+
+                        {/* Video Production Section */}
+                        {activeAdminTab === 'videoProduction' && (
+                            <section>
+                                <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">動画編集リスト</h2>
+
+                                {/* Add New Video Form */}
+                                <div className="bg-stone-100 p-6 rounded-xl mb-8 border border-stone-200">
+                                    <h3 className="font-bold mb-4 text-stone-700">新規追加</h3>
+                                    <div className="flex gap-2 mb-4">
+                                        <input
+                                            className="flex-grow border p-2 rounded"
+                                            value={newVideoProductionUrl}
+                                            onChange={(e) => setNewVideoProductionUrl(e.target.value)}
+                                            placeholder="YouTube URLを入力"
+                                        />
+                                        <button
+                                            onClick={async () => {
+                                                if (!newVideoProductionUrl) return;
+                                                setIsFetchingMeta(true);
+                                                setStatus('メタデータ取得中...');
+                                                try {
+                                                    const res = await fetch(`/api/metadata?url=${encodeURIComponent(newVideoProductionUrl)}`);
+                                                    const meta = await res.json();
+                                                    if (meta.error) {
+                                                        setStatus('メタデータ取得失敗');
+                                                    } else {
+                                                        setNewVideoProductionTitle(meta.title);
+                                                        setStatus('メタデータ取得成功');
+                                                    }
+                                                } catch (e: unknown) {
+                                                    setStatus('メタデータ取得エラー');
+                                                }
+                                                setIsFetchingMeta(false);
+                                            }}
+                                            disabled={isFetchingMeta || !newVideoProductionUrl}
+                                            className="bg-stone-600 text-white px-4 py-2 rounded hover:bg-stone-700 disabled:opacity-50"
+                                        >
+                                            {isFetchingMeta ? '...' : '情報取得'}
+                                        </button>
+                                    </div>
+
+                                    <div className="mb-4">
+                                        <input
+                                            className="w-full border p-2 rounded"
+                                            value={newVideoProductionTitle}
+                                            onChange={(e) => setNewVideoProductionTitle(e.target.value)}
+                                            placeholder="動画タイトル"
+                                        />
+                                    </div>
+
+                                    <button
+                                        onClick={() => {
+                                            if (!data || !newVideoProductionTitle) return;
+                                            const newVideo = {
+                                                id: Date.now().toString(),
+                                                url: newVideoProductionUrl,
+                                                title: newVideoProductionTitle
+                                            };
+                                            const currentVideos = data.videoProductionVideos || [];
+                                            setData({ ...data, videoProductionVideos: [...currentVideos, newVideo] });
+                                            setNewVideoProductionUrl('');
+                                            setNewVideoProductionTitle('');
+                                            setStatus('動画を追加しました（保存ボタンを押してください）');
+                                        }}
+                                        disabled={!newVideoProductionTitle}
+                                        className="w-full bg-accent text-white py-3 rounded-lg hover:bg-accent/90 disabled:opacity-50 font-bold"
+                                    >
+                                        リストに追加
+                                    </button>
+                                </div>
+
+                                {/* Video List */}
+                                <div className="grid grid-cols-1 gap-4">
+                                    {data.videoProductionVideos && data.videoProductionVideos.map((video) => (
+                                        <div key={video.id} className="bg-white p-4 rounded-xl shadow-sm flex gap-4 border border-stone-100 items-center">
+                                            <div className="flex-grow">
+                                                <p className="font-bold text-sm mb-1">{video.title}</p>
+                                                <p className="text-xs text-stone-500 break-all">{video.url}</p>
+                                            </div>
+                                            <button
+                                                onClick={() => {
+                                                    const index = data.videoProductionVideos?.findIndex(v => v.id === video.id) ?? -1;
+                                                    if (index >= 0) {
+                                                        const newList = [...data.videoProductionVideos!] as any[];
+                                                        newList[index] = { ...newList[index], isFeatured: !newList[index].isFeatured };
+                                                        setData({ ...data!, videoProductionVideos: newList } as any);
+                                                    }
+                                                }}
+                                                className={`px-3 py-1 rounded text-sm font-bold ${video.isFeatured ? 'bg-yellow-500 text-white' : 'bg-gray-200 text-gray-600'}`}
+                                            >
+                                                ★
+                                            </button>
+                                            <button
+                                                onClick={() => {
+                                                    if (!data || !data.videoProductionVideos) return;
+                                                    const newList = data.videoProductionVideos.filter(v => v.id !== video.id);
+                                                    setData({ ...data, videoProductionVideos: newList });
+                                                }}
+                                                className="text-red-500 hover:bg-red-50 p-2 rounded"
+                                            >
+                                                ✕
+                                            </button>
+                                        </div>
+                                    ))}
+                                    {(!data.videoProductionVideos || data.videoProductionVideos.length === 0) && (
+                                        <p className="text-center text-stone-500 py-8">まだ動画が登録されていません。</p>
+                                    )}
+                                </div>
+                            </section>
+                        )}
+
+
+                        {/* Audio (BGM) Section */}
+                        {activeAdminTab === 'audio' && (
+                            <section>
+                                <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">BGM管理</h2>
+
+                                {/* Add New Audio Form */}
+                                <div className="bg-stone-100 p-6 rounded-xl mb-8 border border-stone-200">
+                                    <h3 className="font-bold mb-4 text-stone-700">新規BGM追加</h3>
+
+                                    <div className="space-y-4">
+                                        <input
+                                            type="text"
+                                            className="w-full border p-2 rounded"
+                                            value={newAudioTitle}
+                                            onChange={(e) => setNewAudioTitle(e.target.value)}
+                                            placeholder="タイトル (必須)"
+                                        />
+
+                                        <textarea
+                                            className="w-full border p-2 rounded h-20"
+                                            value={newAudioDescription}
+                                            onChange={(e) => setNewAudioDescription(e.target.value)}
+                                            placeholder="説明 (任意)"
+                                        />
+
+                                        <div className="border p-4 rounded bg-white">
+                                            <input
+                                                type="file"
+                                                accept="audio/*"
+                                                onChange={(e) => {
+                                                    if (e.target.files && e.target.files[0]) {
+                                                        setNewAudioFile(e.target.files[0]);
+                                                    }
+                                                }}
+                                            />
+                                            <p className="text-xs text-stone-500 mt-2">※ MP3ファイルのみ対応しています。</p>
+                                        </div>
+
+                                        <button
+                                            onClick={handleAudioUpload}
+                                            disabled={isUploadingAudio || !newAudioTitle || !newAudioFile}
+                                            className="w-full bg-accent text-white py-3 rounded-lg hover:bg-accent/90 disabled:opacity-50 font-bold"
+                                        >
+                                            {isUploadingAudio ? 'アップロード中...' : 'アップロードしてリストに追加'}
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {/* Audio List */}
+                                <div className="grid grid-cols-1 gap-4">
+                                    {data.audioTracks && data.audioTracks.map((track) => (
+                                        <div key={track.id} className="bg-white p-4 rounded-xl shadow-sm border border-stone-100">
+                                            <div className="flex justify-between items-start mb-2">
+                                                <div>
+                                                    <p className="font-bold text-lg">{track.title}</p>
+                                                    <p className="text-stone-500 text-sm">{track.description}</p>
+                                                </div>
+                                                <button
+                                                    onClick={() => removeAudioTrack(track.id)}
+                                                    className="text-red-500 hover:bg-red-50 p-2 rounded"
+                                                >
+                                                    ✕
+                                                </button>
+                                            </div>
+                                            <audio controls src={track.url} className="w-full mt-2" />
+                                            <p className="text-xs text-stone-400 mt-2 break-all">{track.url}</p>
+                                        </div>
+                                    ))}
+                                    {(!data.audioTracks || data.audioTracks.length === 0) && (
+                                        <p className="text-center text-stone-500 py-8">まだBGMが登録されていません。</p>
+                                    )}
+                                </div>
+                            </section>
+                        )}
+
+                        <section className="mt-8 border-t pt-8">
+                            <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">処理ログ</h2>
+                            <div className="bg-black/90 p-4 rounded-xl shadow-inner h-64 overflow-y-auto font-mono text-sm">
+                                {logs.length === 0 ? (
+                                    <div className="text-gray-500">まだログはありません...</div>
+                                ) : (
+                                    logs.map((log, i) => (
+                                        <div key={i} className="text-green-400 border-b border-gray-800 pb-1 mb-1 last:border-0">
+                                            {log}
+                                        </div>
+                                    ))
                                 )}
                             </div>
                         </section>
-                    )}
 
-                    <section className="mt-8 border-t pt-8">
-                        <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">処理ログ</h2>
-                        <div className="bg-black/90 p-4 rounded-xl shadow-inner h-64 overflow-y-auto font-mono text-sm">
-                            {logs.length === 0 ? (
-                                <div className="text-gray-500">まだログはありません...</div>
-                            ) : (
-                                logs.map((log, i) => (
-                                    <div key={i} className="text-green-400 border-b border-gray-800 pb-1 mb-1 last:border-0">
-                                        {log}
-                                    </div>
-                                ))
-                            )}
-                        </div>
-                    </section>
-
-                    <div className="h-20"></div>
-            </div>
-        </main>
+                        <div className="h-20"></div>
+                    </div>
+                </main>
             </div >
         </div >
 

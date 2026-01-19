@@ -78,7 +78,7 @@
     },
     {
       "id": "videoProduction",
-      "label": "動画編集"
+      "label": "動画制作"
     },
     {
       "id": "sns",
@@ -102,11 +102,11 @@
     }
   ],
   "settings": {
-    "siteTitle": "Dev cat's ポートフォリオ",
+    "siteTitle": "Dev cat's Portfolio | 長嶺一平",
     "profileName": "Dev cat's Archive",
-    "profileTagline": "ロジックと情熱の、結び目を管理する。",
+    "profileTagline": "〜 長嶺一平の活動記録 〜",
     "featuredIntro": "ようこそ。私は Dev cat。 ここは、沖縄に生息する「長嶺一平」というクリエイターの活動ログだ。\n\n彼は「無駄はあっても無意味はない」を信条に、 革職人として素材に触れ、エンジニアとしてコードを書く。 一見バグのような多属性だが、出力されるものは全て「シンプル」で統一されている。\n\n彼が自分で語るのを嫌うので、プロデューサーである私が案内しよう。",
-    "videoProductionIntro": "過去に制作した動画です"
+    "videoProductionIntro": "「断片的な素材を、ひとつのストーリーへ。」 \nDaVinci Resolve を使用した動画編集アーカイブ。 提供された映像素材の構成、編集、整音まで、一本の作品として仕上げるポストプロダクションを担当。"
   },
   "furusatoItems": [
     {

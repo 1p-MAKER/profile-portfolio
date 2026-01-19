@@ -899,7 +899,7 @@ export default function AdminPage() {
 
                                     <div>
                                         <label className="block text-sm font-bold text-stone-700 mb-2">
-                                            動画制作タブ導入文 (Video Production Intro)
+                                            動画編集タブ導入文 (Video Production Intro)
                                         </label>
                                         <textarea
                                             className="w-full border p-3 rounded h-24 font-sans"
@@ -911,7 +911,7 @@ export default function AdminPage() {
                                             placeholder="過去に制作した動画です"
                                         />
                                         <p className="mt-1 text-xs text-stone-500">
-                                            動画制作タブに表示される説明文です。
+                                            動画編集タブに表示される説明文です。
                                         </p>
                                     </div>
                                 </div>
@@ -921,7 +921,7 @@ export default function AdminPage() {
                         {/* Video Production Section */}
                         {activeAdminTab === 'videoProduction' && (
                             <section>
-                                <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">動画制作リスト</h2>
+                                <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">動画編集リスト</h2>
 
                                 {/* Add New Video Form */}
                                 <div className="bg-stone-100 p-6 rounded-xl mb-8 border border-stone-200">

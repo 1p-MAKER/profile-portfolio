@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { createCheckout, ShopifyProduct } from '@/lib/shopify';
+import { ShopifyProduct } from '@/lib/shopify';
 
 interface ShopifyProductCardProps {
     handle: string;
@@ -47,23 +47,40 @@ export default function ShopifyProductCard({ handle }: ShopifyProductCardProps) 
         fetchProduct();
     }, [handle]);
 
-    const handlePurchase = async () => {
+    const handlePurchase = () => {
         if (!product || !product.variants.edges[0]) return;
 
         setPurchasing(true);
         try {
             const variantId = product.variants.edges[0].node.id;
-            console.log(`[ShopifyDebug] Creating checkout for variant: ${variantId}`);
+            console.log(`[ShopifyDebug] Variant GID: ${variantId}`);
 
-            const checkoutUrl = await createCheckout(variantId);
-            console.log(`[ShopifyDebug] Checkout URL: ${checkoutUrl}`);
+            // Extract numeric ID from GID (e.g. "gid://shopify/ProductVariant/123456789")
+            // Use regex to find the last sequence of digits
+            const match = variantId.match(/\/(\d+)$/);
+            const numericId = match ? match[1] : null;
 
-            if (checkoutUrl) {
-                window.location.href = checkoutUrl;
-            } else {
-                alert('購入画面への移動に失敗しました。もう一度お試しください。');
+            if (!numericId) {
+                console.error('[ShopifyDebug] Failed to extract numeric ID from:', variantId);
+                alert('商品IDの取得に失敗しました');
                 setPurchasing(false);
+                return;
             }
+
+            const domain = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN;
+            if (!domain) {
+                console.error('[ShopifyDebug] Missing Store Domain');
+                alert('ショップ設定エラー');
+                setPurchasing(false);
+                return;
+            }
+
+            const checkoutUrl = `https://${domain}/cart/${numericId}:1`;
+            console.log(`[ShopifyDebug] Redirecting to: ${checkoutUrl}`);
+
+            // Direct Redirect
+            window.location.href = checkoutUrl;
+
         } catch (e) {
             console.error('[ShopifyDebug] Purchase Error:', e);
             alert('エラーが発生しました。');

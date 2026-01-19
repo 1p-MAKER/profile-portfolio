@@ -19,6 +19,9 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
     const initialTab = data.tabs && data.tabs.length > 0 ? data.tabs[0].id : 'leather';
     const [activeTab, setActiveTab] = useState<TabType>(initialTab);
 
+    // Image Lightbox Modal State
+    const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
     // Use tabs from data
     const tabs = data.tabs || [];
 
@@ -97,7 +100,11 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
                         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
                             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                                 {data.printImages.map((src, index) => (
-                                    <div key={index} className="relative aspect-square rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                                    <div
+                                        key={index}
+                                        className="relative aspect-square rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+                                        onClick={() => setSelectedImage(src)}
+                                    >
                                         <Image
                                             src={src}
                                             alt={`3D Print Work ${index + 1}`}
@@ -178,6 +185,32 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
             </main >
 
             <Footer />
+
+            {/* Image Lightbox Modal */}
+            {selectedImage && (
+                <div
+                    className="fixed inset-0 z-50 bg-black bg-opacity-90 flex items-center justify-center p-4"
+                    onClick={() => setSelectedImage(null)}
+                >
+                    <button
+                        className="absolute top-4 right-4 text-white text-4xl font-bold hover:text-gray-300 transition-colors z-10"
+                        onClick={() => setSelectedImage(null)}
+                        aria-label="閉じる"
+                    >
+                        ×
+                    </button>
+                    <div className="relative max-w-7xl max-h-screen w-full h-full flex items-center justify-center">
+                        <Image
+                            src={selectedImage}
+                            alt="拡大画像"
+                            fill
+                            className="object-contain"
+                            sizes="100vw"
+                            onClick={(e) => e.stopPropagation()}
+                        />
+                    </div>
+                </div>
+            )}
         </div >
     );
 }

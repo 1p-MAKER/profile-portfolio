@@ -297,7 +297,7 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
                     {activeTab === 'videoProduction' && (
                         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
                             {data.settings?.videoProductionIntro && (
-                                <p className="text-center text-stone-600 mb-8">
+                                <p className="text-center text-stone-600 mb-8 whitespace-pre-wrap leading-relaxed">
                                     {data.settings.videoProductionIntro}
                                 </p>
                             )}

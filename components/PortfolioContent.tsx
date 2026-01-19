@@ -127,13 +127,6 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
                                 profileTagline={data.settings?.profileTagline}
                                 featuredIntro={data.settings?.featuredIntro}
                             />
-                            {data.settings?.featuredIntro && (
-                                <div className="max-w-3xl mx-auto mb-12">
-                                    <p className="text-stone-600 whitespace-pre-wrap leading-relaxed text-center">
-                                        {data.settings.featuredIntro}
-                                    </p>
-                                </div>
-                            )}
 
                             <h2 className="text-3xl font-bold mb-8 text-center">Featured Works</h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

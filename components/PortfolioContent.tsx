@@ -39,7 +39,7 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
         });
 
         // Leather Products
-        data.leatherProducts?.filter(p => p.isFeatured).forEach(p => {
+        data.leatherProducts?.filter(p => p.isFeatured && p.handle).forEach(p => {
             items.push({ type: 'leather', data: p });
         });
 
@@ -176,7 +176,7 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
                     {activeTab === 'leather' && (
                         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {data.leatherProducts.map((product, index) => (
+                                {data.leatherProducts.filter(product => product.handle).map((product, index) => (
                                     <div key={index} className="h-full">
                                         <ShopifyProductCard handle={product.handle} />
                                     </div>

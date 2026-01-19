@@ -15,10 +15,16 @@ export default function ShopifyProductCard({ handle }: ShopifyProductCardProps) 
 
     useEffect(() => {
         async function fetchProduct() {
-            setLoading(true);
-            const data = await getProduct(handle);
-            setProduct(data);
-            setLoading(false);
+            try {
+                setLoading(true);
+                const data = await getProduct(handle);
+                setProduct(data);
+            } catch (error) {
+                console.error(`Failed to fetch product for handle: ${handle}`, error);
+                setProduct(null); // エラー時はnullを設定して"取得できませんでした"を表示させる
+            } finally {
+                setLoading(false);
+            }
         }
 
         fetchProduct();

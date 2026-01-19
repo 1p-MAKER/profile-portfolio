@@ -617,6 +617,18 @@ export default function AdminPage() {
                         {activeAdminTab === '3d-printer' && (
                             <section>
                                 <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">3Dプリンタ画像</h2>
+
+                                {/* Intro Text Input */}
+                                <div className="bg-white p-6 rounded-xl shadow-sm mb-6">
+                                    <label className="block text-sm font-bold text-stone-700 mb-2">このタブの導入文（スキル紹介）</label>
+                                    <textarea
+                                        className="w-full p-3 border rounded-lg min-h-[120px]"
+                                        value={data.settings?.printer3dIntro || ''}
+                                        onChange={(e) => setData({ ...data, settings: { ...data.settings, printer3dIntro: e.target.value } })}
+                                        placeholder="3Dプリンタに関する紹介文を入力してください"
+                                    />
+                                </div>
+
                                 <div className="bg-white p-6 rounded-xl shadow-sm">
                                     <div className="grid grid-cols-3 gap-4 mb-6">
                                         {data.printImages.map((src, index) => (
@@ -648,11 +660,15 @@ export default function AdminPage() {
                             <section>
                                 <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">革製品リスト</h2>
 
-                                {/* Intro Text */}
-                                <div className="bg-stone-100 p-4 rounded-lg mb-6 border-l-4 border-stone-800">
-                                    <p className="text-stone-700">
-                                        革製品ブランド『自然のしるし』のアイテムを販売しています。
-                                    </p>
+                                {/* Intro Text Input */}
+                                <div className="bg-white p-6 rounded-xl shadow-sm mb-6">
+                                    <label className="block text-sm font-bold text-stone-700 mb-2">このタブの導入文（スキル紹介）</label>
+                                    <textarea
+                                        className="w-full p-3 border rounded-lg min-h-[120px]"
+                                        value={data.settings?.leatherIntro || ''}
+                                        onChange={(e) => setData({ ...data, settings: { ...data.settings, leatherIntro: e.target.value } })}
+                                        placeholder="革製品に関する紹介文を入力してください"
+                                    />
                                 </div>
 
                                 {/* Leather Products List with DND */}
@@ -727,6 +743,18 @@ export default function AdminPage() {
                         {activeAdminTab === 'sns' && (
                             <section>
                                 <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">SNSリスト</h2>
+
+                                {/* Intro Text Input */}
+                                <div className="bg-white p-6 rounded-xl shadow-sm mb-6">
+                                    <label className="block text-sm font-bold text-stone-700 mb-2">このタブの導入文（スキル紹介）</label>
+                                    <textarea
+                                        className="w-full p-3 border rounded-lg min-h-[120px]"
+                                        value={data.settings?.snsIntro || ''}
+                                        onChange={(e) => setData({ ...data, settings: { ...data.settings, snsIntro: e.target.value } })}
+                                        placeholder="SNSに関する紹介文を入力してください"
+                                    />
+                                </div>
+
                                 <div className="bg-white p-6 rounded-xl shadow-sm mb-4">
                                     <h3 className="text-lg font-bold mb-4">SNSアカウント一覧</h3>
                                     <p className="text-xs text-stone-500 mb-4">ドラッグ&ドロップで並び替えられます</p>
@@ -770,6 +798,18 @@ export default function AdminPage() {
                         {activeAdminTab === 'shopify' && (
                             <section>
                                 <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">Shopifyアプリリスト</h2>
+
+                                {/* Intro Text Input */}
+                                <div className="bg-white p-6 rounded-xl shadow-sm mb-6">
+                                    <label className="block text-sm font-bold text-stone-700 mb-2">このタブの導入文（スキル紹介）</label>
+                                    <textarea
+                                        className="w-full p-3 border rounded-lg min-h-[120px]"
+                                        value={data.settings?.shopifyIntro || ''}
+                                        onChange={(e) => setData({ ...data, settings: { ...data.settings, shopifyIntro: e.target.value } })}
+                                        placeholder="Shopifyアプリに関する紹介文を入力してください"
+                                    />
+                                </div>
+
                                 {data.shopifyApps.map((item, index) => (
                                     <div key={index} className="bg-white p-6 rounded-xl shadow-sm mb-4">
                                         <div className="grid gap-3">
@@ -801,6 +841,17 @@ export default function AdminPage() {
                         {activeAdminTab === 'furusato' && (
                             <section>
                                 <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">ふるさと納税リスト</h2>
+
+                                {/* Intro Text Input */}
+                                <div className="bg-white p-6 rounded-xl shadow-sm mb-6">
+                                    <label className="block text-sm font-bold text-stone-700 mb-2">このタブの導入文（スキル紹介）</label>
+                                    <textarea
+                                        className="w-full p-3 border rounded-lg min-h-[120px]"
+                                        value={data.settings?.furusatoIntro || ''}
+                                        onChange={(e) => setData({ ...data, settings: { ...data.settings, furusatoIntro: e.target.value } })}
+                                        placeholder="ふるさと納税に関する紹介文を入力してください"
+                                    />
+                                </div>
 
                                 {/* Add New Item Form */}
                                 <div className="bg-stone-100 p-6 rounded-xl mb-8 border border-stone-200">
@@ -910,6 +961,18 @@ export default function AdminPage() {
                         {activeAdminTab === 'ios' && (
                             <section>
                                 <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">iOSアプリリスト</h2>
+
+                                {/* Intro Text Input */}
+                                <div className="bg-white p-6 rounded-xl shadow-sm mb-6">
+                                    <label className="block text-sm font-bold text-stone-700 mb-2">このタブの導入文（スキル紹介）</label>
+                                    <textarea
+                                        className="w-full p-3 border rounded-lg min-h-[120px]"
+                                        value={data.settings?.iosIntro || ''}
+                                        onChange={(e) => setData({ ...data, settings: { ...data.settings, iosIntro: e.target.value } })}
+                                        placeholder="iOSアプリに関する紹介文を入力してください"
+                                    />
+                                </div>
+
                                 <div className="bg-white p-6 rounded-xl shadow-sm mb-6">
                                     <h3 className="text-lg font-bold mb-4">アプリリスト</h3>
                                     <p className="text-xs text-stone-500 mb-4">ドラッグ&ドロップで並び替えられます</p>
@@ -965,6 +1028,17 @@ export default function AdminPage() {
                         {activeAdminTab === 'youtube' && (
                             <section>
                                 <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">YouTube動画リスト</h2>
+
+                                {/* Intro Text Input */}
+                                <div className="bg-white p-6 rounded-xl shadow-sm mb-6">
+                                    <label className="block text-sm font-bold text-stone-700 mb-2">このタブの導入文（スキル紹介）</label>
+                                    <textarea
+                                        className="w-full p-3 border rounded-lg min-h-[120px]"
+                                        value={data.settings?.youtubeIntro || ''}
+                                        onChange={(e) => setData({ ...data, settings: { ...data.settings, youtubeIntro: e.target.value } })}
+                                        placeholder="YouTube動画に関する紹介文を入力してください"
+                                    />
+                                </div>
 
                                 {/* Add New Video Form */}
                                 <div className="bg-stone-100 p-6 rounded-xl mb-8 border border-stone-200">

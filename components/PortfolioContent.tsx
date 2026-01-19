@@ -197,6 +197,11 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
 
                     {activeTab === 'leather' && (
                         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                            {data.settings?.leatherIntro && (
+                                <p className="text-center text-stone-600 mb-8 whitespace-pre-wrap leading-relaxed">
+                                    {data.settings.leatherIntro}
+                                </p>
+                            )}
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {data.leatherProducts.filter(product => product.handle).map((product, index) => (
                                     <div key={index} className="h-full">
@@ -209,6 +214,11 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
 
                     {activeTab === 'ios' && (
                         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                            {data.settings?.iosIntro && (
+                                <p className="text-center text-stone-600 mb-8 whitespace-pre-wrap leading-relaxed">
+                                    {data.settings.iosIntro}
+                                </p>
+                            )}
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                                 {data.iosApps.map((app) => (
                                     <div key={app.id} className="h-full">
@@ -221,6 +231,11 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
 
                     {activeTab === 'shopify' && (
                         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                            {data.settings?.shopifyIntro && (
+                                <p className="text-center text-stone-600 mb-8 whitespace-pre-wrap leading-relaxed">
+                                    {data.settings.shopifyIntro}
+                                </p>
+                            )}
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {data.shopifyApps.map((product, index) => (
                                     <div key={index} className="h-full">
@@ -238,6 +253,11 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
 
                     {activeTab === '3d-printer' && (
                         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                            {data.settings?.printer3dIntro && (
+                                <p className="text-center text-stone-600 mb-8 whitespace-pre-wrap leading-relaxed">
+                                    {data.settings.printer3dIntro}
+                                </p>
+                            )}
                             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                                 {data.printImages.map((src, index) => (
                                     <div
@@ -263,6 +283,11 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
 
                     {activeTab === 'sns' && (
                         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                            {data.settings?.snsIntro && (
+                                <p className="text-center text-stone-600 mb-8 whitespace-pre-wrap leading-relaxed">
+                                    {data.settings.snsIntro}
+                                </p>
+                            )}
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {data.snsAccounts.map((account, index) => (
                                     <div key={index} className="h-full">
@@ -280,6 +305,11 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
 
                     {activeTab === 'furusato' && (
                         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                            {data.settings?.furusatoIntro && (
+                                <p className="text-center text-stone-600 mb-8 whitespace-pre-wrap leading-relaxed">
+                                    {data.settings.furusatoIntro}
+                                </p>
+                            )}
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {data.furusatoItems && data.furusatoItems
                                     .filter(item => item.title && item.imageUrl) // データ不整合対策: 必須項目がないアイテムは表示しない
@@ -304,6 +334,11 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
 
                     {activeTab === 'youtube' && (
                         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                            {data.settings?.youtubeIntro && (
+                                <p className="text-center text-stone-600 mb-8 whitespace-pre-wrap leading-relaxed">
+                                    {data.settings.youtubeIntro}
+                                </p>
+                            )}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {data.youtubeVideos && data.youtubeVideos.map((video) => (
                                     <div key={video.id} className="h-full">

@@ -69,4 +69,13 @@ export interface Settings {
     audioIntro?: string;
     xUsername?: string;
     featuredOrder?: string[];
+    // Category Intro Texts
+    homeIntro?: string;
+    leatherIntro?: string;
+    snsIntro?: string;
+    printer3dIntro?: string;
+    iosIntro?: string;
+    youtubeIntro?: string;
+    shopifyIntro?: string;
+    furusatoIntro?: string;
 }

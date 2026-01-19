@@ -147,7 +147,32 @@ export async function getProduct(handle: string): Promise<ShopifyProduct | null>
  * @returns チェックアウトURL
  */
 export async function createCheckout(variantId: string): Promise<string | null> {
-  // Strategy 1: Try Storefront API Mutation first (Best UX)
+  // Strategy: Direct Cart Permalink (Primary & Most Robust)
+  // Format: https://{STORE_DOMAIN}/cart/{Numeric_Variant_ID}:1
+
+  // 1. Extract Numeric ID from GID (e.g. "gid://shopify/ProductVariant/444...")
+  let numericId = '';
+  try {
+    // split by '/' and take the last part. Also remove any query params/anchors just in case.
+    const lastPart = variantId.split('/').pop()?.split('?')[0];
+    if (lastPart && /^\d+$/.test(lastPart)) {
+      numericId = lastPart;
+    }
+  } catch (e) {
+    console.warn('Failed to parse variant ID:', variantId);
+  }
+
+  // Debug log
+  console.log(`[ShopifyDebug] Variant GID: ${variantId} -> Numeric ID: ${numericId}`);
+
+  // 2. Generate Permalink if numeric ID exists
+  if (numericId && domain) {
+    const permalink = `https://${domain}/cart/${numericId}:1`;
+    console.log(`[ShopifyDebug] Generated Permalink: ${permalink}`);
+    return permalink;
+  }
+
+  // 3. Fallback: Try Mutation if extraction fails (Unlikely but safe)
   const mutation = `
     mutation checkoutCreate($input: CheckoutCreateInput!) {
       checkoutCreate(input: $input) {
@@ -174,28 +199,11 @@ export async function createCheckout(variantId: string): Promise<string | null> 
 
   try {
     const data = await shopifyFetch<CheckoutCreateResponse>(mutation, { input });
-
     if (data.checkoutCreate.checkoutUserErrors.length === 0) {
       return data.checkoutCreate.checkout.webUrl;
     }
-
-    console.warn('Checkout API returned errors, falling back to permalink:', data.checkoutCreate.checkoutUserErrors);
   } catch (error) {
-    console.warn('Checkout mutation failed, falling back to permalink:', error);
-  }
-
-  // Strategy 2: Direct Cart Permalink (Fallback)
-  // Format: https://{STORE_DOMAIN}/cart/{VARIANT_ID}:1
-  // Variant ID is typically "gid://shopify/ProductVariant/123456789" -> we need "123456789"
-  try {
-    const numericId = variantId.split('/').pop();
-    if (numericId && domain) {
-      const permalink = `https://${domain}/cart/${numericId}:1`;
-      console.log('[Shopify] Generated Permalink:', permalink);
-      return permalink;
-    }
-  } catch (e) {
-    console.error('[Shopify] Failed to generate permalink:', e);
+    console.warn('Checkout mutation failed:', error);
   }
 
   return null;

@@ -6,6 +6,7 @@ import Footer from '@/components/Footer';
 import AppCard from '@/components/AppCard';
 import SimpleCard from '@/components/SimpleCard';
 import FurusatoCard from '@/components/FurusatoCard';
+import YouTubeEmbed from '@/components/YouTubeEmbed';
 import Image from 'next/image';
 import { ContentData } from '@/types/content';
 
@@ -147,6 +148,28 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
                             {(!data.furusatoItems || data.furusatoItems.length === 0) && (
                                 <p className="text-center text-stone-500 py-12">
                                     現在掲載されている返礼品はありません。
+                                </p>
+                            )}
+                        </div>
+                    )}
+
+                    {activeTab === 'youtube' && (
+                        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {data.youtubeVideos && data.youtubeVideos.map((video) => (
+                                    <div key={video.id} className="h-full">
+                                        <div className="bg-white dark:bg-stone-800 rounded-2xl overflow-hidden shadow-sm border border-stone-200 dark:border-stone-700">
+                                            <YouTubeEmbed url={video.url} />
+                                            <div className="p-4">
+                                                <h3 className="font-bold text-lg">{video.title}</h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                            {(!data.youtubeVideos || data.youtubeVideos.length === 0) && (
+                                <p className="text-center text-stone-500 py-12">
+                                    まだ動画が登録されていません。
                                 </p>
                             )}
                         </div>

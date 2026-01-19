@@ -1155,6 +1155,81 @@ export default function AdminPage() {
                             </section>
                         )}
 
+                        {/* Audio (BGM) Section */}
+                        {activeAdminTab === 'audio' && (
+                            <section>
+                                <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">BGM管理</h2>
+
+                                {/* Add New Audio Form */}
+                                <div className="bg-stone-100 p-6 rounded-xl mb-8 border border-stone-200">
+                                    <h3 className="font-bold mb-4 text-stone-700">新規BGM追加</h3>
+
+                                    <div className="space-y-4">
+                                        <input
+                                            type="text"
+                                            className="w-full border p-2 rounded"
+                                            value={newAudioTitle}
+                                            onChange={(e) => setNewAudioTitle(e.target.value)}
+                                            placeholder="タイトル (必須)"
+                                        />
+
+                                        <textarea
+                                            className="w-full border p-2 rounded h-20"
+                                            value={newAudioDescription}
+                                            onChange={(e) => setNewAudioDescription(e.target.value)}
+                                            placeholder="説明 (任意)"
+                                        />
+
+                                        <div className="border p-4 rounded bg-white">
+                                            <input
+                                                type="file"
+                                                accept="audio/*"
+                                                onChange={(e) => {
+                                                    if (e.target.files && e.target.files[0]) {
+                                                        setNewAudioFile(e.target.files[0]);
+                                                    }
+                                                }}
+                                            />
+                                            <p className="text-xs text-stone-500 mt-2">※ MP3ファイルのみ対応しています。</p>
+                                        </div>
+
+                                        <button
+                                            onClick={handleAudioUpload}
+                                            disabled={isUploadingAudio || !newAudioTitle || !newAudioFile}
+                                            className="w-full bg-accent text-white py-3 rounded-lg hover:bg-accent/90 disabled:opacity-50 font-bold"
+                                        >
+                                            {isUploadingAudio ? 'アップロード中...' : 'アップロードしてリストに追加'}
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {/* Audio List */}
+                                <div className="grid grid-cols-1 gap-4">
+                                    {data.audioTracks && data.audioTracks.map((track) => (
+                                        <div key={track.id} className="bg-white p-4 rounded-xl shadow-sm border border-stone-100">
+                                            <div className="flex justify-between items-start mb-2">
+                                                <div>
+                                                    <p className="font-bold text-lg">{track.title}</p>
+                                                    <p className="text-stone-500 text-sm">{track.description}</p>
+                                                </div>
+                                                <button
+                                                    onClick={() => removeAudioTrack(track.id)}
+                                                    className="text-red-500 hover:bg-red-50 p-2 rounded"
+                                                >
+                                                    ✕
+                                                </button>
+                                            </div>
+                                            <audio controls src={track.url} className="w-full mt-2" />
+                                            <p className="text-xs text-stone-400 mt-2 break-all">{track.url}</p>
+                                        </div>
+                                    ))}
+                                    {(!data.audioTracks || data.audioTracks.length === 0) && (
+                                        <p className="text-center text-stone-500 py-8">まだBGMが登録されていません。</p>
+                                    )}
+                                </div>
+                            </section>
+                        )}
+
                         <section className="mt-8 border-t pt-8">
                             <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">処理ログ</h2>
                             <div className="bg-black/90 p-4 rounded-xl shadow-inner h-64 overflow-y-auto font-mono text-sm">

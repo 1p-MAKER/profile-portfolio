@@ -12,25 +12,33 @@ export default function ShopifyProductCard({ handle }: ShopifyProductCardProps) 
     const [product, setProduct] = useState<ShopifyProduct | null>(null);
     const [loading, setLoading] = useState(true);
     const [purchasing, setPurchasing] = useState(false);
+    const [debugInfo, setDebugInfo] = useState<string>('');
 
     useEffect(() => {
         async function fetchProduct() {
+            console.log(`[ShopifyDebug] Start fetching: ${handle}`);
             try {
                 setLoading(true);
-                // API Route経由で取得（CORS回避）
+                // API Route経由で取得
                 const res = await fetch(`/api/shopify/product?handle=${handle}`);
 
+                console.log(`[ShopifyDebug] Response Status for ${handle}:`, res.status);
+
                 if (!res.ok) {
+                    const errorText = await res.text();
+                    console.error(`[ShopifyDebug] Error Body for ${handle}:`, errorText);
+                    setDebugInfo(`Error: ${res.status} ${errorText.slice(0, 50)}`);
                     throw new Error(`API response status: ${res.status}`);
                 }
 
                 const data: ShopifyProduct = await res.json();
+                console.log(`[ShopifyDebug] Data received for ${handle}:`, data);
                 setProduct(data);
+                setDebugInfo('OK');
             } catch (error) {
-                console.error(`[Shopify API Error] Handle: ${handle}`, error);
-                // @ts-ignore
-                if (error.cause) console.error('Full Error Detail:', error.cause);
-                setProduct(null); // エラー時はnullを設定して"取得できませんでした"を表示させる
+                console.error(`[ShopifyDebug] Exception for ${handle}:`, error);
+                setProduct(null);
+                setDebugInfo(`Fail: ${error instanceof Error ? error.message : String(error)}`);
             } finally {
                 setLoading(false);
             }
@@ -54,34 +62,14 @@ export default function ShopifyProductCard({ handle }: ShopifyProductCardProps) 
         }
     };
 
-    if (loading) {
-        return (
-            <div className="bg-white dark:bg-stone-800 rounded-2xl overflow-hidden shadow-sm border border-stone-200 dark:border-stone-700 animate-pulse h-full">
-                <div className="aspect-square bg-stone-200 dark:bg-stone-700" />
-                <div className="p-6">
-                    <div className="h-6 bg-stone-200 dark:bg-stone-700 rounded w-3/4 mb-3" />
-                    <div className="h-4 bg-stone-200 dark:bg-stone-700 rounded w-1/2 mb-4" />
-                    <div className="h-10 bg-stone-200 dark:bg-stone-700 rounded" />
-                </div>
-            </div>
-        );
-    }
+    // 以前のスケルトンローディング(early return)を廃止し、常にカードを描画する
+    // データがない場合は「通信中」または「エラー」を表示
 
-    if (!product) {
-        return (
-            <div className="bg-white dark:bg-stone-800 rounded-2xl overflow-hidden shadow-sm border border-stone-200 dark:border-stone-700 p-6 text-center h-full">
-                <p className="text-stone-500">商品情報を取得できませんでした</p>
-                <div className="mt-2 text-xs bg-stone-100 p-2 rounded text-stone-400 font-mono break-all">
-                    取得不可: [{handle}]
-                </div>
-            </div>
-        );
-    }
-
-    const imageUrl = product.images.edges[0]?.node.url;
-    const variant = product.variants.edges[0]?.node;
+    const imageUrl = product?.images.edges[0]?.node.url;
+    const variant = product?.variants.edges[0]?.node;
     const price = variant ? parseFloat(variant.price.amount) : 0;
     const currencyCode = variant?.price.currencyCode || 'JPY';
+    const title = product?.title || `(Loading: ${handle}...)`;
 
     const formattedPrice = new Intl.NumberFormat('ja-JP', {
         style: 'currency',
@@ -89,23 +77,34 @@ export default function ShopifyProductCard({ handle }: ShopifyProductCardProps) 
     }).format(price);
 
     return (
-        <div className="bg-white dark:bg-stone-800 rounded-2xl overflow-hidden shadow-sm border border-stone-200 dark:border-stone-700 hover:shadow-lg transition-all duration-300 h-full flex flex-col group">
-            {/* 商品画像 */}
+        <div className="bg-white dark:bg-stone-800 rounded-2xl overflow-hidden shadow-sm border border-stone-200 dark:border-stone-700 hover:shadow-lg transition-all duration-300 h-full flex flex-col group relative">
+
+            {/* デバッグ情報オーバーレイ (透明度高めで表示) */}
+            <div className="absolute top-0 left-0 bg-black/50 text-white text-[10px] p-1 z-20 pointer-events-none font-mono">
+                {loading ? `API通信中: ${handle}` : `Status: ${debugInfo}`}
+            </div>
+
+            {/* 商品画像エリア */}
             <div className="aspect-square relative overflow-hidden bg-stone-100 dark:bg-stone-700">
-                {imageUrl && (
+                {imageUrl ? (
                     <Image
                         src={imageUrl}
-                        alt={product.title}
+                        alt={title}
                         fill
                         className="object-cover group-hover:scale-105 transition-transform duration-500"
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
+                ) : (
+                    <div className="flex items-center justify-center h-full text-stone-400 text-sm flex-col gap-2">
+                        <span>{loading ? 'Now Loading...' : 'No Image'}</span>
+                        <span className="text-xs font-mono">[{handle}]</span>
+                    </div>
                 )}
             </div>
 
             {/* 商品情報 */}
             <div className="p-6 flex flex-col flex-grow">
-                <h3 className="font-bold text-lg mb-2 line-clamp-2">{product.title}</h3>
+                <h3 className="font-bold text-lg mb-2 line-clamp-2">{title}</h3>
 
                 <div className="mt-auto">
                     <p className="text-2xl font-bold text-accent mb-4">{formattedPrice}</p>

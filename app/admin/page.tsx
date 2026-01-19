@@ -630,23 +630,32 @@ export default function AdminPage() {
                                 </div>
 
                                 <div className="bg-white p-6 rounded-xl shadow-sm">
+                                    <h3 className="text-lg font-bold mb-4">画像ギャラリー</h3>
+                                    <p className="text-xs text-stone-500 mb-4">ドラッグ&ドロップで並び替えられます</p>
+
                                     <div className="grid grid-cols-3 gap-4 mb-6">
-                                        {data.printImages.map((src, index) => (
-                                            <div key={index} className="relative group aspect-square rounded-lg overflow-hidden bg-stone-100">
-                                                <Image src={src} alt="gallery" fill className="object-cover" />
-                                                <button
-                                                    onClick={() => {
-                                                        const newImages = [...data.printImages];
-                                                        newImages.splice(index, 1);
-                                                        setData({ ...data, printImages: newImages });
-                                                    }}
-                                                    className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                                                >
-                                                    ✕
-                                                </button>
-                                            </div>
-                                        ))}
+                                        <DraggableList
+                                            items={data.printImages || []}
+                                            onReorder={(newImages) => setData({ ...data, printImages: newImages })}
+                                            renderItem={(src, index) => (
+                                                <div className="relative group aspect-square rounded-lg overflow-hidden bg-stone-100">
+                                                    <Image src={src} alt={`gallery-${index}`} fill className="object-cover" />
+                                                    <button
+                                                        onClick={() => {
+                                                            const newImages = [...data.printImages];
+                                                            newImages.splice(index, 1);
+                                                            setData({ ...data, printImages: newImages });
+                                                        }}
+                                                        className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                                                    >
+                                                        ✕
+                                                    </button>
+                                                </div>
+                                            )}
+                                            itemKey={(src, idx) => `print-${idx}-${src.slice(-20)}`}
+                                        />
                                     </div>
+
                                     <label className="cursor-pointer bg-stone-200 hover:bg-stone-300 text-stone-700 px-4 py-2 rounded-lg inline-block transition-colors">
                                         <span>+ 画像を追加する</span>
                                         <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />

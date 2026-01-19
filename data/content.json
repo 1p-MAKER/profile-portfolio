@@ -91,12 +91,16 @@
       "label": "動画制作"
     },
     {
-      "id": "sns",
-      "label": "SNS"
-    },
-    {
       "id": "youtube",
       "label": "YouTube"
+    },
+    {
+      "id": "audio",
+      "label": "BGM"
+    },
+    {
+      "id": "sns",
+      "label": "SNS"
     },
     {
       "id": "3d-printer",
@@ -109,10 +113,6 @@
     {
       "id": "shopify",
       "label": "Shopifyアプリ"
-    },
-    {
-      "id": "audio",
-      "label": "BGM"
     }
   ],
   "audioTracks": [

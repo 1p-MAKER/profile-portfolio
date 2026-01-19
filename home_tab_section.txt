@@ -1,0 +1,81 @@
+// HOME Tab Section - To be inserted into admin page.tsx
+
+{activeAdminTab === 'home' && (
+    <section className="space-y-12">
+        <div>
+            <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">HOMEページ設定</h2>
+            
+            {/* Section 1: Profile Photo Upload */}
+            <div className="bg-white p-6 rounded-xl shadow-sm mb-8">
+                <h3 className="text-lg font-bold mb-4">プロフィール写真</h3>
+                <p className="text-sm text-stone-600 mb-4">※現在未実装（将来実装予定）</p>
+            </div>
+
+            {/* Section 2: Tab Display Order with DND */}
+            <div className="bg-white p-6 rounded-xl shadow-sm mb-8">
+                <h3 className="text-lg font-bold mb-4">タブの表示順</h3>
+                <p className="text-xs text-stone-500 mb-4">ドラッグ&ドロップで並び替えられます</p>
+                <DraggableList
+                    items={data.tabs || []}
+                    onReorder={(newTabs) => setData({ ...data, tabs: newTabs })}
+                    renderItem={(tab, idx) => (
+                        <div className="p-3 bg-stone-50 rounded-lg border border-stone-200">
+                            <span className="font-bold text-stone-700">{tab.label}</span>
+                        </div>
+                    )}
+                    itemKey={(tab) => tab.id}
+                />
+            </div>
+
+            {/* Section 3: Featured Works Order with DND */}
+            <div className="bg-white p-6 rounded-xl shadow-sm">
+                <h3 className="text-lg font-bold mb-4">Featured (TopPage) 並び順</h3>
+                <p className="text-xs text-stone-500 mb-4">
+                    トップページに表示される "Featured Works" の並び順をドラッグ&ドロップで変更できます。<br />
+                    ※ リストにない新規Featuredアイテムは自動的に末尾に追加されます。
+                </p>
+                {(() => {
+                    // Aggregate all featured items
+                    const items: Array<{ id: string; title: string; type: string }> = [];
+
+                    data.iosApps?.filter(x => x.isFeatured).forEach(x => items.push({ id: x.id, title: `[iOS] ${x.name}`, type: 'ios' }));
+                    data.leatherProducts?.filter(x => x.isFeatured && x.handle).forEach(x => items.push({ id: x.handle, title: `[Leather] ${x.handle}`, type: 'leather' }));
+                    data.shopifyApps?.filter(x => x.isFeatured).forEach(x => items.push({ id: x.url, title: `[ShopifyApp] ${x.title}`, type: 'shopify' }));
+                    data.snsAccounts?.filter(x => x.isFeatured).forEach(x => items.push({ id: x.url, title: `[SNS] ${x.title}`, type: 'sns' }));
+                    data.youtubeVideos?.filter(x => x.isFeatured).forEach(x => items.push({ id: x.id, title: `[YouTube] ${x.title}`, type: 'youtube' }));
+                    data.furusatoItems?.filter(x => x.isFeatured).forEach(x => items.push({ id: x.url, title: `[Furusato] ${x.title}`, type: 'furusato' }));
+                    data.videoProductionVideos?.filter(x => x.isFeatured).forEach(x => items.push({ id: x.id, title: `[VideoProd] ${x.title}`, type: 'videoProduction' }));
+
+                    // Current Order
+                    const currentOrder = data.settings?.featuredOrder || [];
+
+                    // Sort items according to current order
+                    items.sort((a, b) => {
+                        const indexA = currentOrder.indexOf(a.id);
+                        const indexB = currentOrder.indexOf(b.id);
+                        if (indexA !== -1 && indexB !== -1) return indexA - indexB;
+                        if (indexA !== -1) return -1;
+                        if (indexB !== -1) return 1;
+                        return 0;
+                    });
+
+                    return (
+                        <DraggableList
+                            items={items}
+                            onReorder={(newItems) => {
+                                const newOrderIDs = newItems.map(item => item.id);
+                                setData({ ...data, settings: { ...data.settings, featuredOrder: newOrderIDs } });
+                            }}
+                            renderItem={(item) => (
+                                <div className="p-3 bg-stone-50 rounded-lg border border-stone-200">
+                                    <span className="font-medium text-stone-700">{item.title}</span>
+                                </div>
+                            )}
+                            itemKey={(item) => item.id}
+                        />
+                    );
+                })()}
+            </div>
+        </div>
+    </section>
+)}

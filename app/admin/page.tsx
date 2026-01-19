@@ -337,6 +337,14 @@ export default function AdminPage() {
         setData({ ...data, youtubeVideos: newList });
     };
 
+    // Featured Toggle Logic
+    const toggleFeatured = (listName: 'iosApps' | 'leatherProducts' | 'shopifyApps' | 'snsAccounts' | 'youtubeVideos' | 'furusatoItems', index: number) => {
+        if (!data) return;
+        const newList = [...data[listName]] as any[];
+        newList[index] = { ...newList[index], isFeatured: !newList[index].isFeatured };
+        setData({ ...data, [listName]: newList } as any);
+    };
+
 
     return (
         <div className="min-h-screen bg-stone-50 p-8 pb-32">
@@ -424,7 +432,13 @@ export default function AdminPage() {
                                             </div>
                                             <input className="border p-2 rounded" value={item.url} onChange={(e) => updateProduct('leatherProducts', index, 'url', e.target.value)} placeholder="URL" />
                                             <textarea className="border p-2 rounded h-24" value={item.description} onChange={(e) => updateProduct('leatherProducts', index, 'description', e.target.value)} placeholder="説明" />
-                                            <div className="flex justify-end">
+                                            <div className="flex justify-end gap-2">
+                                                <button
+                                                    onClick={() => toggleFeatured('leatherProducts', index)}
+                                                    className={`px-3 py-1 rounded text-sm font-bold ${item.isFeatured ? 'bg-yellow-500 text-white' : 'bg-gray-200 text-gray-600'}`}
+                                                >
+                                                    ★ {item.isFeatured ? 'Featured' : 'Pick Up'}
+                                                </button>
                                                 <button onClick={() => removeProduct('leatherProducts', index)} className="text-red-500 text-sm">削除</button>
                                             </div>
                                         </div>
@@ -449,7 +463,13 @@ export default function AdminPage() {
                                             </div>
                                             <input className="border p-2 rounded" value={item.url} onChange={(e) => updateProduct('snsAccounts', index, 'url', e.target.value)} placeholder="URL" />
                                             <textarea className="border p-2 rounded h-24" value={item.description} onChange={(e) => updateProduct('snsAccounts', index, 'description', e.target.value)} placeholder="説明" />
-                                            <div className="flex justify-end">
+                                            <div className="flex justify-end gap-2">
+                                                <button
+                                                    onClick={() => toggleFeatured('snsAccounts', index)}
+                                                    className={`px-3 py-1 rounded text-sm font-bold ${item.isFeatured ? 'bg-yellow-500 text-white' : 'bg-gray-200 text-gray-600'}`}
+                                                >
+                                                    ★ {item.isFeatured ? 'Featured' : 'Pick Up'}
+                                                </button>
                                                 <button onClick={() => removeProduct('snsAccounts', index)} className="text-red-500 text-sm">削除</button>
                                             </div>
                                         </div>
@@ -474,7 +494,13 @@ export default function AdminPage() {
                                             </div>
                                             <input className="border p-2 rounded" value={item.url} onChange={(e) => updateProduct('shopifyApps', index, 'url', e.target.value)} placeholder="URL" />
                                             <textarea className="border p-2 rounded h-24" value={item.description} onChange={(e) => updateProduct('shopifyApps', index, 'description', e.target.value)} placeholder="説明" />
-                                            <div className="flex justify-end">
+                                            <div className="flex justify-end gap-2">
+                                                <button
+                                                    onClick={() => toggleFeatured('shopifyApps', index)}
+                                                    className={`px-3 py-1 rounded text-sm font-bold ${item.isFeatured ? 'bg-yellow-500 text-white' : 'bg-gray-200 text-gray-600'}`}
+                                                >
+                                                    ★ {item.isFeatured ? 'Featured' : 'Pick Up'}
+                                                </button>
                                                 <button onClick={() => removeProduct('shopifyApps', index)} className="text-red-500 text-sm">削除</button>
                                             </div>
                                         </div>
@@ -578,6 +604,12 @@ export default function AdminPage() {
                                                 />
                                             </div>
                                             <button
+                                                onClick={() => toggleFeatured('furusatoItems', index)}
+                                                className={`px-3 py-1 rounded text-sm font-bold ${item.isFeatured ? 'bg-yellow-500 text-white' : 'bg-gray-200 text-gray-600'}`}
+                                            >
+                                                ★
+                                            </button>
+                                            <button
                                                 onClick={() => removeFurusatoItem(index)}
                                                 className="text-red-500 hover:bg-red-50 p-2 rounded self-start"
                                             >
@@ -603,6 +635,12 @@ export default function AdminPage() {
                                                     <span className="font-mono text-xs text-stone-500">ID: {app.id}</span>
                                                 </div>
                                                 <div className="flex items-center gap-2">
+                                                    <button
+                                                        onClick={() => toggleFeatured('iosApps', index)}
+                                                        className={`px-3 py-1 rounded text-sm font-bold ${app.isFeatured ? 'bg-yellow-500 text-white' : 'bg-gray-200 text-gray-600'}`}
+                                                    >
+                                                        ★ {app.isFeatured ? 'Featured' : 'Pick Up'}
+                                                    </button>
                                                     <button
                                                         onClick={() => moveAppId(index, 'up')}
                                                         disabled={index === 0}
@@ -698,6 +736,15 @@ export default function AdminPage() {
                                                 <p className="font-bold text-sm mb-1">{video.title}</p>
                                                 <p className="text-xs text-stone-500 break-all">{video.url}</p>
                                             </div>
+                                            <button
+                                                onClick={() => {
+                                                    const index = data.youtubeVideos?.findIndex(v => v.id === video.id) ?? -1;
+                                                    if (index >= 0) toggleFeatured('youtubeVideos', index);
+                                                }}
+                                                className={`px-3 py-1 rounded text-sm font-bold ${video.isFeatured ? 'bg-yellow-500 text-white' : 'bg-gray-200 text-gray-600'}`}
+                                            >
+                                                ★
+                                            </button>
                                             <button
                                                 onClick={() => removeYouTubeVideo(video.id)}
                                                 className="text-red-500 hover:bg-red-50 p-2 rounded"

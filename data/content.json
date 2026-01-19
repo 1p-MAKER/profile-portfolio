@@ -1,19 +1,13 @@
 {
   "leatherProducts": [
     {
-      "title": "しぜんのしるし",
-      "description": "沖縄の革職人夫婦によるお店です。\n等身大で表現をしていきたいという想いから\n「しぜんのしるし」は生まれました。",
-      "url": "https://shizennoshirushi.com/",
-      "category": "comet R2",
+      "handle": "cometr2",
       "isFeatured": true,
-      "handle": "cometr2"
+      "category": "comet R2"
     },
     {
-      "title": "しぜんのしるし とは",
-      "description": "商品は全て手づくり。\n素材の裁断から縫製、仕上げまで\n全てを夫婦二人で行っています。",
-      "url": "https://shizennoshirushi.com/pages/about",
-      "category": "comet Long3",
-      "handle": "comet-long3"
+      "handle": "comet-long3",
+      "category": "comet Long3"
     },
     {
       "handle": "valley-a",

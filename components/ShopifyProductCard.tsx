@@ -71,6 +71,9 @@ export default function ShopifyProductCard({ handle }: ShopifyProductCardProps) 
         return (
             <div className="bg-white dark:bg-stone-800 rounded-2xl overflow-hidden shadow-sm border border-stone-200 dark:border-stone-700 p-6 text-center h-full">
                 <p className="text-stone-500">商品情報を取得できませんでした</p>
+                <div className="mt-2 text-xs bg-stone-100 p-2 rounded text-stone-400 font-mono break-all">
+                    取得不可: [{handle}]
+                </div>
             </div>
         );
     }

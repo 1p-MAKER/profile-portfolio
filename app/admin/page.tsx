@@ -207,15 +207,48 @@ export default function AdminPage() {
 
     if (!data) return <div className="p-8">読み込み中...</div>;
 
-    const updateProduct = (listName: 'leatherProducts' | 'shopifyApps' | 'snsAccounts', index: number, field: string, value: string) => {
-        const newList = [...data[listName]];
+    const updateGeneralProduct = (listName: 'shopifyApps' | 'snsAccounts', index: number, field: string, value: string) => {
+        const newList = [...data[listName]] as Product[];
         newList[index] = { ...newList[index], [field]: value };
         setData({ ...data, [listName]: newList });
     };
 
-    const addProduct = (listName: 'leatherProducts' | 'shopifyApps' | 'snsAccounts') => {
+    const updateLeatherProduct = (index: number, field: 'handle' | 'category', value: string) => {
+        if (!data) return;
+        const newList = [...data.leatherProducts];
+        newList[index] = { ...newList[index], [field]: value };
+        setData({ ...data, leatherProducts: newList });
+    };
+
+    const addProduct = (listName: 'shopifyApps' | 'snsAccounts') => {
         const newProduct: Product = { title: 'New Item', description: '', url: '', category: 'New' };
-        setData({ ...data, [listName]: [...data[listName], newProduct] });
+        setData({ ...data, [listName]: [...data[listName], newProduct] as Product[] });
+    };
+
+    const addLeatherProduct = () => {
+        if (!data) return;
+        const newProduct = { handle: 'handle-id', category: 'Leather' };
+        setData({ ...data, leatherProducts: [...data.leatherProducts, newProduct] });
+    };
+
+    const addGeneralProduct = (listName: 'shopifyApps' | 'snsAccounts') => {
+        if (!data) return;
+        const newProduct: Product = { title: 'New Item', description: '', url: '', category: 'New' };
+        setData({ ...data, [listName]: [...data[listName], newProduct] as Product[] });
+    };
+
+    const removeLeatherProduct = (index: number) => {
+        if (!data) return;
+        const newList = [...data.leatherProducts];
+        newList.splice(index, 1);
+        setData({ ...data, leatherProducts: newList });
+    };
+
+    const removeGeneralProduct = (listName: 'shopifyApps' | 'snsAccounts', index: number) => {
+        if (!data) return;
+        const newList = [...data[listName]];
+        newList.splice(index, 1);
+        setData({ ...data, [listName]: newList });
     };
 
     const removeProduct = (listName: 'leatherProducts' | 'shopifyApps' | 'snsAccounts', index: number) => {
@@ -506,30 +539,38 @@ export default function AdminPage() {
                                 {data.leatherProducts.map((item, index) => (
                                     <div key={index} className="bg-white p-6 rounded-xl shadow-sm mb-4">
                                         <div className="grid gap-3">
-                                            <div className="grid grid-cols-2 gap-3">
-                                                <input className="border p-2 rounded" value={item.title} onChange={(e) => updateProduct('leatherProducts', index, 'title', e.target.value)} placeholder="タイトル" />
-                                                <input className="border p-2 rounded" value={item.category} onChange={(e) => updateProduct('leatherProducts', index, 'category', e.target.value)} placeholder="カテゴリ (例: Leather Craft)" />
-                                            </div>
-                                            <input className="border p-2 rounded" value={item.url} onChange={(e) => updateProduct('leatherProducts', index, 'url', e.target.value)} placeholder="URL" />
-                                            <textarea className="border p-2 rounded h-24" value={item.description} onChange={(e) => updateProduct('leatherProducts', index, 'description', e.target.value)} placeholder="説明" />
-                                            <div className="flex justify-end gap-2">
+                                            <label className="block text-xs font-bold text-stone-500">Shopify Handle ID</label>
+                                            <input
+                                                className="border p-2 rounded w-full"
+                                                value={item.handle}
+                                                onChange={(e) => updateLeatherProduct(index, 'handle', e.target.value)}
+                                                placeholder="handle-id (例: comet-r2)"
+                                            />
+                                            <input
+                                                className="border p-2 rounded w-full"
+                                                value={item.category}
+                                                onChange={(e) => updateLeatherProduct(index, 'category', e.target.value)}
+                                                placeholder="カテゴリ (例: Leather Craft)"
+                                            />
+                                            <div className="flex justify-end gap-2 mt-2">
                                                 <button
                                                     onClick={() => toggleFeatured('leatherProducts', index)}
                                                     className={`px-3 py-1 rounded text-sm font-bold ${item.isFeatured ? 'bg-yellow-500 text-white' : 'bg-gray-200 text-gray-600'}`}
                                                 >
                                                     ★ {item.isFeatured ? 'Featured' : 'Pick Up'}
                                                 </button>
-                                                <button onClick={() => removeProduct('leatherProducts', index)} className="text-red-500 text-sm">削除</button>
+                                                <button onClick={() => removeLeatherProduct(index)} className="text-red-500 text-sm hover:bg-red-50 px-3 py-1 rounded">削除</button>
                                             </div>
                                         </div>
                                     </div>
                                 ))}
-                                <button onClick={() => addProduct('leatherProducts')} className="w-full py-3 border-2 border-dashed border-stone-300 text-stone-500 rounded-xl hover:bg-stone-50 transition-colors">
-                                    + アイテムを追加
+                                <button onClick={addLeatherProduct} className="w-full py-3 border-2 border-dashed border-stone-300 text-stone-500 rounded-xl hover:bg-stone-50 transition-colors">
+                                    + 商品を追加
                                 </button>
                             </section>
                         )}
 
+                        {/* SNS Section */}
                         {/* SNS Section */}
                         {activeAdminTab === 'sns' && (
                             <section>
@@ -538,11 +579,11 @@ export default function AdminPage() {
                                     <div key={index} className="bg-white p-6 rounded-xl shadow-sm mb-4">
                                         <div className="grid gap-3">
                                             <div className="grid grid-cols-2 gap-3">
-                                                <input className="border p-2 rounded" value={item.title} onChange={(e) => updateProduct('snsAccounts', index, 'title', e.target.value)} placeholder="タイトル" />
-                                                <input className="border p-2 rounded" value={item.category} onChange={(e) => updateProduct('snsAccounts', index, 'category', e.target.value)} placeholder="カテゴリ (例: SNS)" />
+                                                <input className="border p-2 rounded" value={item.title} onChange={(e) => updateGeneralProduct('snsAccounts', index, 'title', e.target.value)} placeholder="タイトル" />
+                                                <input className="border p-2 rounded" value={item.category} onChange={(e) => updateGeneralProduct('snsAccounts', index, 'category', e.target.value)} placeholder="カテゴリ (例: SNS)" />
                                             </div>
-                                            <input className="border p-2 rounded" value={item.url} onChange={(e) => updateProduct('snsAccounts', index, 'url', e.target.value)} placeholder="URL" />
-                                            <textarea className="border p-2 rounded h-24" value={item.description} onChange={(e) => updateProduct('snsAccounts', index, 'description', e.target.value)} placeholder="説明" />
+                                            <input className="border p-2 rounded" value={item.url} onChange={(e) => updateGeneralProduct('snsAccounts', index, 'url', e.target.value)} placeholder="URL" />
+                                            <textarea className="border p-2 rounded h-24" value={item.description} onChange={(e) => updateGeneralProduct('snsAccounts', index, 'description', e.target.value)} placeholder="説明" />
                                             <div className="flex justify-end gap-2">
                                                 <button
                                                     onClick={() => toggleFeatured('snsAccounts', index)}
@@ -550,17 +591,18 @@ export default function AdminPage() {
                                                 >
                                                     ★ {item.isFeatured ? 'Featured' : 'Pick Up'}
                                                 </button>
-                                                <button onClick={() => removeProduct('snsAccounts', index)} className="text-red-500 text-sm">削除</button>
+                                                <button onClick={() => removeGeneralProduct('snsAccounts', index)} className="text-red-500 text-sm">削除</button>
                                             </div>
                                         </div>
                                     </div>
                                 ))}
-                                <button onClick={() => addProduct('snsAccounts')} className="w-full py-3 border-2 border-dashed border-stone-300 text-stone-500 rounded-xl hover:bg-stone-50 transition-colors">
+                                <button onClick={() => addGeneralProduct('snsAccounts')} className="w-full py-3 border-2 border-dashed border-stone-300 text-stone-500 rounded-xl hover:bg-stone-50 transition-colors">
                                     + アイテムを追加
                                 </button>
                             </section>
                         )}
 
+                        {/* Shopify Section */}
                         {/* Shopify Section */}
                         {activeAdminTab === 'shopify' && (
                             <section>
@@ -569,11 +611,11 @@ export default function AdminPage() {
                                     <div key={index} className="bg-white p-6 rounded-xl shadow-sm mb-4">
                                         <div className="grid gap-3">
                                             <div className="grid grid-cols-2 gap-3">
-                                                <input className="border p-2 rounded" value={item.title} onChange={(e) => updateProduct('shopifyApps', index, 'title', e.target.value)} placeholder="タイトル" />
-                                                <input className="border p-2 rounded" value={item.category} onChange={(e) => updateProduct('shopifyApps', index, 'category', e.target.value)} placeholder="カテゴリ (例: Shopify App)" />
+                                                <input className="border p-2 rounded" value={item.title} onChange={(e) => updateGeneralProduct('shopifyApps', index, 'title', e.target.value)} placeholder="タイトル" />
+                                                <input className="border p-2 rounded" value={item.category} onChange={(e) => updateGeneralProduct('shopifyApps', index, 'category', e.target.value)} placeholder="カテゴリ (例: Shopify App)" />
                                             </div>
-                                            <input className="border p-2 rounded" value={item.url} onChange={(e) => updateProduct('shopifyApps', index, 'url', e.target.value)} placeholder="URL" />
-                                            <textarea className="border p-2 rounded h-24" value={item.description} onChange={(e) => updateProduct('shopifyApps', index, 'description', e.target.value)} placeholder="説明" />
+                                            <input className="border p-2 rounded" value={item.url} onChange={(e) => updateGeneralProduct('shopifyApps', index, 'url', e.target.value)} placeholder="URL" />
+                                            <textarea className="border p-2 rounded h-24" value={item.description} onChange={(e) => updateGeneralProduct('shopifyApps', index, 'description', e.target.value)} placeholder="説明" />
                                             <div className="flex justify-end gap-2">
                                                 <button
                                                     onClick={() => toggleFeatured('shopifyApps', index)}
@@ -581,12 +623,12 @@ export default function AdminPage() {
                                                 >
                                                     ★ {item.isFeatured ? 'Featured' : 'Pick Up'}
                                                 </button>
-                                                <button onClick={() => removeProduct('shopifyApps', index)} className="text-red-500 text-sm">削除</button>
+                                                <button onClick={() => removeGeneralProduct('shopifyApps', index)} className="text-red-500 text-sm">削除</button>
                                             </div>
                                         </div>
                                     </div>
                                 ))}
-                                <button onClick={() => addProduct('shopifyApps')} className="w-full py-3 border-2 border-dashed border-stone-300 text-stone-500 rounded-xl hover:bg-stone-50 transition-colors">
+                                <button onClick={() => addGeneralProduct('shopifyApps')} className="w-full py-3 border-2 border-dashed border-stone-300 text-stone-500 rounded-xl hover:bg-stone-50 transition-colors">
                                     + アイテムを追加
                                 </button>
                             </section>

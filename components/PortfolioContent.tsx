@@ -148,6 +148,9 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
                                         );
                                     }
                                     if (item.type === 'furusato') {
+                                        // データ不整合（titleやimageUrlがない）場合のガード
+                                        if (!item.data.title || !item.data.imageUrl) return null;
+
                                         return (
                                             <div key={`featured-furusato-${index}`} className="h-full">
                                                 <FurusatoCard
@@ -256,16 +259,18 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
                     {activeTab === 'furusato' && (
                         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {data.furusatoItems && data.furusatoItems.map((item, index) => (
-                                    <div key={index} className="h-full">
-                                        <FurusatoCard
-                                            title={item.title}
-                                            url={item.url}
-                                            imageUrl={item.imageUrl}
-                                            siteName={item.siteName}
-                                        />
-                                    </div>
-                                ))}
+                                {data.furusatoItems && data.furusatoItems
+                                    .filter(item => item.title && item.imageUrl) // データ不整合対策: 必須項目がないアイテムは表示しない
+                                    .map((item, index) => (
+                                        <div key={index} className="h-full">
+                                            <FurusatoCard
+                                                title={item.title}
+                                                url={item.url}
+                                                imageUrl={item.imageUrl}
+                                                siteName={item.siteName}
+                                            />
+                                        </div>
+                                    ))}
                             </div>
                             {(!data.furusatoItems || data.furusatoItems.length === 0) && (
                                 <p className="text-center text-stone-500 py-12">

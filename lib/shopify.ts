@@ -126,10 +126,8 @@ export async function getProduct(handle: string): Promise<ShopifyProduct | null>
     // Let's try explicit encoding just in case.
     const encodedHandle = encodeURIComponent(handle);
     if (encodedHandle !== handle) {
-      console.warn(`[Shopify] 1st attempt failed for ${handle}. Retrying with encoded: ${encodedHandle}`);
       const dataRetry = await shopifyFetch<{ productByHandle: ShopifyProduct | null }>(query, { handle: encodedHandle });
       if (dataRetry.productByHandle) {
-        console.log(`[Shopify] Retry successful for ${encodedHandle}`);
         return dataRetry.productByHandle;
       }
     }

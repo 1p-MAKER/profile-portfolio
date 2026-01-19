@@ -40,7 +40,7 @@ export default function ShopifyProductCard({ handle }: ShopifyProductCardProps) 
         if (!handle) return;
 
         const productPageUrl = `https://shizennoshirushi.com/products/${handle}`;
-        window.location.href = productPageUrl;
+        window.open(productPageUrl, '_blank', 'noopener,noreferrer');
     };
 
     const imageUrl = product?.images.edges[0]?.node.url;

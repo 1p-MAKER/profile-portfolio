@@ -31,6 +31,12 @@ export default function AdminPage() {
     const [newVideoProductionUrl, setNewVideoProductionUrl] = useState('');
     const [newVideoProductionTitle, setNewVideoProductionTitle] = useState('');
 
+    // Audio (BGM) Input State
+    const [newAudioTitle, setNewAudioTitle] = useState('');
+    const [newAudioDescription, setNewAudioDescription] = useState('');
+    const [newAudioFile, setNewAudioFile] = useState<File | null>(null);
+    const [isUploadingAudio, setIsUploadingAudio] = useState(false);
+
     // Settings State
     const [xUsername, setXUsername] = useState('');
     const [siteTitle, setSiteTitle] = useState('');
@@ -38,6 +44,7 @@ export default function AdminPage() {
     const [profileTagline, setProfileTagline] = useState('');
     const [featuredIntro, setFeaturedIntro] = useState('');
     const [videoProductionIntro, setVideoProductionIntro] = useState('');
+    const [audioIntro, setAudioIntro] = useState('');
 
     useEffect(() => {
         fetch('/api/data')
@@ -62,7 +69,12 @@ export default function AdminPage() {
                 if (fetchedData.settings?.profileName) setProfileName(fetchedData.settings.profileName);
                 if (fetchedData.settings?.profileTagline) setProfileTagline(fetchedData.settings.profileTagline);
                 if (fetchedData.settings?.featuredIntro) setFeaturedIntro(fetchedData.settings.featuredIntro);
-                if (fetchedData.settings?.videoProductionIntro) setVideoProductionIntro(fetchedData.settings.videoProductionIntro);
+                if (fetchedData.settings?.videoProductionIntro) {
+                    setVideoProductionIntro(fetchedData.settings.videoProductionIntro);
+                }
+                if (fetchedData.settings?.audioIntro) {
+                    setAudioIntro(fetchedData.settings.audioIntro);
+                }
             });
     }, []);
 
@@ -349,6 +361,60 @@ export default function AdminPage() {
         if (!data || !data.youtubeVideos) return;
         const newList = data.youtubeVideos.filter(v => v.id !== id);
         setData({ ...data, youtubeVideos: newList });
+    };
+
+    // Audio (BGM) Logic
+    const handleAudioUpload = async () => {
+        if (!newAudioFile || !newAudioTitle) {
+            setStatus('ファイルとタイトルを入力してください');
+            return;
+        }
+
+        setIsUploadingAudio(true);
+        setStatus('音声ファイルをアップロード中...');
+
+        try {
+            const formData = new FormData();
+            formData.append('file', newAudioFile);
+
+            const uploadRes = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData,
+            });
+
+            const uploadData = await uploadRes.json();
+
+            if (uploadData.success) {
+                const newTrack = {
+                    id: Date.now().toString(),
+                    title: newAudioTitle,
+                    description: newAudioDescription,
+                    url: uploadData.path,
+                };
+
+                const currentTracks = data?.audioTracks || [];
+                setData({ ...data!, audioTracks: [...currentTracks, newTrack] });
+
+                // Reset inputs
+                setNewAudioTitle('');
+                setNewAudioDescription('');
+                setNewAudioFile(null);
+                setStatus('BGMを追加しました（保存ボタンを押してください）');
+            } else {
+                setStatus('アップロードに失敗しました');
+            }
+        } catch (error) {
+            console.error('Audio upload error:', error);
+            setStatus('アップロードエラー');
+        }
+
+        setIsUploadingAudio(false);
+    };
+
+    const removeAudioTrack = (id: string) => {
+        if (!data || !data.audioTracks) return;
+        const newList = data.audioTracks.filter(t => t.id !== id);
+        setData({ ...data, audioTracks: newList });
     };
 
     // Featured Toggle Logic
@@ -912,6 +978,24 @@ export default function AdminPage() {
                                         />
                                         <p className="mt-1 text-xs text-stone-500">
                                             動画編集タブに表示される説明文です。
+                                        </p>
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-bold text-stone-700 mb-2">
+                                            BGMタブ導入文 (Audio Intro)
+                                        </label>
+                                        <textarea
+                                            className="w-full border p-3 rounded h-24 font-sans"
+                                            value={audioIntro}
+                                            onChange={(e) => {
+                                                setAudioIntro(e.target.value);
+                                                setData({ ...data!, settings: { ...data!.settings, audioIntro: e.target.value } });
+                                            }}
+                                            placeholder="DTMで制作したBGM素材です。楽器演奏と打ち込みを組み合わせて作成しています。"
+                                        />
+                                        <p className="mt-1 text-xs text-stone-500">
+                                            BGMタブに表示される説明文です。
                                         </p>
                                     </div>
                                 </div>

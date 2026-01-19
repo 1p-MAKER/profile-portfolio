@@ -48,44 +48,14 @@ export default function ShopifyProductCard({ handle }: ShopifyProductCardProps) 
     }, [handle]);
 
     const handlePurchase = () => {
-        if (!product || !product.variants.edges[0]) return;
+        if (!handle) return;
 
-        setPurchasing(true);
-        try {
-            const variantId = product.variants.edges[0].node.id;
-            console.log(`[ShopifyDebug] Variant GID: ${variantId}`);
+        // Simple redirection to the Shopify Product Page
+        // Assuming the main storefront is hosted at shizennoshirushi.com
+        const productPageUrl = `https://shizennoshirushi.com/products/${handle}`;
 
-            // Extract numeric ID from GID (e.g. "gid://shopify/ProductVariant/123456789")
-            // Use regex to find the last sequence of digits
-            const match = variantId.match(/\/(\d+)$/);
-            const numericId = match ? match[1] : null;
-
-            if (!numericId) {
-                console.error('[ShopifyDebug] Failed to extract numeric ID from:', variantId);
-                alert('商品IDの取得に失敗しました');
-                setPurchasing(false);
-                return;
-            }
-
-            const domain = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN;
-            if (!domain) {
-                console.error('[ShopifyDebug] Missing Store Domain');
-                alert('ショップ設定エラー');
-                setPurchasing(false);
-                return;
-            }
-
-            const checkoutUrl = `https://${domain}/cart/${numericId}:1`;
-            console.log(`[ShopifyDebug] Redirecting to: ${checkoutUrl}`);
-
-            // Direct Redirect
-            window.location.href = checkoutUrl;
-
-        } catch (e) {
-            console.error('[ShopifyDebug] Purchase Error:', e);
-            alert('エラーが発生しました。');
-            setPurchasing(false);
-        }
+        console.log(`[ShopifyDebug] Redirecting to product page: ${productPageUrl}`);
+        window.location.href = productPageUrl;
     };
 
     // 以前のスケルトンローディング(early return)を廃止し、常にカードを描画する
@@ -137,10 +107,10 @@ export default function ShopifyProductCard({ handle }: ShopifyProductCardProps) 
 
                     <button
                         onClick={handlePurchase}
-                        disabled={purchasing}
-                        className="w-full bg-accent text-white py-3 px-6 rounded-lg font-bold hover:bg-accent/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled={loading || purchasing}
+                        className="w-full bg-stone-800 text-white py-3 rounded-full font-bold hover:bg-stone-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        {purchasing ? '処理中...' : '購入画面へ'}
+                        {purchasing ? '移動中...' : '商品ページへ'}
                     </button>
                 </div>
             </div>

@@ -7,6 +7,7 @@ import SimpleCard from './SimpleCard';
 import FurusatoCard from '@/components/FurusatoCard';
 import YouTubeEmbed from './YouTubeEmbed';
 import ShopifyProductCard from '@/components/ShopifyProductCard';
+import AudioCard from '@/components/AudioCard';
 import Image from 'next/image';
 import { ContentData } from '@/types/content';
 
@@ -319,6 +320,27 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
                             {(!data.videoProductionVideos || data.videoProductionVideos.length === 0) && (
                                 <p className="text-center text-stone-500 py-12">
                                     まだ動画が登録されていません。
+                                </p>
+                            )}
+                        </div>
+                    )}
+
+                    {/* Audio (BGM) Tab */}
+                    {activeTab === 'audio' && (
+                        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                            {data.settings?.audioIntro && (
+                                <p className="text-center text-stone-600 mb-8 whitespace-pre-wrap leading-relaxed">
+                                    {data.settings.audioIntro}
+                                </p>
+                            )}
+                            <div className="grid grid-cols-1 gap-4">
+                                {data.audioTracks && data.audioTracks.map((track) => (
+                                    <AudioCard key={track.id} track={track} />
+                                ))}
+                            </div>
+                            {(!data.audioTracks || data.audioTracks.length === 0) && (
+                                <p className="text-center text-stone-500 py-12">
+                                    まだBGMが登録されていません。
                                 </p>
                             )}
                         </div>

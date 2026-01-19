@@ -574,8 +574,23 @@ export default function AdminPage() {
                                             <input
                                                 className="border p-2 rounded w-full"
                                                 value={item.handle}
-                                                onChange={(e) => updateLeatherProduct(index, 'handle', e.target.value)}
-                                                placeholder="handle-id (例: comet-r2)"
+                                                onChange={(e) => {
+                                                    const val = e.target.value;
+                                                    let cleanHandle = val;
+                                                    if (val.startsWith('http')) {
+                                                        try {
+                                                            const url = new URL(val);
+                                                            const parts = url.pathname.split('/').filter(Boolean);
+                                                            if (parts.length > 0) {
+                                                                cleanHandle = parts[parts.length - 1];
+                                                            }
+                                                        } catch (e) {
+                                                            // invalid url, keep original
+                                                        }
+                                                    }
+                                                    updateLeatherProduct(index, 'handle', cleanHandle);
+                                                }}
+                                                placeholder="商品URL または handle-id"
                                             />
                                             <input
                                                 className="border p-2 rounded w-full"

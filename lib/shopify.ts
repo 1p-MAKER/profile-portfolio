@@ -18,6 +18,7 @@ async function shopifyFetch<T>(query: string, variables: Record<string, any> = {
       headers: {
         'Content-Type': 'application/json',
         'X-Shopify-Storefront-Access-Token': token,
+        'Accept-Language': 'ja-JP', // 日本語ロケールを優先
       },
       body: JSON.stringify({ query, variables }),
     });
@@ -112,8 +113,28 @@ export async function getProduct(handle: string): Promise<ShopifyProduct | null>
   `;
 
   try {
+    // 1st Attempt: Standard fetch
     const data = await shopifyFetch<{ productByHandle: ShopifyProduct | null }>(query, { handle });
-    return data.productByHandle;
+
+    if (data.productByHandle) {
+      return data.productByHandle;
+    }
+
+    // 2nd Attempt: Fallback with URL encoding (e.g. for Japanese handles)
+    // Shopify handles *should* be URL encoded if they contain special chars, but sometimes pure strings work.
+    // Or sometimes the input handle is raw Japanese and needs encoding?
+    // Let's try explicit encoding just in case.
+    const encodedHandle = encodeURIComponent(handle);
+    if (encodedHandle !== handle) {
+      console.warn(`[Shopify] 1st attempt failed for ${handle}. Retrying with encoded: ${encodedHandle}`);
+      const dataRetry = await shopifyFetch<{ productByHandle: ShopifyProduct | null }>(query, { handle: encodedHandle });
+      if (dataRetry.productByHandle) {
+        console.log(`[Shopify] Retry successful for ${encodedHandle}`);
+        return dataRetry.productByHandle;
+      }
+    }
+
+    return null;
   } catch (error) {
     console.error('Error fetching product:', error);
     return null;

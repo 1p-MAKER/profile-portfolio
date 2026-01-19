@@ -10,6 +10,7 @@ export default function YouTubeEmbed({ url }: YouTubeEmbedProps) {
             /youtube\.com\/watch\?v=([^&]+)/,
             /youtu\.be\/([^?]+)/,
             /youtube\.com\/embed\/([^?]+)/,
+            /youtube\.com\/shorts\/([^?]+)/,  // YouTube Shorts対応
         ];
 
         for (const pattern of patterns) {

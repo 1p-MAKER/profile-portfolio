@@ -34,6 +34,12 @@
       "description": "アプリの開発記録や最新情報です。",
       "url": "https://x.com/DevCat123",
       "category": "SNS"
+    },
+    {
+      "title": "Sora (Video Generation)",
+      "description": "AI動画生成プロフィール",
+      "url": "https://sora.chatgpt.com/profile/1ppn",
+      "category": "SNS"
     }
   ],
   "printImages": [

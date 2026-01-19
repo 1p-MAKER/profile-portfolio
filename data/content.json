@@ -77,24 +77,24 @@
       "label": "革製品"
     },
     {
-      "id": "3d-printer",
-      "label": "3Dプリンタ"
-    },
-    {
       "id": "sns",
       "label": "SNS"
     },
     {
-      "id": "shopify",
-      "label": "Shopifyアプリ"
+      "id": "youtube",
+      "label": "YouTube"
+    },
+    {
+      "id": "3d-printer",
+      "label": "3Dプリンタ"
     },
     {
       "id": "furusato",
       "label": "ふるさと納税"
     },
     {
-      "id": "youtube",
-      "label": "YouTube"
+      "id": "shopify",
+      "label": "Shopifyアプリ"
     }
   ],
   "settings": {},

@@ -64,6 +64,10 @@
     {
       "id": "furusato",
       "label": "ふるさと納税"
+    },
+    {
+      "id": "youtube",
+      "label": "YouTube"
     }
   ],
   "furusatoItems": [
@@ -98,6 +102,7 @@
       "siteName": "ふるさと納税サイト「ふるなび」"
     }
   ],
+  "youtubeVideos": [],
   "iosApps": [
     {
       "id": "6756815912",

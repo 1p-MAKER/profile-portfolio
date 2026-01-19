@@ -5,6 +5,7 @@ export interface ContentData {
     snsAccounts: Product[];
     printImages: string[];
     furusatoItems: FurusatoItem[];
+    youtubeVideos: YouTubeVideo[];
     tabs: TabItem[];
 }
 
@@ -15,8 +16,14 @@ export interface FurusatoItem {
     siteName?: string;
 }
 
+export interface YouTubeVideo {
+    id: string;
+    url: string;
+    title: string;
+}
+
 export interface TabItem {
-    id: 'leather' | 'ios' | 'shopify' | 'sns' | '3d-printer' | 'furusato';
+    id: 'leather' | 'ios' | 'shopify' | 'sns' | '3d-printer' | 'furusato' | 'youtube';
     label: string;
 }
 

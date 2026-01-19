@@ -7,6 +7,7 @@ export interface ContentData {
     furusatoItems: FurusatoItem[];
     youtubeVideos: YouTubeVideo[];
     tabs: TabItem[];
+    settings: Settings;
 }
 
 export interface FurusatoItem {
@@ -23,7 +24,7 @@ export interface YouTubeVideo {
 }
 
 export interface TabItem {
-    id: 'leather' | 'ios' | 'shopify' | 'sns' | '3d-printer' | 'furusato' | 'youtube';
+    id: 'leather' | 'ios' | 'shopify' | 'sns' | '3d-printer' | 'furusato' | 'youtube' | 'x';
     label: string;
 }
 
@@ -32,4 +33,8 @@ export interface Product {
     description: string;
     url: string;
     category: string;
+}
+
+export interface Settings {
+    xUsername: string;
 }

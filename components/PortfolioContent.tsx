@@ -4,9 +4,10 @@ import { useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import AppCard from '@/components/AppCard';
-import SimpleCard from '@/components/SimpleCard';
+import SimpleCard from './SimpleCard';
 import FurusatoCard from '@/components/FurusatoCard';
-import YouTubeEmbed from '@/components/YouTubeEmbed';
+import YouTubeEmbed from './YouTubeEmbed';
+import XTimeline from './XTimeline';
 import Image from 'next/image';
 import { ContentData } from '@/types/content';
 
@@ -179,6 +180,20 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
                                     まだ動画が登録されていません。
                                 </p>
                             )}
+                        </div>
+                    )}
+
+                    {activeTab === 'x' && (
+                        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                            <div className="max-w-3xl mx-auto">
+                                {data.settings?.xUsername ? (
+                                    <XTimeline xUsername={data.settings.xUsername} />
+                                ) : (
+                                    <p className="text-center text-stone-500 py-12">
+                                        X (Twitter) のユーザー名が設定されていません。
+                                    </p>
+                                )}
+                            </div>
                         </div>
                     )}
                 </div>

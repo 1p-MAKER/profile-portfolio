@@ -27,6 +27,9 @@ export default function AdminPage() {
     const [newYouTubeUrl, setNewYouTubeUrl] = useState('');
     const [newYouTubeTitle, setNewYouTubeTitle] = useState('');
 
+    // Settings State
+    const [xUsername, setXUsername] = useState('');
+
     useEffect(() => {
         fetch('/api/data')
             .then(res => res.json())
@@ -43,6 +46,9 @@ export default function AdminPage() {
 
                 }
                 setData(fetchedData);
+                if (fetchedData.settings?.xUsername) {
+                    setXUsername(fetchedData.settings.xUsername);
+                }
             });
     }, []);
 
@@ -358,7 +364,7 @@ export default function AdminPage() {
                 {/* Sidebar Navigation */}
                 <aside className="w-64 bg-white border-r border-stone-200 fixed left-0 top-20 bottom-0 overflow-y-auto p-4 z-40">
                     <nav className="space-y-1">
-                        {(data.tabs ? [...data.tabs, { id: 'tab-order', label: 'タブ表示順設定' }] : []).map((item) => (
+                        {(data.tabs ? [...data.tabs, { id: 'tab-order', label: 'タブ表示順設定' }, { id: 'settings', label: '設定' }] : []).map((item) => (
                             <button
                                 key={item.id}
                                 onClick={() => setActiveAdminTab(item.id)}
@@ -746,6 +752,40 @@ export default function AdminPage() {
                                         ))}
                                     </div>
                                     <p className="mt-4 text-xs text-stone-500">※矢印ボタンで表示順を入れ替えられます。</p>
+                                </div>
+                            </section>
+                        )}
+
+                        {/* Settings Section */}
+                        {activeAdminTab === 'settings' && (
+                            <section>
+                                <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">設定</h2>
+                                <div className="bg-white p-6 rounded-xl shadow-sm">
+                                    <div className="mb-6">
+                                        <label className="block text-sm font-bold text-stone-700 mb-2">
+                                            X (Twitter) ユーザー名
+                                        </label>
+                                        <div className="flex gap-2">
+                                            <span className="flex items-center text-stone-500 text-lg">@</span>
+                                            <input
+                                                type="text"
+                                                className="flex-grow border p-2 rounded"
+                                                value={xUsername}
+                                                onChange={(e) => {
+                                                    setXUsername(e.target.value);
+                                                    if (data?.settings) {
+                                                        setData({ ...data, settings: { ...data.settings, xUsername: e.target.value } });
+                                                    } else {
+                                                        setData({ ...data!, settings: { xUsername: e.target.value } });
+                                                    }
+                                                }}
+                                                placeholder="DevCat123"
+                                            />
+                                        </div>
+                                        <p className="mt-2 text-xs text-stone-500">
+                                            Xタブに表示するタイムラインのユーザー名を設定します。
+                                        </p>
+                                    </div>
                                 </div>
                             </section>
                         )}

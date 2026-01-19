@@ -12,27 +12,30 @@ const endpoint = `https://${domain}/api/2024-01/graphql.json`;
 async function shopifyFetch<T>(query: string, variables: Record<string, any> = {}): Promise<T> {
   // 環境変数は上でチェック済みなので、ここでは確実に存在する
   const token = storefrontAccessToken!;
+  try {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Shopify-Storefront-Access-Token': token,
+      },
+      body: JSON.stringify({ query, variables }),
+    });
 
-  const response = await fetch(endpoint, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Shopify-Storefront-Access-Token': token,
-    },
-    body: JSON.stringify({ query, variables }),
-  });
+    if (!response.ok) {
+      throw new Error(`Shopify API error: ${response.statusText}`);
+    }
 
-  if (!response.ok) {
-    throw new Error(`Shopify API error: ${response.statusText}`);
+    const json = await response.json();
+
+    if (json.errors) {
+      throw new Error(`GraphQL errors: ${JSON.stringify(json.errors)}`);
+    }
+
+    return json.data;
+  } catch (error) {
+    throw error;
   }
-
-  const json = await response.json();
-
-  if (json.errors) {
-    throw new Error(`GraphQL errors: ${JSON.stringify(json.errors)}`);
-  }
-
-  return json.data;
 }
 
 export interface ShopifyProduct {

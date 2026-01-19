@@ -68,4 +68,5 @@ export interface Settings {
     videoProductionIntro?: string;
     audioIntro?: string;
     xUsername?: string;
+    featuredOrder?: string[];
 }

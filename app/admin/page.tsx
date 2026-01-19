@@ -459,6 +459,37 @@ export default function AdminPage() {
     };
 
 
+    const handleProfileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (!e.target.files || !e.target.files[0]) return;
+
+        const file = e.target.files[0];
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('type', 'profile'); // Explicit type for route.ts
+
+        setStatus('プロフィール写真アップロード中...');
+        try {
+            const res = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData
+            });
+            const result = await res.json();
+            if (result.success) {
+                setStatus('プロフィール写真を更新しました！(キャッシュクリアが必要な場合があります)');
+                addLogEntry(`プロフィール写真更新: ${result.path}`);
+                // Force a reload of the image by updating a timestamp state if we had one, 
+                // but effectively the user might need to reload. 
+                // We can try to append a timestamp to the image src in the preview but 
+                // for admin simple reload is okay.
+            } else {
+                setStatus('アップロード失敗');
+            }
+        } catch (e) {
+            console.error(e);
+            setStatus('エラーが発生しました');
+        }
+    };
+
     return (
         <div className="min-h-screen bg-stone-50 p-8 pb-32">
             <header className="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md shadow-sm z-50 p-4 flex justify-between items-center">
@@ -485,7 +516,7 @@ export default function AdminPage() {
                 {/* Sidebar Navigation */}
                 <aside className="w-64 bg-white border-r border-stone-200 fixed left-0 top-20 bottom-0 overflow-y-auto p-4 z-40">
                     <nav className="space-y-1">
-                        {(data.tabs ? [...data.tabs, { id: 'tab-order', label: 'タブ表示順設定' }, { id: 'settings', label: '設定' }] : []).map((item) => (
+                        {(data.tabs ? [...data.tabs, { id: 'featured-order', label: 'Featured並び順' }, { id: 'settings', label: '設定' }] : []).map((item) => (
                             <button
                                 key={item.id}
                                 onClick={() => setActiveAdminTab(item.id)}
@@ -930,6 +961,40 @@ export default function AdminPage() {
                             <section>
                                 <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">サイト設定</h2>
                                 <div className="bg-white p-6 rounded-xl shadow-sm space-y-6">
+
+                                    {/* Profile Image Upload */}
+                                    <div className="p-4 border border-stone-200 rounded-lg bg-stone-50">
+                                        <h3 className="font-bold mb-4">プロフィール写真 (Hero Section)</h3>
+                                        <div className="flex items-center gap-6">
+                                            <div className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-stone-200 shadow-sm">
+                                                <Image
+                                                    src="/profile/profile.jpg"
+                                                    alt="Current Profile"
+                                                    width={96}
+                                                    height={96}
+                                                    className="object-cover"
+                                                    onError={(e) => { (e.target as HTMLImageElement).src = '/profile-icon.png' }}
+                                                    key={Date.now()}
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="cursor-pointer bg-white border border-stone-300 hover:bg-stone-50 text-stone-700 px-4 py-2 rounded-lg inline-block transition-colors">
+                                                    <span>写真を変更する</span>
+                                                    <input
+                                                        type="file"
+                                                        accept="image/*"
+                                                        className="hidden"
+                                                        onChange={handleProfileUpload}
+                                                    />
+                                                </label>
+                                                <p className="text-xs text-stone-500 mt-2">
+                                                    推奨: 正方形 (jpg/png)<br />
+                                                    反映されない場合はページをリロードしてください。
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div>
                                         <label className="block text-sm font-bold text-stone-700 mb-2">
                                             サイトタイトル (Site Title)
@@ -1151,6 +1216,82 @@ export default function AdminPage() {
                                     {(!data.videoProductionVideos || data.videoProductionVideos.length === 0) && (
                                         <p className="text-center text-stone-500 py-8">まだ動画が登録されていません。</p>
                                     )}
+                                </div>
+                            </section>
+                        )}
+
+                        {/* Featured Order Section */}
+                        {activeAdminTab === 'featured-order' && (
+                            <section>
+                                <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">Featured (TopPage) 並び順設定</h2>
+                                <p className="mb-4 text-stone-600">
+                                    トップページに表示される "Featured Works" の並び順を変更できます。<br />
+                                    ※ リストにない新規Featuredアイテムは自動的に末尾に追加されます。
+                                </p>
+                                <div className="bg-white p-6 rounded-xl shadow-sm">
+                                    {(() => {
+                                        // Aggregate all featured items
+                                        const items: Array<{ id: string; title: string; type: string }> = [];
+
+                                        data.iosApps?.filter(x => x.isFeatured).forEach(x => items.push({ id: x.id, title: `[iOS] ${x.name}`, type: 'ios' }));
+                                        data.leatherProducts?.filter(x => x.isFeatured && x.handle).forEach(x => items.push({ id: x.handle, title: `[Leather] ${x.handle}`, type: 'leather' }));
+                                        data.shopifyApps?.filter(x => x.isFeatured).forEach(x => items.push({ id: x.url, title: `[ShopifyApp] ${x.title}`, type: 'shopify' }));
+                                        data.snsAccounts?.filter(x => x.isFeatured).forEach(x => items.push({ id: x.url, title: `[SNS] ${x.title}`, type: 'sns' }));
+                                        data.youtubeVideos?.filter(x => x.isFeatured).forEach(x => items.push({ id: x.id, title: `[YouTube] ${x.title}`, type: 'youtube' }));
+                                        data.furusatoItems?.filter(x => x.isFeatured).forEach(x => items.push({ id: x.url, title: `[Furusato] ${x.title}`, type: 'furusato' }));
+                                        data.videoProductionVideos?.filter(x => x.isFeatured).forEach(x => items.push({ id: x.id, title: `[VideoProd] ${x.title}`, type: 'videoProduction' }));
+
+                                        // Current Order
+                                        const currentOrder = data.settings?.featuredOrder || [];
+
+                                        // Sort items according to current order, appending new ones at the end
+                                        items.sort((a, b) => {
+                                            const indexA = currentOrder.indexOf(a.id);
+                                            const indexB = currentOrder.indexOf(b.id);
+                                            if (indexA !== -1 && indexB !== -1) return indexA - indexB;
+                                            if (indexA !== -1) return -1;
+                                            if (indexB !== -1) return 1;
+                                            return 0; // Maintain default order for new items
+                                        });
+
+                                        const moveItem = (index: number, direction: 'up' | 'down') => {
+                                            const newItems = [...items];
+                                            if (direction === 'up' && index > 0) {
+                                                [newItems[index - 1], newItems[index]] = [newItems[index], newItems[index - 1]];
+                                            } else if (direction === 'down' && index < newItems.length - 1) {
+                                                [newItems[index + 1], newItems[index]] = [newItems[index], newItems[index + 1]];
+                                            }
+                                            // Extract new ID order
+                                            const newOrderIDs = newItems.map(item => item.id);
+                                            setData({ ...data!, settings: { ...data!.settings, featuredOrder: newOrderIDs } });
+                                        };
+
+                                        return (
+                                            <ul className="space-y-2">
+                                                {items.map((item, index) => (
+                                                    <li key={item.id} className="flex items-center justify-between p-3 bg-stone-50 border border-stone-200 rounded text-sm">
+                                                        <span className="truncate flex-grow pr-4 font-mono">{index + 1}. {item.title}</span>
+                                                        <div className="flex-shrink-0 flex gap-2">
+                                                            <button
+                                                                onClick={() => moveItem(index, 'up')}
+                                                                disabled={index === 0}
+                                                                className="px-3 py-1 bg-white border border-stone-300 rounded hover:bg-stone-100 disabled:opacity-30"
+                                                            >
+                                                                ↑
+                                                            </button>
+                                                            <button
+                                                                onClick={() => moveItem(index, 'down')}
+                                                                disabled={index === items.length - 1}
+                                                                className="px-3 py-1 bg-white border border-stone-300 rounded hover:bg-stone-100 disabled:opacity-30"
+                                                            >
+                                                                ↓
+                                                            </button>
+                                                        </div>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        );
+                                    })()}
                                 </div>
                             </section>
                         )}

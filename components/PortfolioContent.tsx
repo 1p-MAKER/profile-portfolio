@@ -15,6 +15,8 @@ import { ContentData } from '@/types/content';
 // For simplicity in this refactor, we accept string as activeTab to match dynamic data
 type TabType = string;
 
+import HeroSection from './HeroSection';
+
 export default function PortfolioContent({ data }: { data: ContentData }) {
     // データがない場合のフォールバック（初回ロード時など）
     const initialTab = data.tabs && data.tabs.length > 0 ? data.tabs[0].id : 'leather';
@@ -29,44 +31,67 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
     // Featured items collection
     const getFeaturedItems = () => {
         const items: Array<{
+            id?: string; // Add optional ID for sorting
             type: 'ios' | 'leather' | 'shopify' | 'sns' | 'youtube' | 'furusato' | 'videoProduction';
             data: any;
         }> = [];
 
         // iOS Apps
         data.iosApps?.filter(app => app.isFeatured).forEach(app => {
-            items.push({ type: 'ios', data: app });
+            items.push({ type: 'ios', data: app, id: app.id });
         });
 
         // Leather Products
         data.leatherProducts?.filter(p => p.isFeatured && p.handle).forEach(p => {
-            items.push({ type: 'leather', data: p });
+            items.push({ type: 'leather', data: p, id: p.handle }); // Use handle as ID
         });
 
         // Shopify Apps
         data.shopifyApps?.filter(p => p.isFeatured).forEach(p => {
-            items.push({ type: 'shopify', data: p });
+            items.push({ type: 'shopify', data: p, id: p.url }); // Use url as fallback ID
         });
 
         // SNS Accounts
         data.snsAccounts?.filter(p => p.isFeatured).forEach(p => {
-            items.push({ type: 'sns', data: p });
+            items.push({ type: 'sns', data: p, id: p.url }); // Use url as fallback ID
         });
 
         // YouTube Videos
         data.youtubeVideos?.filter(v => v.isFeatured).forEach(v => {
-            items.push({ type: 'youtube', data: v });
+            items.push({ type: 'youtube', data: v, id: v.id });
         });
 
         // Furusato Items
         data.furusatoItems?.filter(item => item.isFeatured).forEach(item => {
-            items.push({ type: 'furusato', data: item });
+            items.push({ type: 'furusato', data: item, id: item.url }); // Use url as ID
         });
 
         // Video Production Videos
         data.videoProductionVideos?.filter(v => v.isFeatured).forEach(v => {
-            items.push({ type: 'videoProduction', data: v });
+            items.push({ type: 'videoProduction', data: v, id: v.id });
         });
+
+        // Sorting Logic
+        const order = data.settings?.featuredOrder || [];
+        if (order.length > 0) {
+            items.sort((a, b) => {
+                const idA = a.id || '';
+                const idB = b.id || '';
+                const indexA = order.indexOf(idA);
+                const indexB = order.indexOf(idB);
+
+                // If both are in the order list, sort by index
+                if (indexA !== -1 && indexB !== -1) {
+                    return indexA - indexB;
+                }
+                // If only A is in the list, A comes first
+                if (indexA !== -1) return -1;
+                // If only B is in the list, B comes first
+                if (indexB !== -1) return 1;
+                // If neither, keep original order (or maybe new items at end)
+                return 0;
+            });
+        }
 
         return items;
     };
@@ -97,7 +122,11 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
                 <div className="min-h-[50vh]">
                     {activeTab === 'home' && (
                         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                            {/* Featured Intro Text */}
+                            <HeroSection
+                                profileName={data.settings?.profileName}
+                                profileTagline={data.settings?.profileTagline}
+                                featuredIntro={data.settings?.featuredIntro}
+                            />
                             {data.settings?.featuredIntro && (
                                 <div className="max-w-3xl mx-auto mb-12">
                                     <p className="text-stone-600 whitespace-pre-wrap leading-relaxed text-center">

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { getProduct, createCheckout, ShopifyProduct } from '@/lib/shopify';
+import { createCheckout, ShopifyProduct } from '@/lib/shopify';
 
 interface ShopifyProductCardProps {
     handle: string;
@@ -17,10 +17,19 @@ export default function ShopifyProductCard({ handle }: ShopifyProductCardProps) 
         async function fetchProduct() {
             try {
                 setLoading(true);
-                const data = await getProduct(handle);
+                // API Route経由で取得（CORS回避）
+                const res = await fetch(`/api/shopify/product?handle=${handle}`);
+
+                if (!res.ok) {
+                    throw new Error(`API response status: ${res.status}`);
+                }
+
+                const data: ShopifyProduct = await res.json();
                 setProduct(data);
             } catch (error) {
-                console.error(`Failed to fetch product for handle: ${handle}`, error);
+                console.error(`[Shopify API Error] Handle: ${handle}`, error);
+                // @ts-ignore
+                if (error.cause) console.error('Full Error Detail:', error.cause);
                 setProduct(null); // エラー時はnullを設定して"取得できませんでした"を表示させる
             } finally {
                 setLoading(false);

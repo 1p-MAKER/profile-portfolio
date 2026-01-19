@@ -13,14 +13,21 @@ export async function POST(request: Request) {
 
         const buffer = Buffer.from(await file.arrayBuffer());
 
-        // Determine upload directory based on file type
+        const uploadType = formData.get('type') as string;
+
+        // Determine upload directory based on file type or explicit type param
         let uploadSubDir = '3d-print'; // default
-        if (file.type === 'audio/mpeg' || file.type === 'audio/mp3' || file.name.endsWith('.mp3')) {
+        let targetFilename = '';
+
+        if (uploadType === 'profile') {
+            uploadSubDir = 'profile';
+            targetFilename = 'profile.jpg'; // Force filename for profile image
+        } else if (file.type === 'audio/mpeg' || file.type === 'audio/mp3' || file.name.endsWith('.mp3')) {
             uploadSubDir = 'audio';
         }
 
-        // Create specific filename with timestamp to avoid collisions
-        const filename = `upload_${Date.now()}_${file.name.replace(/\s/g, '_')}`;
+        // Create specific filename with timestamp to avoid collisions (unless overridden)
+        const filename = targetFilename || `upload_${Date.now()}_${file.name.replace(/\s/g, '_')}`;
         const uploadDir = path.join(process.cwd(), 'public', uploadSubDir);
 
         // Ensure directory exists

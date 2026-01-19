@@ -58,6 +58,10 @@
   ],
   "tabs": [
     {
+      "id": "home",
+      "label": "Home"
+    },
+    {
       "id": "ios",
       "label": "iOSアプリ"
     },

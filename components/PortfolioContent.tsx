@@ -26,6 +26,46 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
     // Use tabs from data
     const tabs = data.tabs || [];
 
+    // Featured items collection
+    const getFeaturedItems = () => {
+        const items: Array<{
+            type: 'ios' | 'leather' | 'shopify' | 'sns' | 'youtube' | 'furusato';
+            data: any;
+        }> = [];
+
+        // iOS Apps
+        data.iosApps?.filter(app => app.isFeatured).forEach(app => {
+            items.push({ type: 'ios', data: app });
+        });
+
+        // Leather Products
+        data.leatherProducts?.filter(p => p.isFeatured).forEach(p => {
+            items.push({ type: 'leather', data: p });
+        });
+
+        // Shopify Apps
+        data.shopifyApps?.filter(p => p.isFeatured).forEach(p => {
+            items.push({ type: 'shopify', data: p });
+        });
+
+        // SNS Accounts
+        data.snsAccounts?.filter(p => p.isFeatured).forEach(p => {
+            items.push({ type: 'sns', data: p });
+        });
+
+        // YouTube Videos
+        data.youtubeVideos?.filter(v => v.isFeatured).forEach(v => {
+            items.push({ type: 'youtube', data: v });
+        });
+
+        // Furusato Items
+        data.furusatoItems?.filter(item => item.isFeatured).forEach(item => {
+            items.push({ type: 'furusato', data: item });
+        });
+
+        return items;
+    };
+
     return (
         <div className="min-h-screen flex flex-col font-sans">
             <Header />
@@ -51,6 +91,66 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
 
             <main className="flex-grow container mx-auto px-4 py-12">
                 <div className="min-h-[50vh]">
+                    {/* Home/Featured Tab */}
+                    {activeTab === 'home' && (
+                        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                            <h2 className="text-3xl font-bold mb-8 text-center">Featured Works</h2>
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {getFeaturedItems().map((item, index) => {
+                                    if (item.type === 'ios') {
+                                        return (
+                                            <div key={`featured-ios-${index}`} className="h-full">
+                                                <AppCard appId={item.data.id} />
+                                            </div>
+                                        );
+                                    }
+                                    if (item.type === 'leather' || item.type === 'shopify' || item.type === 'sns') {
+                                        return (
+                                            <div key={`featured-${item.type}-${index}`} className="h-full">
+                                                <SimpleCard
+                                                    title={item.data.title}
+                                                    description={item.data.description}
+                                                    url={item.data.url}
+                                                    category={item.data.category}
+                                                />
+                                            </div>
+                                        );
+                                    }
+                                    if (item.type === 'youtube') {
+                                        return (
+                                            <div key={`featured-youtube-${index}`} className="h-full">
+                                                <div className="bg-white dark:bg-stone-800 rounded-2xl overflow-hidden shadow-sm border border-stone-200 dark:border-stone-700">
+                                                    <YouTubeEmbed url={item.data.url} />
+                                                    <div className="p-4">
+                                                        <h3 className="font-bold text-lg">{item.data.title}</h3>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        );
+                                    }
+                                    if (item.type === 'furusato') {
+                                        return (
+                                            <div key={`featured-furusato-${index}`} className="h-full">
+                                                <FurusatoCard
+                                                    title={item.data.title}
+                                                    url={item.data.url}
+                                                    imageUrl={item.data.imageUrl}
+                                                    siteName={item.data.siteName}
+                                                />
+                                            </div>
+                                        );
+                                    }
+                                    return null;
+                                })}
+                            </div>
+                            {getFeaturedItems().length === 0 && (
+                                <p className="text-center text-stone-500 py-12">
+                                    まだピックアップアイテムが設定されていません。
+                                </p>
+                            )}
+                        </div>
+                    )}
+
                     {activeTab === 'leather' && (
                         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

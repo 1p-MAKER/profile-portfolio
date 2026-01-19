@@ -115,7 +115,32 @@
       "label": "BGM"
     }
   ],
-  "audioTracks": [],
+  "audioTracks": [
+    {
+      "id": "1768806510641",
+      "title": "IN THE ROOM",
+      "description": "",
+      "url": "/audio/upload_1768806510636_IN_THE_ROOM.mp3"
+    },
+    {
+      "id": "1768806556664",
+      "title": "sketch markプロジェクト",
+      "description": "",
+      "url": "/audio/upload_1768806556640_スケッチマーク.mp3"
+    },
+    {
+      "id": "1768806569345",
+      "title": "RADIO",
+      "description": "",
+      "url": "/audio/upload_1768806569315_RADIO.mp3"
+    },
+    {
+      "id": "1768806585237",
+      "title": "分校",
+      "description": "",
+      "url": "/audio/upload_1768806584969_school_of_rock_BUNKO.mp3"
+    }
+  ],
   "settings": {
     "siteTitle": "Dev cat's Portfolio | 長嶺一平",
     "profileName": "Dev cat's Archive",

@@ -22,6 +22,8 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
     const initialTab = data.tabs && data.tabs.length > 0 ? data.tabs[0].id : 'leather';
     const [activeTab, setActiveTab] = useState<TabType>(initialTab);
     const [direction, setDirection] = useState(0);
+    const [isAnimating, setIsAnimating] = useState(false);
+    const lastSwipeTime = useRef(0);
 
     // Image Lightbox Modal State
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -32,6 +34,13 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
     const tabIndex = tabs.findIndex(t => t.id === activeTab);
 
     const paginate = (newDirection: number) => {
+        const now = Date.now();
+        // Debounce: Lock if animating or within 500ms of last swipe
+        if (isAnimating || now - lastSwipeTime.current < 500) return;
+
+        lastSwipeTime.current = now;
+        setIsAnimating(true);
+
         const newIndex = (tabIndex + newDirection + tabs.length) % tabs.length;
         setDirection(newDirection);
         setActiveTab(tabs[newIndex].id);
@@ -52,7 +61,12 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
     }, {
         axis: 'x',
         filterTaps: true,
-        threshold: 50, // Sensitivity
+        threshold: 80, // Increased sensitivity threshold
+        swipe: {
+            duration: 2000,
+            distance: 50,
+            velocity: 0.3
+        }
     });
 
     // Animation variants
@@ -312,6 +326,7 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
                                 x: { type: "spring", stiffness: 300, damping: 30 },
                                 opacity: { duration: 0.2 }
                             }}
+                            onAnimationComplete={() => setIsAnimating(false)}
                             className="w-full"
                         >
                             {renderTabContent()}

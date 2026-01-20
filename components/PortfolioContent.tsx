@@ -289,9 +289,9 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
 
     return (
         <div className="min-h-screen flex flex-col font-sans overflow-x-hidden">
-            <nav className="sticky top-14 z-40 bg-background/95 backdrop-blur-sm border-b border-stone-200 overflow-x-auto no-scrollbar">
-                <div className="container mx-auto px-4">
-                    <div className="flex justify-start md:justify-center gap-4 md:gap-6 min-w-max pb-px">
+            <nav className="sticky top-12 z-40 bg-background/95 backdrop-blur-sm border-b border-stone-200 overflow-x-auto no-scrollbar">
+                <div className="container mx-auto px-2">
+                    <div className="flex justify-start md:justify-center gap-2 md:gap-6 min-w-max pb-px">
                         {tabs.map((tab) => (
                             <button
                                 key={tab.id}
@@ -301,7 +301,7 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
                                     setActiveTab(tab.id);
                                     window.scrollTo({ top: 0, behavior: 'smooth' });
                                 }}
-                                className={`py-3 md:py-4 text-xs md:text-sm font-bold border-b-2 transition-all duration-300 px-1 md:px-2 ${activeTab === tab.id
+                                className={`py-2 md:py-4 text-xs md:text-sm font-bold border-b-2 transition-all duration-300 px-3 md:px-4 ${activeTab === tab.id
                                     ? 'border-accent text-accent'
                                     : 'border-transparent text-subtext hover:text-foreground'
                                     }`}

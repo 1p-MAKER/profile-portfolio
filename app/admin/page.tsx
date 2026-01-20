@@ -132,7 +132,7 @@ export default function AdminPage() {
                 msg = 'ブラウザの保存容量を超えました。画像などを減らしてください。';
             }
 
-            setStatus('エラー: ブラウザ保存失敗');
+            setStatus(`エラー: ${msg}`);
             addLogEntry(`保存エラー: ${msg}`);
         }
 
@@ -199,8 +199,8 @@ export default function AdminPage() {
             addLogEntry(`[${new Date().toISOString()}] GitHubへの更新が完了しました。数分後に本番サイトに反映されます。`);
 
         } catch (e: unknown) {
-            setStatus('公開エラー');
             const msg = e instanceof Error ? e.message : String(e);
+            setStatus(`公開エラー: ${msg}`);
             addLogEntry(`通信エラー: ${msg}`);
             console.error('[公開例外]', e);
         } finally {
@@ -556,7 +556,7 @@ export default function AdminPage() {
                         サイトを確認する
                     </a>
 
-                    <span className="text-sm font-bold text-accent">{status}</span>
+
                     <button
                         onClick={handleSave}
                         className="bg-primary text-white px-6 py-2 rounded-full hover:bg-primary/90 transition-colors"
@@ -598,6 +598,29 @@ export default function AdminPage() {
 
                 <main className="flex-1 ml-64 p-8 overflow-y-auto bg-stone-50 pb-32">
                     <div className="max-w-4xl mx-auto space-y-12">
+                        {/* Status Alert Area */}
+                        {status && (
+                            <div className={`p-4 rounded-lg shadow-md border flex items-start gap-4 mb-4 ${status.includes('エラー') || status.includes('失敗')
+                                ? 'bg-red-50 border-red-200 text-red-800'
+                                : 'bg-green-50 border-green-200 text-green-800'
+                                }`}>
+                                <div className="text-2xl">
+                                    {status.includes('エラー') || status.includes('失敗') ? '⚠️' : '✅'}
+                                </div>
+                                <div className="flex-1">
+                                    <h3 className="font-bold mb-1">
+                                        {status.includes('エラー') || status.includes('失敗') ? 'システムメッセージ' : '完了'}
+                                    </h3>
+                                    <p className="whitespace-pre-wrap font-mono text-sm">{status}</p>
+                                </div>
+                                <button
+                                    onClick={() => setStatus('')}
+                                    className="text-stone-400 hover:text-stone-600"
+                                >
+                                    ✕
+                                </button>
+                            </div>
+                        )}
                         {/* HOME Tab */}
                         {activeAdminTab === 'home' && (
                             <section className="space-y-8">

@@ -1431,6 +1431,17 @@ export default function AdminPage() {
                             <section>
                                 <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">BGM管理</h2>
 
+                                {/* Intro Text Input */}
+                                <div className="bg-white p-6 rounded-xl shadow-sm mb-6">
+                                    <label className="block text-sm font-bold text-stone-700 mb-2">このタブの導入文（スキル紹介）</label>
+                                    <textarea
+                                        className="w-full p-3 border rounded-lg min-h-[120px]"
+                                        value={data.settings?.audioIntro || ''}
+                                        onChange={(e) => setData({ ...data, settings: { ...data.settings, audioIntro: e.target.value } })}
+                                        placeholder="BGMに関する紹介文を入力してください"
+                                    />
+                                </div>
+
                                 {/* Add New Audio Form */}
                                 <div className="bg-stone-100 p-6 rounded-xl mb-8 border border-stone-200">
                                     <h3 className="font-bold mb-4 text-stone-700">新規BGM追加</h3>

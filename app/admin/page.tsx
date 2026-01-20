@@ -1385,6 +1385,25 @@ export default function AdminPage() {
                             <section>
                                 <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">動画編集リスト</h2>
 
+                                {/* Intro Text Section */}
+                                <div className="bg-stone-50 p-6 rounded-xl mb-8 border border-stone-200">
+                                    <label className="block text-sm font-bold text-stone-700 mb-2">
+                                        動画制作のスキル・想い（導入文）
+                                    </label>
+                                    <textarea
+                                        className="w-full border p-3 rounded h-32 font-sans"
+                                        value={videoProductionIntro}
+                                        onChange={(e) => {
+                                            setVideoProductionIntro(e.target.value);
+                                            setData({ ...data!, settings: { ...data!.settings, videoProductionIntro: e.target.value } });
+                                        }}
+                                        placeholder="動画制作に対する想いやスキルを記述してください..."
+                                    />
+                                    <p className="mt-1 text-xs text-stone-500">
+                                        動画制作タブの上部に表示される導入文です。改行が反映されます。
+                                    </p>
+                                </div>
+
                                 {/* Add New Video Form */}
                                 <div className="bg-stone-100 p-6 rounded-xl mb-8 border border-stone-200">
                                     <h3 className="font-bold mb-4 text-stone-700">新規追加</h3>

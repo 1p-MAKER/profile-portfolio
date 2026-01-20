@@ -536,15 +536,15 @@ export default function AdminPage() {
 
     return (
         <div className="min-h-screen bg-stone-50 p-8 pb-32">
-            <header className="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md shadow-sm z-50 p-4 flex justify-between items-center">
-                <h1 className="text-xl font-bold text-primary">ポートフォリオ管理画面</h1>
-                <div className="flex gap-4 items-center">
+            <header className="fixed top-0 left-0 right-0 bg-white border-b border-stone-200 px-4 md:px-8 py-3 md:py-4 flex flex-col md:flex-row md:justify-between md:items-center gap-3 z-50 shadow-sm">
+                <h1 className="text-lg md:text-xl font-bold text-primary">ポートフォリオ管理画面</h1>
+                <div className="flex flex-col sm:flex-row gap-2 md:gap-4 items-stretch sm:items-center">
                     {/* Preview Button */}
                     <a
                         href="https://profile-portfolio-one-tau.vercel.app"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition-colors text-sm font-medium"
+                        className="flex items-center justify-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition-colors text-sm font-medium"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -555,23 +555,24 @@ export default function AdminPage() {
 
                     <button
                         onClick={handleSave}
-                        className="bg-primary text-white px-6 py-2 rounded-full hover:bg-primary/90 transition-colors"
+                        className="bg-primary text-white px-4 md:px-6 py-2 rounded-full hover:bg-primary/90 transition-colors text-sm md:text-base font-medium"
                     >
                         保存する
                     </button>
                     <button
                         onClick={handleDeploy}
                         disabled={isDeploying}
-                        className="bg-red-500 text-white px-6 py-2 rounded-full hover:bg-red-600 transition-colors disabled:opacity-50"
+                        className="bg-red-500 text-white px-4 md:px-6 py-2 rounded-full hover:bg-red-600 transition-colors disabled:opacity-50 text-sm md:text-base font-medium"
                     >
                         {isDeploying ? '公開中...' : '公開する'}
                     </button>
                 </div>
             </header>
 
-            <div className="flex pt-20 h-screen">
-                {/* Sidebar Navigation */}
-                <aside className="w-64 bg-white border-r border-stone-200 fixed left-0 top-20 bottom-0 overflow-y-auto p-4 z-40">
+
+            <div className="flex pt-16 md:pt-20 h-screen">
+                {/* Sidebar Navigation - Hidden on mobile */}
+                <aside className="hidden md:block w-64 bg-white border-r border-stone-200 fixed left-0 top-16 md:top-20 bottom-0 overflow-y-auto p-4 z-40">
                     <nav className="space-y-1">
                         {[
                             { id: 'home', label: 'HOME' },
@@ -592,22 +593,45 @@ export default function AdminPage() {
                     </nav>
                 </aside>
 
-                <main className="flex-1 ml-64 p-8 overflow-y-auto bg-stone-50 pb-32">
-                    <div className="max-w-4xl mx-auto space-y-12">
+
+                <main className="flex-1 ml-0 md:ml-64 p-4 md:p-8 overflow-y-auto bg-stone-50 pb-32 md:pb-32">
+                    {/* Mobile Tab Navigation - Horizontal Scroll */}
+                    <div className="md:hidden mb-6 -mx-4 px-4 overflow-x-auto no-scrollbar border-b border-stone-200 bg-white sticky top-0 z-30">
+                        <div className="flex gap-2 py-3 min-w-max">
+                            {[
+                                { id: 'home', label: 'HOME' },
+                                ...(data.tabs || []),
+                                { id: 'settings', label: '設定' }
+                            ].map((item) => (
+                                <button
+                                    key={item.id}
+                                    onClick={() => setActiveAdminTab(item.id)}
+                                    className={`px-4 py-2 rounded-full font-bold text-sm whitespace-nowrap transition-colors ${activeAdminTab === item.id
+                                        ? 'bg-stone-800 text-white'
+                                        : 'bg-stone-100 text-stone-600'
+                                        }`}
+                                >
+                                    {item.label}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="max-w-4xl mx-auto space-y-8 md:space-y-12">
                         {/* Status Alert Area */}
                         {status && (
-                            <div className={`p-4 rounded-lg shadow-md border flex items-start gap-4 mb-4 ${status.includes('エラー') || status.includes('失敗')
+                            <div className={`p-3 md:p-4 rounded-lg shadow-md border flex items-start gap-3 md:gap-4 mb-4 ${status.includes('エラー') || status.includes('失敗')
                                 ? 'bg-red-50 border-red-200 text-red-800'
                                 : 'bg-green-50 border-green-200 text-green-800'
                                 }`}>
-                                <div className="text-2xl">
+                                <div className="text-xl md:text-2xl">
                                     {status.includes('エラー') || status.includes('失敗') ? '⚠️' : '✅'}
                                 </div>
                                 <div className="flex-1">
-                                    <h3 className="font-bold mb-1">
+                                    <h3 className="font-bold mb-1 text-sm md:text-base">
                                         {status.includes('エラー') || status.includes('失敗') ? 'システムメッセージ' : '完了'}
                                     </h3>
-                                    <p className="whitespace-pre-wrap font-mono text-sm">{status}</p>
+                                    <p className="whitespace-pre-wrap font-mono text-xs md:text-sm">{status}</p>
                                 </div>
                                 <button
                                     onClick={() => setStatus('')}
@@ -1617,6 +1641,25 @@ export default function AdminPage() {
                 </main>
             </div >
         </div >
+
+        {/* Mobile Fixed Save Button - Visible only on mobile */ }
+    <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-stone-200 p-4 z-50 shadow-lg" style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}>
+        <div className="flex gap-2">
+            <button
+                onClick={handleSave}
+                className="flex-1 bg-primary text-white px-6 py-3 rounded-full hover:bg-primary/90 transition-colors font-bold text-sm"
+            >
+                保存する
+            </button>
+            <button
+                onClick={handleDeploy}
+                disabled={isDeploying}
+                className="flex-1 bg-red-500 text-white px-6 py-3 rounded-full hover:bg-red-600 transition-colors disabled:opacity-50 font-bold text-sm"
+            >
+                {isDeploying ? '公開中...' : '公開する'}
+            </button>
+        </div>
+    </div>
 
     );
 }

@@ -2,7 +2,7 @@ export interface ContentData {
     leatherProducts: ShopifyLeatherProduct[];
     iosApps: IosApp[];
     shopifyApps: Product[];
-    snsAccounts: Product[];
+    snsAccounts: SNSAccount[];
     printImages: string[];
     furusatoItems: FurusatoItem[];
     youtubeVideos: YouTubeVideo[];
@@ -58,6 +58,17 @@ export interface Product {
     url: string;
     category: string;
     isFeatured?: boolean;
+}
+
+export interface SNSAccount {
+    title: string;
+    description: string;
+    url: string;
+    category: string;
+    isFeatured?: boolean;
+    platformType?: 'instagram' | 'x' | 'youtube' | 'tiktok' | 'facebook' | 'linkedin' | 'sora' | 'other';
+    tagline?: string;
+    thumbnailUrl?: string;
 }
 
 export interface Settings {

@@ -496,6 +496,19 @@ export default function AdminPage() {
             <header className="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md shadow-sm z-50 p-4 flex justify-between items-center">
                 <h1 className="text-xl font-bold text-primary">ポートフォリオ管理画面</h1>
                 <div className="flex gap-4 items-center">
+                    {/* Preview Button */}
+                    <a
+                        href="https://profile-portfolio-one-tau.vercel.app"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition-colors text-sm font-medium"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                        サイトを確認する
+                    </a>
+
                     <span className="text-sm font-bold text-accent">{status}</span>
                     <button
                         onClick={handleSave}
@@ -776,9 +789,37 @@ export default function AdminPage() {
                                                 <div className="grid gap-3">
                                                     <div className="grid grid-cols-2 gap-3">
                                                         <input className="border p-2 rounded" value={item.title} onChange={(e) => updateGeneralProduct('snsAccounts', index, 'title', e.target.value)} placeholder="タイトル" />
+                                                        <select
+                                                            className="border p-2 rounded"
+                                                            value={item.platformType || 'other'}
+                                                            onChange={(e) => updateGeneralProduct('snsAccounts', index, 'platformType', e.target.value)}
+                                                        >
+                                                            <option value="instagram">Instagram</option>
+                                                            <option value="x">X (Twitter)</option>
+                                                            <option value="youtube">YouTube</option>
+                                                            <option value="tiktok">TikTok</option>
+                                                            <option value="facebook">Facebook</option>
+                                                            <option value="linkedin">LinkedIn</option>
+                                                            <option value="sora">Sora</option>
+                                                            <option value="other">その他</option>
+                                                        </select>
+                                                    </div>
+                                                    <div className="grid grid-cols-2 gap-3">
                                                         <input className="border p-2 rounded" value={item.category} onChange={(e) => updateGeneralProduct('snsAccounts', index, 'category', e.target.value)} placeholder="カテゴリ (例: SNS)" />
+                                                        <input
+                                                            className="border p-2 rounded"
+                                                            value={item.tagline || ''}
+                                                            onChange={(e) => updateGeneralProduct('snsAccounts', index, 'tagline', e.target.value)}
+                                                            placeholder="キャッチコピー (例: 日々のつぶやき)"
+                                                        />
                                                     </div>
                                                     <input className="border p-2 rounded" value={item.url} onChange={(e) => updateGeneralProduct('snsAccounts', index, 'url', e.target.value)} placeholder="URL" />
+                                                    <input
+                                                        className="border p-2 rounded"
+                                                        value={item.thumbnailUrl || ''}
+                                                        onChange={(e) => updateGeneralProduct('snsAccounts', index, 'thumbnailUrl', e.target.value)}
+                                                        placeholder="サムネイルURL (任意)"
+                                                    />
                                                     <textarea className="border p-2 rounded h-24" value={item.description} onChange={(e) => updateGeneralProduct('snsAccounts', index, 'description', e.target.value)} placeholder="説明" />
                                                     <div className="flex justify-end gap-2">
                                                         <button

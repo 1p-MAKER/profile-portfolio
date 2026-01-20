@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Footer from '@/components/Footer';
 import AppCard from '@/components/AppCard';
 import SimpleCard from './SimpleCard';
+import SNSCard from '@/components/SNSCard';
 import FurusatoCard from '@/components/FurusatoCard';
 import YouTubeEmbed from './YouTubeEmbed';
 import ShopifyProductCard from '@/components/ShopifyProductCard';
@@ -290,14 +291,7 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
                             )}
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {data.snsAccounts.map((account, index) => (
-                                    <div key={index} className="h-full">
-                                        <SimpleCard
-                                            title={account.title}
-                                            description={account.description}
-                                            url={account.url}
-                                            category={account.category}
-                                        />
-                                    </div>
+                                    <SNSCard key={index} account={account} />
                                 ))}
                             </div>
                         </div>

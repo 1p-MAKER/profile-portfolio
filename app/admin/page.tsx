@@ -650,7 +650,7 @@ export default function AdminPage() {
 
                                 {/* Tab Display Order with DND */}
                                 <div className="bg-white p-6 rounded-xl shadow-sm">
-                                    <h3 className="text-lg font-bold mb-4">タブの表示順</h3>
+                                    <h3 className="text-lg font-bold mb-4 text-stone-900">タブの表示順</h3>
                                     <p className="text-xs text-stone-500 mb-4">ドラッグ&ドロップで並び替えられます</p>
                                     <DraggableList
                                         items={data.tabs || []}
@@ -666,7 +666,7 @@ export default function AdminPage() {
 
                                 {/* Featured Works Order with DND */}
                                 <div className="bg-white p-6 rounded-xl shadow-sm">
-                                    <h3 className="text-lg font-bold mb-4">Featured (TopPage) 並び順</h3>
+                                    <h3 className="text-lg font-bold mb-4 text-stone-900">Featured (TopPage) 並び順</h3>
                                     <p className="text-xs text-stone-500 mb-4">
                                         トップページに表示される "Featured Works" の並び順をドラッグ&ドロップで変更できます。<br />
                                         ※ リストにない新規Featuredアイテムは自動的に末尾に追加されます。
@@ -735,7 +735,7 @@ export default function AdminPage() {
                                 </div>
 
                                 <div className="bg-white p-6 rounded-xl shadow-sm">
-                                    <h3 className="text-lg font-bold mb-4">画像ギャラリー</h3>
+                                    <h3 className="text-lg font-bold mb-4 text-stone-900">画像ギャラリー</h3>
                                     <p className="text-xs text-stone-500 mb-4">ドラッグ&ドロップで並び替えられます</p>
 
                                     <div className="grid grid-cols-3 gap-4 mb-6">
@@ -787,7 +787,7 @@ export default function AdminPage() {
 
                                 {/* Leather Products List with DND */}
                                 <div className="bg-white p-6 rounded-xl shadow-sm mb-4">
-                                    <h3 className="text-lg font-bold mb-4">商品リスト</h3>
+                                    <h3 className="text-lg font-bold mb-4 text-stone-900">商品リスト</h3>
                                     <p className="text-xs text-stone-500 mb-4">ドラッグ&ドロップで並び替えられます</p>
 
                                     <DraggableList
@@ -870,7 +870,7 @@ export default function AdminPage() {
                                 </div>
 
                                 <div className="bg-white p-6 rounded-xl shadow-sm mb-4">
-                                    <h3 className="text-lg font-bold mb-4">SNSアカウント一覧</h3>
+                                    <h3 className="text-lg font-bold mb-4 text-stone-900">SNSアカウント一覧</h3>
                                     <p className="text-xs text-stone-500 mb-4">ドラッグ&ドロップで並び替えられます</p>
 
                                     <DraggableList
@@ -1116,7 +1116,7 @@ export default function AdminPage() {
                                 </div>
 
                                 <div className="bg-white p-6 rounded-xl shadow-sm mb-6">
-                                    <h3 className="text-lg font-bold mb-4">アプリリスト</h3>
+                                    <h3 className="text-lg font-bold mb-4 text-stone-900">アプリリスト</h3>
                                     <p className="text-xs text-stone-500 mb-4">ドラッグ&ドロップで並び替えられます</p>
 
                                     <DraggableList

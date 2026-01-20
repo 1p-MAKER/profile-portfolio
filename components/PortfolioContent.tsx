@@ -324,8 +324,8 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
                             animate="center"
                             exit="exit"
                             transition={{
-                                x: { type: "spring", stiffness: 300, damping: 30 },
-                                opacity: { duration: 0.2 }
+                                x: { type: "spring", stiffness: 400, damping: 35 },
+                                opacity: { duration: 0.15 }
                             }}
                             onAnimationComplete={() => setIsAnimating(false)}
                             className="w-full"

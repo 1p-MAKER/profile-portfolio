@@ -536,8 +536,8 @@ export default function AdminPage() {
 
     return (
         <div className="min-h-screen bg-stone-50 p-8 pb-32">
-            <header className="fixed top-0 left-0 right-0 bg-white border-b border-stone-200 px-4 md:px-8 py-2 md:py-4 flex flex-col md:flex-row md:justify-between md:items-center gap-2 z-50 shadow-sm">
-                <h1 className="text-lg md:text-xl font-bold text-primary">ポートフォリオ管理画面</h1>
+            <header className="fixed top-0 left-0 right-0 bg-white border-b border-stone-200 px-4 md:px-8 py-1 md:py-4 flex flex-col md:flex-row md:justify-between md:items-center gap-1 z-50 shadow-sm">
+                <h1 className="text-sm md:text-xl font-bold text-stone-900">ポートフォリオ管理画面</h1>
                 <div className="hidden md:flex flex-col sm:flex-row gap-2 md:gap-4 items-stretch sm:items-center">
                     {/* Preview Button */}
                     <a
@@ -570,7 +570,7 @@ export default function AdminPage() {
             </header>
 
 
-            <div className="flex pt-16 md:pt-20 h-screen">
+            <div className="flex pt-10 md:pt-20 h-screen">
                 {/* Sidebar Navigation - Hidden on mobile */}
                 <aside className="hidden md:block w-64 bg-white border-r border-stone-200 fixed left-0 top-16 md:top-20 bottom-0 overflow-y-auto p-4 z-40">
                     <nav className="space-y-1">
@@ -594,9 +594,9 @@ export default function AdminPage() {
                 </aside>
 
 
-                <main className="flex-1 ml-0 md:ml-64 p-4 md:p-8 overflow-y-auto bg-stone-50 pb-32 md:pb-32">
+                <main className="flex-1 ml-0 md:ml-64 p-4 md:p-8 overflow-y-auto bg-stone-50 pb-20 md:pb-32">
                     {/* Mobile Tab Navigation - Horizontal Scroll */}
-                    <div className="md:hidden mb-6 -mx-4 px-4 overflow-x-auto no-scrollbar border-b border-stone-200 bg-white sticky top-12 z-30">
+                    <div className="md:hidden mb-4 -mx-4 px-4 overflow-x-auto no-scrollbar border-b border-stone-200 bg-white sticky top-0 z-30">
                         <div className="flex gap-2 py-3 min-w-max">
                             {[
                                 { id: 'home', label: 'HOME' },
@@ -608,7 +608,7 @@ export default function AdminPage() {
                                     onClick={() => setActiveAdminTab(item.id)}
                                     className={`px-4 py-2 rounded-full font-bold text-sm whitespace-nowrap transition-colors ${activeAdminTab === item.id
                                         ? 'bg-stone-800 text-white'
-                                        : 'bg-stone-100 text-stone-600'
+                                        : 'bg-stone-100 text-stone-900'
                                         }`}
                                 >
                                     {item.label}

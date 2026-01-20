@@ -637,7 +637,7 @@ export default function AdminPage() {
                                 </div>
                                 <button
                                     onClick={() => setStatus('')}
-                                    className="text-stone-400 hover:text-stone-600"
+                                    className="text-stone-600 hover:text-stone-600"
                                 >
                                     ✕
                                 </button>
@@ -651,7 +651,7 @@ export default function AdminPage() {
                                 {/* Tab Display Order with DND */}
                                 <div className="bg-white p-6 rounded-xl shadow-sm">
                                     <h3 className="text-lg font-bold mb-4 text-stone-900">タブの表示順</h3>
-                                    <p className="text-xs text-stone-500 mb-4">ドラッグ&ドロップで並び替えられます</p>
+                                    <p className="text-xs text-stone-700 mb-4">ドラッグ&ドロップで並び替えられます</p>
                                     <DraggableList
                                         items={data.tabs || []}
                                         onReorder={(newTabs) => setData({ ...data, tabs: newTabs })}
@@ -667,7 +667,7 @@ export default function AdminPage() {
                                 {/* Featured Works Order with DND */}
                                 <div className="bg-white p-6 rounded-xl shadow-sm">
                                     <h3 className="text-lg font-bold mb-4 text-stone-900">Featured (TopPage) 並び順</h3>
-                                    <p className="text-xs text-stone-500 mb-4">
+                                    <p className="text-xs text-stone-700 mb-4">
                                         トップページに表示される "Featured Works" の並び順をドラッグ&ドロップで変更できます。<br />
                                         ※ リストにない新規Featuredアイテムは自動的に末尾に追加されます。
                                     </p>
@@ -736,7 +736,7 @@ export default function AdminPage() {
 
                                 <div className="bg-white p-6 rounded-xl shadow-sm">
                                     <h3 className="text-lg font-bold mb-4 text-stone-900">画像ギャラリー</h3>
-                                    <p className="text-xs text-stone-500 mb-4">ドラッグ&ドロップで並び替えられます</p>
+                                    <p className="text-xs text-stone-700 mb-4">ドラッグ&ドロップで並び替えられます</p>
 
                                     <div className="grid grid-cols-3 gap-4 mb-6">
                                         <DraggableList
@@ -788,7 +788,7 @@ export default function AdminPage() {
                                 {/* Leather Products List with DND */}
                                 <div className="bg-white p-6 rounded-xl shadow-sm mb-4">
                                     <h3 className="text-lg font-bold mb-4 text-stone-900">商品リスト</h3>
-                                    <p className="text-xs text-stone-500 mb-4">ドラッグ&ドロップで並び替えられます</p>
+                                    <p className="text-xs text-stone-700 mb-4">ドラッグ&ドロップで並び替えられます</p>
 
                                     <DraggableList
                                         items={data.leatherProducts || []}
@@ -797,7 +797,7 @@ export default function AdminPage() {
                                             <div className="p-4 bg-stone-50 rounded-lg border border-stone-200">
                                                 <div className="grid gap-3">
                                                     <div>
-                                                        <label className="block text-xs font-bold text-stone-500 mb-1">Shopify Handle ID</label>
+                                                        <label className="block text-xs font-bold text-stone-700 mb-1">Shopify Handle ID</label>
                                                         <input
                                                             className="border p-2 rounded w-full"
                                                             value={item.handle}
@@ -811,7 +811,7 @@ export default function AdminPage() {
                                                         />
                                                     </div>
                                                     <div>
-                                                        <label className="block text-xs font-bold text-stone-500 mb-1">カテゴリ</label>
+                                                        <label className="block text-xs font-bold text-stone-700 mb-1">カテゴリ</label>
                                                         <input
                                                             className="border p-2 rounded w-full"
                                                             value={item.category}
@@ -871,7 +871,7 @@ export default function AdminPage() {
 
                                 <div className="bg-white p-6 rounded-xl shadow-sm mb-4">
                                     <h3 className="text-lg font-bold mb-4 text-stone-900">SNSアカウント一覧</h3>
-                                    <p className="text-xs text-stone-500 mb-4">ドラッグ&ドロップで並び替えられます</p>
+                                    <p className="text-xs text-stone-700 mb-4">ドラッグ&ドロップで並び替えられます</p>
 
                                     <DraggableList
                                         items={data.snsAccounts || []}
@@ -928,7 +928,7 @@ export default function AdminPage() {
                                         itemKey={(item, idx) => `sns-${idx}-${item.url}`}
                                     />
 
-                                    <button onClick={() => addGeneralProduct('snsAccounts')} className="mt-4 w-full py-3 border-2 border-dashed border-stone-300 text-stone-500 rounded-xl hover:bg-stone-50 transition-colors">
+                                    <button onClick={() => addGeneralProduct('snsAccounts')} className="mt-4 w-full py-3 border-2 border-dashed border-stone-300 text-stone-700 rounded-xl hover:bg-stone-50 transition-colors">
                                         + アイテムを追加
                                     </button>
                                 </div>
@@ -973,7 +973,7 @@ export default function AdminPage() {
                                         </div>
                                     </div>
                                 ))}
-                                <button onClick={() => addGeneralProduct('shopifyApps')} className="w-full py-3 border-2 border-dashed border-stone-300 text-stone-500 rounded-xl hover:bg-stone-50 transition-colors">
+                                <button onClick={() => addGeneralProduct('shopifyApps')} className="w-full py-3 border-2 border-dashed border-stone-300 text-stone-700 rounded-xl hover:bg-stone-50 transition-colors">
                                     + アイテムを追加
                                 </button>
                             </section>
@@ -1022,7 +1022,7 @@ export default function AdminPage() {
                                                     <Image src={newFurusatoImage} alt="preview" fill className="object-cover" />
                                                 </div>
                                             ) : (
-                                                <div className="w-24 h-24 bg-stone-100 rounded flex items-center justify-center text-xs text-stone-400">
+                                                <div className="w-24 h-24 bg-stone-100 rounded flex items-center justify-center text-xs text-stone-600">
                                                     No Image
                                                 </div>
                                             )}
@@ -1066,7 +1066,7 @@ export default function AdminPage() {
                                                 {item.imageUrl ? (
                                                     <Image src={item.imageUrl} alt={item.title} fill className="object-cover" />
                                                 ) : (
-                                                    <div className="flex items-center justify-center h-full text-xs text-stone-400">No Image</div>
+                                                    <div className="flex items-center justify-center h-full text-xs text-stone-600">No Image</div>
                                                 )}
                                             </div>
                                             <div className="flex-grow grid gap-2">
@@ -1076,7 +1076,7 @@ export default function AdminPage() {
                                                     onChange={(e) => updateFurusatoItem(index, 'title', e.target.value)}
                                                 />
                                                 <input
-                                                    className="border p-2 rounded text-xs text-stone-500"
+                                                    className="border p-2 rounded text-xs text-stone-700"
                                                     value={item.url}
                                                     onChange={(e) => updateFurusatoItem(index, 'url', e.target.value)}
                                                 />
@@ -1117,7 +1117,7 @@ export default function AdminPage() {
 
                                 <div className="bg-white p-6 rounded-xl shadow-sm mb-6">
                                     <h3 className="text-lg font-bold mb-4 text-stone-900">アプリリスト</h3>
-                                    <p className="text-xs text-stone-500 mb-4">ドラッグ&ドロップで並び替えられます</p>
+                                    <p className="text-xs text-stone-700 mb-4">ドラッグ&ドロップで並び替えられます</p>
 
                                     <DraggableList
                                         items={data.iosApps || []}
@@ -1126,7 +1126,7 @@ export default function AdminPage() {
                                             <div className="flex items-center justify-between bg-stone-50 p-3 rounded-lg border border-stone-200">
                                                 <div className="flex flex-col">
                                                     <span className="font-bold text-stone-800">{app.name}</span>
-                                                    <span className="font-mono text-xs text-stone-500">ID: {app.id}</span>
+                                                    <span className="font-mono text-xs text-stone-700">ID: {app.id}</span>
                                                 </div>
                                                 <div className="flex items-center gap-2">
                                                     <button
@@ -1225,7 +1225,7 @@ export default function AdminPage() {
                                         <div key={video.id} className="bg-white p-4 rounded-xl shadow-sm flex gap-4 border border-stone-100 items-center">
                                             <div className="flex-grow">
                                                 <p className="font-bold text-sm mb-1">{video.title}</p>
-                                                <p className="text-xs text-stone-500 break-all">{video.url}</p>
+                                                <p className="text-xs text-stone-700 break-all">{video.url}</p>
                                             </div>
                                             <button
                                                 onClick={() => {
@@ -1245,7 +1245,7 @@ export default function AdminPage() {
                                         </div>
                                     ))}
                                     {(!data.youtubeVideos || data.youtubeVideos.length === 0) && (
-                                        <p className="text-center text-stone-500 py-8">まだ動画が登録されていません。</p>
+                                        <p className="text-center text-stone-700 py-8">まだ動画が登録されていません。</p>
                                     )}
                                 </div>
                             </section>
@@ -1284,7 +1284,7 @@ export default function AdminPage() {
                                                         onChange={handleProfileUpload}
                                                     />
                                                 </label>
-                                                <p className="text-xs text-stone-500 mt-2">
+                                                <p className="text-xs text-stone-700 mt-2">
                                                     推奨: 正方形 (jpg/png)<br />
                                                     反映されない場合はページをリロードしてください。
                                                 </p>
@@ -1306,7 +1306,7 @@ export default function AdminPage() {
                                             }}
                                             placeholder="Dev cat's ポートフォリオ"
                                         />
-                                        <p className="mt-1 text-xs text-stone-500">
+                                        <p className="mt-1 text-xs text-stone-700">
                                             ブラウザタブに表示されるタイトルです。
                                         </p>
                                     </div>
@@ -1325,7 +1325,7 @@ export default function AdminPage() {
                                             }}
                                             placeholder="Dev cat's Archive"
                                         />
-                                        <p className="mt-1 text-xs text-stone-500">
+                                        <p className="mt-1 text-xs text-stone-700">
                                             ヘッダーに表示される名前です。
                                         </p>
                                     </div>
@@ -1344,7 +1344,7 @@ export default function AdminPage() {
                                             }}
                                             placeholder="ロジックと情熱の、結び目を管理する。"
                                         />
-                                        <p className="mt-1 text-xs text-stone-500">
+                                        <p className="mt-1 text-xs text-stone-700">
                                             ヘッダー右側に表示される一言です。
                                         </p>
                                     </div>
@@ -1362,7 +1362,7 @@ export default function AdminPage() {
                                             }}
                                             placeholder="ようこそ。私は Dev cat と申します..."
                                         />
-                                        <p className="mt-1 text-xs text-stone-500">
+                                        <p className="mt-1 text-xs text-stone-700">
                                             Featured Worksセクションの上部に表示される導入文です。改行が反映されます。
                                         </p>
                                     </div>
@@ -1380,7 +1380,7 @@ export default function AdminPage() {
                                             }}
                                             placeholder="過去に制作した動画です"
                                         />
-                                        <p className="mt-1 text-xs text-stone-500">
+                                        <p className="mt-1 text-xs text-stone-700">
                                             動画編集タブに表示される説明文です。
                                         </p>
                                     </div>
@@ -1398,7 +1398,7 @@ export default function AdminPage() {
                                             }}
                                             placeholder="DTMで制作したBGM素材です。楽器演奏と打ち込みを組み合わせて作成しています。"
                                         />
-                                        <p className="mt-1 text-xs text-stone-500">
+                                        <p className="mt-1 text-xs text-stone-700">
                                             BGMタブに表示される説明文です。
                                         </p>
                                     </div>
@@ -1425,7 +1425,7 @@ export default function AdminPage() {
                                         }}
                                         placeholder="動画制作に対する想いやスキルを記述してください..."
                                     />
-                                    <p className="mt-1 text-xs text-stone-500">
+                                    <p className="mt-1 text-xs text-stone-700">
                                         動画制作タブの上部に表示される導入文です。改行が反映されます。
                                     </p>
                                 </div>
@@ -1502,7 +1502,7 @@ export default function AdminPage() {
                                         <div key={video.id} className="bg-white p-4 rounded-xl shadow-sm flex gap-4 border border-stone-100 items-center">
                                             <div className="flex-grow">
                                                 <p className="font-bold text-sm mb-1">{video.title}</p>
-                                                <p className="text-xs text-stone-500 break-all">{video.url}</p>
+                                                <p className="text-xs text-stone-700 break-all">{video.url}</p>
                                             </div>
                                             <button
                                                 onClick={() => {
@@ -1530,7 +1530,7 @@ export default function AdminPage() {
                                         </div>
                                     ))}
                                     {(!data.videoProductionVideos || data.videoProductionVideos.length === 0) && (
-                                        <p className="text-center text-stone-500 py-8">まだ動画が登録されていません。</p>
+                                        <p className="text-center text-stone-700 py-8">まだ動画が登録されていません。</p>
                                     )}
                                 </div>
                             </section>
@@ -1583,7 +1583,7 @@ export default function AdminPage() {
                                                     }
                                                 }}
                                             />
-                                            <p className="text-xs text-stone-500 mt-2">※ MP3ファイルのみ対応しています。</p>
+                                            <p className="text-xs text-stone-700 mt-2">※ MP3ファイルのみ対応しています。</p>
                                         </div>
 
                                         <button
@@ -1603,7 +1603,7 @@ export default function AdminPage() {
                                             <div className="flex justify-between items-start mb-2">
                                                 <div>
                                                     <p className="font-bold text-lg">{track.title}</p>
-                                                    <p className="text-stone-500 text-sm">{track.description}</p>
+                                                    <p className="text-stone-700 text-sm">{track.description}</p>
                                                 </div>
                                                 <button
                                                     onClick={() => removeAudioTrack(track.id)}
@@ -1613,11 +1613,11 @@ export default function AdminPage() {
                                                 </button>
                                             </div>
                                             <audio controls src={track.url} className="w-full mt-2" />
-                                            <p className="text-xs text-stone-400 mt-2 break-all">{track.url}</p>
+                                            <p className="text-xs text-stone-600 mt-2 break-all">{track.url}</p>
                                         </div>
                                     ))}
                                     {(!data.audioTracks || data.audioTracks.length === 0) && (
-                                        <p className="text-center text-stone-500 py-8">まだBGMが登録されていません。</p>
+                                        <p className="text-center text-stone-700 py-8">まだBGMが登録されていません。</p>
                                     )}
                                 </div>
                             </section>

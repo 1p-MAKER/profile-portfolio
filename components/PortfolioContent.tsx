@@ -288,8 +288,8 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
     };
 
     return (
-        <div className="min-h-screen flex flex-col font-sans overflow-x-hidden">
-            <nav className="sticky top-10 z-40 bg-background/95 backdrop-blur-sm border-b border-stone-200 overflow-x-auto no-scrollbar">
+        <>
+            <nav className="sticky top-12 z-40 bg-background/95 backdrop-blur-sm border-b border-stone-200 overflow-x-auto no-scrollbar">
                 <div className="container mx-auto px-2">
                     <div className="flex justify-start md:justify-center gap-2 md:gap-6 min-w-max pb-px">
                         {tabs.map((tab) => (
@@ -313,7 +313,7 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
                 </div>
             </nav>
 
-            <main className="flex-grow container mx-auto px-4 py-8 overflow-hidden touch-pan-y" {...bind()}>
+            <main className="flex-grow container mx-auto px-4 py-8 overflow-hidden touch-pan-y min-h-screen" {...bind()}>
                 <div className="min-h-[50vh]">
                     <AnimatePresence initial={false} custom={direction} mode="wait">
                         <motion.div
@@ -362,6 +362,6 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
                     </div>
                 </div>
             )}
-        </div>
+        </>
     );
 }

@@ -646,7 +646,7 @@ export default function AdminPage() {
                         {/* HOME Tab */}
                         {activeAdminTab === 'home' && (
                             <section className="space-y-8">
-                                <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">HOMEページ設定</h2>
+                                <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200 text-stone-900">HOMEページ設定</h2>
 
                                 {/* Tab Display Order with DND */}
                                 <div className="bg-white p-6 rounded-xl shadow-sm">
@@ -721,7 +721,7 @@ export default function AdminPage() {
                         {/* 3D Printer Gallery Section */}
                         {activeAdminTab === '3d-printer' && (
                             <section>
-                                <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">3Dプリンタ画像</h2>
+                                <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200 text-stone-900">3Dプリンタ画像</h2>
 
                                 {/* Intro Text Input */}
                                 <div className="bg-white p-6 rounded-xl shadow-sm mb-6">
@@ -772,7 +772,7 @@ export default function AdminPage() {
                         {/* Leather Products Section */}
                         {activeAdminTab === 'leather' && (
                             <section>
-                                <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">革製品リスト</h2>
+                                <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200 text-stone-900">革製品リスト</h2>
 
                                 {/* Intro Text Input */}
                                 <div className="bg-white p-6 rounded-xl shadow-sm mb-6">
@@ -856,7 +856,7 @@ export default function AdminPage() {
                         {/* SNS Section */}
                         {activeAdminTab === 'sns' && (
                             <section>
-                                <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">SNSリスト</h2>
+                                <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200 text-stone-900">SNSリスト</h2>
 
                                 {/* Intro Text Input */}
                                 <div className="bg-white p-6 rounded-xl shadow-sm mb-6">
@@ -939,7 +939,7 @@ export default function AdminPage() {
                         {/* Shopify Section */}
                         {activeAdminTab === 'shopify' && (
                             <section>
-                                <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">Shopifyアプリリスト</h2>
+                                <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200 text-stone-900">Shopifyアプリリスト</h2>
 
                                 {/* Intro Text Input */}
                                 <div className="bg-white p-6 rounded-xl shadow-sm mb-6">
@@ -982,7 +982,7 @@ export default function AdminPage() {
                         {/* Furusato Nozei Section */}
                         {activeAdminTab === 'furusato' && (
                             <section>
-                                <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">ふるさと納税リスト</h2>
+                                <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200 text-stone-900">ふるさと納税リスト</h2>
 
                                 {/* Intro Text Input */}
                                 <div className="bg-white p-6 rounded-xl shadow-sm mb-6">
@@ -1102,7 +1102,7 @@ export default function AdminPage() {
                         {/* iOS Apps Section */}
                         {activeAdminTab === 'ios' && (
                             <section>
-                                <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">iOSアプリリスト</h2>
+                                <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200 text-stone-900">iOSアプリリスト</h2>
 
                                 {/* Intro Text Input */}
                                 <div className="bg-white p-6 rounded-xl shadow-sm mb-6">
@@ -1169,7 +1169,7 @@ export default function AdminPage() {
                         {/* YouTube Section */}
                         {activeAdminTab === 'youtube' && (
                             <section>
-                                <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">YouTube動画リスト</h2>
+                                <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200 text-stone-900">YouTube動画リスト</h2>
 
                                 {/* Intro Text Input */}
                                 <div className="bg-white p-6 rounded-xl shadow-sm mb-6">
@@ -1256,7 +1256,7 @@ export default function AdminPage() {
                         {/* Settings Section */}
                         {activeAdminTab === 'settings' && (
                             <section>
-                                <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">サイト設定</h2>
+                                <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200 text-stone-900">サイト設定</h2>
                                 <div className="bg-white p-6 rounded-xl shadow-sm space-y-6">
 
                                     {/* Profile Image Upload */}
@@ -1409,7 +1409,7 @@ export default function AdminPage() {
                         {/* Video Production Section */}
                         {activeAdminTab === 'videoProduction' && (
                             <section>
-                                <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">動画編集リスト</h2>
+                                <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200 text-stone-900">動画編集リスト</h2>
 
                                 {/* Intro Text Section */}
                                 <div className="bg-stone-50 p-6 rounded-xl mb-8 border border-stone-200">
@@ -1540,7 +1540,7 @@ export default function AdminPage() {
                         {/* Audio (BGM) Section */}
                         {activeAdminTab === 'audio' && (
                             <section>
-                                <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">BGM管理</h2>
+                                <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200 text-stone-900">BGM管理</h2>
 
                                 {/* Intro Text Input */}
                                 <div className="bg-white p-6 rounded-xl shadow-sm mb-6">
@@ -1624,7 +1624,7 @@ export default function AdminPage() {
                         )}
 
                         <section className="mt-8 border-t pt-8">
-                            <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200">処理ログ</h2>
+                            <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200 text-stone-900">処理ログ</h2>
                             <div className="bg-black/90 p-4 rounded-xl shadow-inner h-64 overflow-y-auto font-mono text-sm">
                                 {logs.length === 0 ? (
                                     <div className="text-gray-500">まだログはありません...</div>

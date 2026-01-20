@@ -78,8 +78,6 @@ export default function ShopifyProductCard({ handle }: ShopifyProductCardProps) 
                 <h3 className="font-bold text-lg mb-2 line-clamp-2">{title}</h3>
 
                 <div className="mt-auto">
-                    <p className="text-2xl font-bold text-accent mb-4">{formattedPrice}</p>
-
                     <button
                         onClick={handlePurchase}
                         disabled={loading || purchasing}

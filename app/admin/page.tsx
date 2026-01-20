@@ -536,9 +536,9 @@ export default function AdminPage() {
 
     return (
         <div className="min-h-screen bg-stone-50 p-8 pb-32">
-            <header className="fixed top-0 left-0 right-0 bg-white border-b border-stone-200 px-4 md:px-8 py-3 md:py-4 flex flex-col md:flex-row md:justify-between md:items-center gap-3 z-50 shadow-sm">
+            <header className="fixed top-0 left-0 right-0 bg-white border-b border-stone-200 px-4 md:px-8 py-2 md:py-4 flex flex-col md:flex-row md:justify-between md:items-center gap-2 z-50 shadow-sm">
                 <h1 className="text-lg md:text-xl font-bold text-primary">ポートフォリオ管理画面</h1>
-                <div className="flex flex-col sm:flex-row gap-2 md:gap-4 items-stretch sm:items-center">
+                <div className="hidden md:flex flex-col sm:flex-row gap-2 md:gap-4 items-stretch sm:items-center">
                     {/* Preview Button */}
                     <a
                         href="https://profile-portfolio-one-tau.vercel.app"
@@ -596,7 +596,7 @@ export default function AdminPage() {
 
                 <main className="flex-1 ml-0 md:ml-64 p-4 md:p-8 overflow-y-auto bg-stone-50 pb-32 md:pb-32">
                     {/* Mobile Tab Navigation - Horizontal Scroll */}
-                    <div className="md:hidden mb-6 -mx-4 px-4 overflow-x-auto no-scrollbar border-b border-stone-200 bg-white sticky top-0 z-30">
+                    <div className="md:hidden mb-6 -mx-4 px-4 overflow-x-auto no-scrollbar border-b border-stone-200 bg-white sticky top-12 z-30">
                         <div className="flex gap-2 py-3 min-w-max">
                             {[
                                 { id: 'home', label: 'HOME' },
@@ -1642,20 +1642,20 @@ export default function AdminPage() {
             </div>
 
             {/* Mobile Fixed Save Button */}
-            <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-stone-200 p-4 z-50 shadow-lg" style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}>
+            <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-stone-900 border-t border-stone-200 dark:border-stone-700 p-2 z-50 shadow-lg" style={{ paddingBottom: 'max(0.5rem, env(safe-area-inset-bottom))' }}>
                 <div className="flex gap-2">
                     <button
                         onClick={handleSave}
-                        className="flex-1 bg-primary text-white px-6 py-3 rounded-full hover:bg-primary/90 transition-colors font-bold text-sm"
+                        className="flex-1 bg-primary text-white px-4 py-2 rounded-full hover:bg-primary/90 transition-colors font-medium text-xs"
                     >
-                        保存する
+                        保存
                     </button>
                     <button
                         onClick={handleDeploy}
                         disabled={isDeploying}
-                        className="flex-1 bg-red-500 text-white px-6 py-3 rounded-full hover:bg-red-600 transition-colors disabled:opacity-50 font-bold text-sm"
+                        className="flex-1 bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-600 transition-colors disabled:opacity-50 font-medium text-xs"
                     >
-                        {isDeploying ? '公開中...' : '公開する'}
+                        {isDeploying ? '公開中' : '公開'}
                     </button>
                 </div>
             </div>

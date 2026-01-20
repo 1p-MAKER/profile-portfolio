@@ -1642,8 +1642,7 @@ export default function AdminPage() {
             </div >
         </div >
 
-        {/* Mobile Fixed Save Button - Visible only on mobile */ }
-    <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-stone-200 p-4 z-50 shadow-lg" style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}>
+        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-stone-200 p-4 z-50 shadow-lg" style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}>
         <div className="flex gap-2">
             <button
                 onClick={handleSave}

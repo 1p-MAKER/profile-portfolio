@@ -880,9 +880,9 @@ export default function AdminPage() {
                                             <div className="p-4 bg-stone-50 rounded-lg border border-stone-200">
                                                 <div className="grid gap-3">
                                                     <div className="grid grid-cols-2 gap-3">
-                                                        <input className="border p-2 rounded" value={item.title} onChange={(e) => updateGeneralProduct('snsAccounts', index, 'title', e.target.value)} placeholder="タイトル" />
+                                                        <input className="border p-2 rounded text-stone-900" value={item.title} onChange={(e) => updateGeneralProduct('snsAccounts', index, 'title', e.target.value)} placeholder="タイトル" />
                                                         <select
-                                                            className="border p-2 rounded"
+                                                            className="border p-2 rounded text-stone-900"
                                                             value={item.platformType || 'other'}
                                                             onChange={(e) => updateGeneralProduct('snsAccounts', index, 'platformType', e.target.value)}
                                                         >
@@ -897,22 +897,22 @@ export default function AdminPage() {
                                                         </select>
                                                     </div>
                                                     <div className="grid grid-cols-2 gap-3">
-                                                        <input className="border p-2 rounded" value={item.category} onChange={(e) => updateGeneralProduct('snsAccounts', index, 'category', e.target.value)} placeholder="カテゴリ (例: SNS)" />
+                                                        <input className="border p-2 rounded text-stone-900" value={item.category} onChange={(e) => updateGeneralProduct('snsAccounts', index, 'category', e.target.value)} placeholder="カテゴリ (例: SNS)" />
                                                         <input
-                                                            className="border p-2 rounded"
+                                                            className="border p-2 rounded text-stone-900"
                                                             value={item.tagline || ''}
                                                             onChange={(e) => updateGeneralProduct('snsAccounts', index, 'tagline', e.target.value)}
                                                             placeholder="キャッチコピー (例: 日々のつぶやき)"
                                                         />
                                                     </div>
-                                                    <input className="border p-2 rounded" value={item.url} onChange={(e) => updateGeneralProduct('snsAccounts', index, 'url', e.target.value)} placeholder="URL" />
+                                                    <input className="border p-2 rounded text-stone-900" value={item.url} onChange={(e) => updateGeneralProduct('snsAccounts', index, 'url', e.target.value)} placeholder="URL" />
                                                     <input
-                                                        className="border p-2 rounded"
+                                                        className="border p-2 rounded text-stone-900"
                                                         value={item.thumbnailUrl || ''}
                                                         onChange={(e) => updateGeneralProduct('snsAccounts', index, 'thumbnailUrl', e.target.value)}
                                                         placeholder="サムネイルURL (任意)"
                                                     />
-                                                    <textarea className="border p-2 rounded h-24" value={item.description} onChange={(e) => updateGeneralProduct('snsAccounts', index, 'description', e.target.value)} placeholder="説明" />
+                                                    <textarea className="border p-2 rounded text-stone-900 h-24" value={item.description} onChange={(e) => updateGeneralProduct('snsAccounts', index, 'description', e.target.value)} placeholder="説明" />
                                                     <div className="flex justify-end gap-2">
                                                         <button
                                                             onClick={() => toggleFeatured('snsAccounts', index)}
@@ -956,11 +956,11 @@ export default function AdminPage() {
                                     <div key={index} className="bg-white p-6 rounded-xl shadow-sm mb-4">
                                         <div className="grid gap-3">
                                             <div className="grid grid-cols-2 gap-3">
-                                                <input className="border p-2 rounded" value={item.title} onChange={(e) => updateGeneralProduct('shopifyApps', index, 'title', e.target.value)} placeholder="タイトル" />
-                                                <input className="border p-2 rounded" value={item.category} onChange={(e) => updateGeneralProduct('shopifyApps', index, 'category', e.target.value)} placeholder="カテゴリ (例: Shopify App)" />
+                                                <input className="border p-2 rounded text-stone-900" value={item.title} onChange={(e) => updateGeneralProduct('shopifyApps', index, 'title', e.target.value)} placeholder="タイトル" />
+                                                <input className="border p-2 rounded text-stone-900" value={item.category} onChange={(e) => updateGeneralProduct('shopifyApps', index, 'category', e.target.value)} placeholder="カテゴリ (例: Shopify App)" />
                                             </div>
-                                            <input className="border p-2 rounded" value={item.url} onChange={(e) => updateGeneralProduct('shopifyApps', index, 'url', e.target.value)} placeholder="URL" />
-                                            <textarea className="border p-2 rounded h-24" value={item.description} onChange={(e) => updateGeneralProduct('shopifyApps', index, 'description', e.target.value)} placeholder="説明" />
+                                            <input className="border p-2 rounded text-stone-900" value={item.url} onChange={(e) => updateGeneralProduct('shopifyApps', index, 'url', e.target.value)} placeholder="URL" />
+                                            <textarea className="border p-2 rounded text-stone-900 h-24" value={item.description} onChange={(e) => updateGeneralProduct('shopifyApps', index, 'description', e.target.value)} placeholder="説明" />
                                             <div className="flex justify-end gap-2">
                                                 <button
                                                     onClick={() => toggleFeatured('shopifyApps', index)}
@@ -1000,7 +1000,7 @@ export default function AdminPage() {
                                     <h3 className="font-bold mb-4 text-stone-700">新規追加</h3>
                                     <div className="flex gap-2 mb-4">
                                         <input
-                                            className="flex-grow border p-2 rounded"
+                                            className="flex-grow border p-2 rounded text-stone-900"
                                             value={newFurusatoUrl}
                                             onChange={(e) => setNewFurusatoUrl(e.target.value)}
                                             placeholder="URLを入力して自動取得"
@@ -1150,7 +1150,7 @@ export default function AdminPage() {
 
                                 <div className="flex gap-2 bg-stone-100 p-4 rounded-xl border border-stone-200">
                                     <input
-                                        className="flex-grow border p-2 rounded"
+                                        className="flex-grow border p-2 rounded text-stone-900"
                                         value={newAppId}
                                         onChange={(e) => setNewAppId(e.target.value)}
                                         placeholder="App Store IDを入力 (例: 1234567890)"
@@ -1187,7 +1187,7 @@ export default function AdminPage() {
                                     <h3 className="font-bold mb-4 text-stone-700">新規追加</h3>
                                     <div className="flex gap-2 mb-4">
                                         <input
-                                            className="flex-grow border p-2 rounded"
+                                            className="flex-grow border p-2 rounded text-stone-900"
                                             value={newYouTubeUrl}
                                             onChange={(e) => setNewYouTubeUrl(e.target.value)}
                                             placeholder="YouTube URLを入力"
@@ -1354,7 +1354,7 @@ export default function AdminPage() {
                                             Featured導入文 (Featured Intro)
                                         </label>
                                         <textarea
-                                            className="w-full border p-3 rounded h-48 font-sans"
+                                            className="w-full border p-3 rounded text-stone-900 h-48 font-sans"
                                             value={featuredIntro}
                                             onChange={(e) => {
                                                 setFeaturedIntro(e.target.value);
@@ -1372,7 +1372,7 @@ export default function AdminPage() {
                                             動画編集タブ導入文 (Video Production Intro)
                                         </label>
                                         <textarea
-                                            className="w-full border p-3 rounded h-24 font-sans"
+                                            className="w-full border p-3 rounded text-stone-900 h-24 font-sans"
                                             value={videoProductionIntro}
                                             onChange={(e) => {
                                                 setVideoProductionIntro(e.target.value);
@@ -1390,7 +1390,7 @@ export default function AdminPage() {
                                             BGMタブ導入文 (Audio Intro)
                                         </label>
                                         <textarea
-                                            className="w-full border p-3 rounded h-24 font-sans"
+                                            className="w-full border p-3 rounded text-stone-900 h-24 font-sans"
                                             value={audioIntro}
                                             onChange={(e) => {
                                                 setAudioIntro(e.target.value);
@@ -1417,7 +1417,7 @@ export default function AdminPage() {
                                         動画制作のスキル・想い（導入文）
                                     </label>
                                     <textarea
-                                        className="w-full border p-3 rounded h-32 font-sans"
+                                        className="w-full border p-3 rounded text-stone-900 h-32 font-sans"
                                         value={videoProductionIntro}
                                         onChange={(e) => {
                                             setVideoProductionIntro(e.target.value);
@@ -1435,7 +1435,7 @@ export default function AdminPage() {
                                     <h3 className="font-bold mb-4 text-stone-700">新規追加</h3>
                                     <div className="flex gap-2 mb-4">
                                         <input
-                                            className="flex-grow border p-2 rounded"
+                                            className="flex-grow border p-2 rounded text-stone-900"
                                             value={newVideoProductionUrl}
                                             onChange={(e) => setNewVideoProductionUrl(e.target.value)}
                                             placeholder="YouTube URLを入力"

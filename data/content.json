@@ -31,19 +31,22 @@
       "title": "Instagram",
       "description": "個人の活動記録です。",
       "url": "https://www.instagram.com/1pei_okinawa",
-      "category": "SNS"
+      "category": "SNS",
+      "platformType": "other"
     },
     {
       "title": "X (Twitter)",
       "description": "アプリの開発記録や最新情報です。",
       "url": "https://x.com/DevCat123",
-      "category": "SNS"
+      "category": "SNS",
+      "platformType": "x"
     },
     {
       "title": "Sora (Video Generation)",
       "description": "AI動画生成プロフィール",
       "url": "https://sora.chatgpt.com/profile/1ppn",
-      "category": "SNS"
+      "category": "SNS",
+      "platformType": "sora"
     }
   ],
   "printImages": [

@@ -63,10 +63,7 @@ function SortableItem({ id, children }: SortableItemProps) {
             </div>
 
             {/* Content - Inputs are now clickable */}
-            <div
-                className="flex-1 min-w-0"
-                onPointerDown={(e) => e.stopPropagation()}
-            >
+            <div className="flex-1 min-w-0">
                 {children}
             </div>
         </div>

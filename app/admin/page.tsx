@@ -235,13 +235,9 @@ export default function AdminPage() {
                 setStatus('画像をアップロードしました（保存ボタンを押してください）');
                 addLogEntry(`画像アップロード成功: ${result.path}`);
 
-                // 自動保存もしてしまう
-                await fetch('/api/data', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(newData)
-                });
-                addLogEntry('アップロード後のデータを自動保存しました');
+                // 自動保存もしてしまう (LocalStorage)
+                localStorage.setItem('portfolio_admin_data', JSON.stringify(newData));
+                addLogEntry('アップロード後のデータをブラウザに自動保存しました');
 
             } else {
                 addLogEntry('画像アップロードに失敗しました');

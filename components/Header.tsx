@@ -20,9 +20,9 @@ export default function Header({ profileName, profileTagline }: HeaderProps) {
                             sizes="40px"
                         />
                     </div>
-                    <div className="flex flex-row items-baseline gap-2">
-                        <h1 className="text-sm md:text-lg font-bold leading-tight whitespace-nowrap">{profileName || "長嶺 一平"}</h1>
-                        <p className="text-[10px] md:text-xs text-subtext truncate max-w-[120px] md:max-w-none">{profileTagline || "ものづくりで貢献"}</p>
+                    <div className="flex flex-row items-center gap-2 overflow-hidden">
+                        <h1 className="text-sm md:text-lg font-bold leading-tight whitespace-nowrap shrink-0">{profileName || "長嶺 一平"}</h1>
+                        <p className="text-[10px] md:text-xs text-subtext truncate">{profileTagline || "ものづくりで貢献"}</p>
                     </div>
                 </Link>
             </div>

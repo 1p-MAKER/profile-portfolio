@@ -88,25 +88,67 @@ export default function AdminPage() {
 
     const handleSave = async () => {
         setStatus('保存中...');
-        addLogEntry('保存処理を開始しました');
+        const startTime = new Date().toISOString();
+        addLogEntry(`[${startTime}] 保存処理を開始しました`);
+
         try {
             const res = await fetch('/api/data', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             });
-            if (res.ok) {
-                setStatus('保存しました！');
-                addLogEntry('データの保存に成功しました');
-            } else {
-                setStatus('保存に失敗しました');
-                addLogEntry('エラー: データの保存に失敗しました');
+
+            // HTTPステータスチェック
+            if (!res.ok) {
+                const errorBody = await res.text();
+                const statusCode = res.status;
+                const statusText = res.statusText;
+
+                // 詳細エラーログ
+                console.error('[保存エラー詳細]', {
+                    statusCode,
+                    statusText,
+                    body: errorBody,
+                    timestamp: new Date().toISOString(),
+                    dataSize: JSON.stringify(data).length,
+                });
+
+                // ユーザー向けメッセージ
+                let userMessage = `保存失敗 (${statusCode} ${statusText})`;
+
+                if (statusCode === 403) {
+                    userMessage += ' - 権限不足';
+                } else if (statusCode === 413) {
+                    userMessage += ' - データサイズ超過';
+                } else if (statusCode === 504) {
+                    userMessage += ' - タイムアウト';
+                } else if (statusCode === 500) {
+                    userMessage += ' - サーバーエラー';
+                }
+
+                setStatus(userMessage);
+                addLogEntry(`エラー: ${userMessage}`);
+                return;
             }
+
+            const result = await res.json();
+            setStatus('保存しました！');
+            addLogEntry(`[${new Date().toISOString()}] データの保存に成功しました`);
+
         } catch (e: unknown) {
-            setStatus('エラーが発生しました');
-            const msg = e instanceof Error ? e.message : String(e);
-            addLogEntry(`エラー: ${msg}`);
+            // ネットワークエラー等
+            const errorDetails = {
+                message: e instanceof Error ? e.message : String(e),
+                stack: e instanceof Error ? e.stack : undefined,
+                timestamp: new Date().toISOString(),
+            };
+
+            console.error('[保存エラー（例外）]', errorDetails);
+
+            setStatus('エラー: ネットワーク接続失敗');
+            addLogEntry(`エラー: ${errorDetails.message}`);
         }
+
         setTimeout(() => setStatus(''), 3000);
     };
 
@@ -115,7 +157,7 @@ export default function AdminPage() {
 
         setIsDeploying(true);
         setStatus('公開処理中... ログを確認してください');
-        addLogEntry('公開（デプロイ）処理を開始...');
+        addLogEntry(`[${new Date().toISOString()}] 公開（デプロイ）処理を開始...`);
 
         // Step 1: 自動保存
         addLogEntry('デプロイ前の自動保存を実行中...');
@@ -125,14 +167,28 @@ export default function AdminPage() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             });
+
             if (!saveRes.ok) {
-                throw new Error('データの自動保存に失敗しました');
+                const errorBody = await saveRes.text();
+                const statusCode = saveRes.status;
+                const statusText = saveRes.statusText;
+
+                console.error('[デプロイ前保存エラー詳細]', {
+                    statusCode,
+                    statusText,
+                    body: errorBody,
+                    timestamp: new Date().toISOString()
+                });
+
+                throw new Error(`自動保存失敗: ${statusCode} ${statusText}`);
             }
+
             addLogEntry('データの自動保存完了。');
         } catch (e: unknown) {
             setStatus('保存エラー');
             const msg = e instanceof Error ? e.message : String(e);
             addLogEntry(`エラー: ${msg}`);
+            console.error('[デプロイ前保存例外]', e);
             setIsDeploying(false);
             return;
         }
@@ -140,6 +196,26 @@ export default function AdminPage() {
         // Step 2: デプロイ実行
         try {
             const res = await fetch('/api/deploy', { method: 'POST' });
+
+            // HTTPステータスチェック（レスポンス解析前）
+            if (!res.ok) {
+                const errorBody = await res.text();
+                const statusCode = res.status;
+                const statusText = res.statusText;
+
+                console.error('[デプロイAPIエラー詳細]', {
+                    statusCode,
+                    statusText,
+                    body: errorBody,
+                    timestamp: new Date().toISOString()
+                });
+
+                addLogEntry(`エラー: デプロイAPI呼び出し失敗 (${statusCode} ${statusText})`);
+                setStatus('公開に失敗しました');
+                setIsDeploying(false);
+                return;
+            }
+
             const result = await res.json();
 
             // サーバーからのログを表示
@@ -147,19 +223,23 @@ export default function AdminPage() {
                 result.logs.forEach((log: string) => addLogEntry(`SERVER: ${log}`));
             }
 
-            if (res.ok) {
+            if (res.ok) { // api/deployは通常200を返すが、内部のエラーはlogsやsuccessフラグで判断する場合もある
                 setStatus('公開リクエスト完了！');
-                addLogEntry('公開リクエストが正常に完了しました。Vercelでの反映を待ってください。');
+                addLogEntry(`[${new Date().toISOString()}] 公開リクエストが正常に完了しました。Vercelでの反映を待ってください。`);
             } else {
+                // res.okがfalseの場合はここに来るが、上でチェック済み
                 setStatus('公開に失敗しました');
-                addLogEntry('エラー: 公開処理に失敗しました。詳細は上記サーバログを確認してください。');
+                addLogEntry('エラー: 公開処理に失敗しました。');
             }
         } catch (e: unknown) {
             setStatus('エラーが発生しました');
             const msg = e instanceof Error ? e.message : String(e);
             addLogEntry(`通信エラー: ${msg}`);
+            console.error('[デプロイ例外]', e);
+        } finally {
+            setIsDeploying(false);
+            setTimeout(() => setStatus(''), 5000);
         }
-        setIsDeploying(false);
     };
 
     const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -18,6 +18,8 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
+import { FaGripVertical } from 'react-icons/fa';
+
 interface DraggableListProps<T> {
     items: T[];
     onReorder: (newItems: T[]) => void;
@@ -35,6 +37,7 @@ function SortableItem({ id, children }: SortableItemProps) {
         attributes,
         listeners,
         setNodeRef,
+        setActivatorNodeRef,
         transform,
         transition,
         isDragging,
@@ -47,8 +50,22 @@ function SortableItem({ id, children }: SortableItemProps) {
     };
 
     return (
-        <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-            {children}
+        <div ref={setNodeRef} style={style} className="flex items-start gap-2">
+            {/* Drag Handle - Only this part is draggable */}
+            <div
+                ref={setActivatorNodeRef}
+                {...attributes}
+                {...listeners}
+                className="cursor-grab active:cursor-grabbing p-2 hover:bg-stone-200 rounded transition-colors flex-shrink-0"
+                title="ドラッグして並び替え"
+            >
+                <FaGripVertical className="w-5 h-5 text-stone-500" />
+            </div>
+
+            {/* Content - Inputs are now clickable */}
+            <div className="flex-1 min-w-0">
+                {children}
+            </div>
         </div>
     );
 }

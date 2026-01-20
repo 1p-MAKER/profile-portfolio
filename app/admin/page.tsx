@@ -1639,26 +1639,28 @@ export default function AdminPage() {
                         <div className="h-20"></div>
                     </div>
                 </main>
-            </div >
-        </div >
+            </div>
 
-        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-stone-200 p-4 z-50 shadow-lg" style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}>
-        <div className="flex gap-2">
-            <button
-                onClick={handleSave}
-                className="flex-1 bg-primary text-white px-6 py-3 rounded-full hover:bg-primary/90 transition-colors font-bold text-sm"
-            >
-                保存する
-            </button>
-            <button
-                onClick={handleDeploy}
-                disabled={isDeploying}
-                className="flex-1 bg-red-500 text-white px-6 py-3 rounded-full hover:bg-red-600 transition-colors disabled:opacity-50 font-bold text-sm"
-            >
-                {isDeploying ? '公開中...' : '公開する'}
-            </button>
+            {/* Mobile Fixed Save Button */}
+            <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-stone-200 p-4 z-50 shadow-lg" style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}>
+                <div className="flex gap-2">
+                    <button
+                        onClick={handleSave}
+                        className="flex-1 bg-primary text-white px-6 py-3 rounded-full hover:bg-primary/90 transition-colors font-bold text-sm"
+                    >
+                        保存する
+                    </button>
+                    <button
+                        onClick={handleDeploy}
+                        disabled={isDeploying}
+                        className="flex-1 bg-red-500 text-white px-6 py-3 rounded-full hover:bg-red-600 transition-colors disabled:opacity-50 font-bold text-sm"
+                    >
+                        {isDeploying ? '公開中...' : '公開する'}
+                    </button>
+                </div>
+            </div>
         </div>
-    </div>
+
 
     );
 }

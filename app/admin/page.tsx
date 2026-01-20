@@ -48,6 +48,28 @@ export default function AdminPage() {
     const [audioIntro, setAudioIntro] = useState('');
 
     useEffect(() => {
+        // 1. Try to load from LocalStorage first
+        const localData = localStorage.getItem('portfolio_admin_data');
+        if (localData) {
+            try {
+                const parsed = JSON.parse(localData);
+                console.log('Loaded data from LocalStorage');
+                setData(parsed);
+                // Update local state from loaded data
+                if (parsed.settings?.xUsername) setXUsername(parsed.settings.xUsername);
+                if (parsed.settings?.siteTitle) setSiteTitle(parsed.settings.siteTitle);
+                if (parsed.settings?.profileName) setProfileName(parsed.settings.profileName);
+                if (parsed.settings?.profileTagline) setProfileTagline(parsed.settings.profileTagline);
+                if (parsed.settings?.featuredIntro) setFeaturedIntro(parsed.settings.featuredIntro);
+                if (parsed.settings?.videoProductionIntro) setVideoProductionIntro(parsed.settings.videoProductionIntro);
+                if (parsed.settings?.audioIntro) setAudioIntro(parsed.settings.audioIntro);
+                return; // Skip server fetch if local data exists
+            } catch (e) {
+                console.error('Failed to parse local storage data', e);
+            }
+        }
+
+        // 2. Fallback to server fetch
         fetch('/api/data')
             .then(res => res.json())
             .then(fetchedData => {
@@ -60,9 +82,11 @@ export default function AdminPage() {
                         { id: 'sns', label: 'SNSリスト' },
                         { id: 'furusato', label: 'ふるさと納税リスト' },
                     ];
-
                 }
                 setData(fetchedData);
+                // Also save to local storage to sync
+                localStorage.setItem('portfolio_admin_data', JSON.stringify(fetchedData));
+
                 if (fetchedData.settings?.xUsername) {
                     setXUsername(fetchedData.settings.xUsername);
                 }
@@ -87,155 +111,92 @@ export default function AdminPage() {
     };
 
     const handleSave = async () => {
+        if (!data) return;
+
         setStatus('保存中...');
         const startTime = new Date().toISOString();
-        addLogEntry(`[${startTime}] 保存処理を開始しました`);
 
         try {
-            const res = await fetch('/api/data', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
+            // LocalStorageに保存
+            localStorage.setItem('portfolio_admin_data', JSON.stringify(data));
 
-            // HTTPステータスチェック
-            if (!res.ok) {
-                const errorBody = await res.text();
-                const statusCode = res.status;
-                const statusText = res.statusText;
-
-                // 詳細エラーログ
-                console.error('[保存エラー詳細]', {
-                    statusCode,
-                    statusText,
-                    body: errorBody,
-                    timestamp: new Date().toISOString(),
-                    dataSize: JSON.stringify(data).length,
-                });
-
-                // ユーザー向けメッセージ
-                let userMessage = `保存失敗 (${statusCode} ${statusText})`;
-
-                if (statusCode === 403) {
-                    userMessage += ' - 権限不足';
-                } else if (statusCode === 413) {
-                    userMessage += ' - データサイズ超過';
-                } else if (statusCode === 504) {
-                    userMessage += ' - タイムアウト';
-                } else if (statusCode === 500) {
-                    userMessage += ' - サーバーエラー';
-                }
-
-                setStatus(userMessage);
-                addLogEntry(`エラー: ${userMessage}`);
-                return;
-            }
-
-            const result = await res.json();
-            setStatus('保存しました！');
-            addLogEntry(`[${new Date().toISOString()}] データの保存に成功しました`);
+            setStatus('ブラウザに保存しました');
+            addLogEntry(`[${startTime}] ブラウザへの一時保存に成功しました`);
 
         } catch (e: unknown) {
-            // ネットワークエラー等
-            const errorDetails = {
-                message: e instanceof Error ? e.message : String(e),
-                stack: e instanceof Error ? e.stack : undefined,
-                timestamp: new Date().toISOString(),
-            };
-
-            console.error('[保存エラー（例外）]', errorDetails);
-
-            setStatus('エラー: ネットワーク接続失敗');
-            addLogEntry(`エラー: ${errorDetails.message}`);
+            console.error('[保存エラー]', e);
+            setStatus('エラー: ブラウザ保存失敗');
+            const msg = e instanceof Error ? e.message : String(e);
+            addLogEntry(`保存エラー: ${msg}`);
         }
 
         setTimeout(() => setStatus(''), 3000);
     };
 
     const handleDeploy = async () => {
-        if (!confirm('本当に公開しますか？\n（編集内容は自動で保存され、Gitへのコミットとプッシュが行われます）')) return;
+        if (!confirm('本当に公開しますか？\n（GitHubへコミットし、Vercelへのデプロイをトリガーします）')) return;
 
         setIsDeploying(true);
         setStatus('公開処理中... ログを確認してください');
-        addLogEntry(`[${new Date().toISOString()}] 公開（デプロイ）処理を開始...`);
+        addLogEntry(`[${new Date().toISOString()}] 公開リクエストを開始...`);
 
-        // Step 1: 自動保存
-        addLogEntry('デプロイ前の自動保存を実行中...');
+        // Step 1: ブラウザ保存
+        addLogEntry('公開前のブラウザ保存を実行中...');
         try {
-            const saveRes = await fetch('/api/data', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
-
-            if (!saveRes.ok) {
-                const errorBody = await saveRes.text();
-                const statusCode = saveRes.status;
-                const statusText = saveRes.statusText;
-
-                console.error('[デプロイ前保存エラー詳細]', {
-                    statusCode,
-                    statusText,
-                    body: errorBody,
-                    timestamp: new Date().toISOString()
-                });
-
-                throw new Error(`自動保存失敗: ${statusCode} ${statusText}`);
+            if (data) {
+                localStorage.setItem('portfolio_admin_data', JSON.stringify(data));
+                addLogEntry('ブラウザへの自動保存完了。');
             }
-
-            addLogEntry('データの自動保存完了。');
-        } catch (e: unknown) {
-            setStatus('保存エラー');
-            const msg = e instanceof Error ? e.message : String(e);
-            addLogEntry(`エラー: ${msg}`);
-            console.error('[デプロイ前保存例外]', e);
-            setIsDeploying(false);
-            return;
+        } catch (e) {
+            console.error('Auto-save failed', e);
+            addLogEntry('警告: ブラウザ自動保存に失敗しましたが、公開処理を続行します。');
         }
 
-        // Step 2: デプロイ実行
+        // Step 2: GitHub API経由で直接更新 (/api/publish)
         try {
-            const res = await fetch('/api/deploy', { method: 'POST' });
+            const res = await fetch('/api/publish', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    content: data,
+                    message: 'update: content.json via admin tool'
+                })
+            });
 
-            // HTTPステータスチェック（レスポンス解析前）
             if (!res.ok) {
                 const errorBody = await res.text();
                 const statusCode = res.status;
                 const statusText = res.statusText;
 
-                console.error('[デプロイAPIエラー詳細]', {
+                console.error('[公開APIエラー詳細]', {
                     statusCode,
                     statusText,
                     body: errorBody,
                     timestamp: new Date().toISOString()
                 });
 
-                addLogEntry(`エラー: デプロイAPI呼び出し失敗 (${statusCode} ${statusText})`);
-                setStatus('公開に失敗しました');
-                setIsDeploying(false);
-                return;
+                // エラーレスポンスがJSONの場合パースを試みる
+                let errorMsg = `公開失敗 (${statusCode} ${statusText})`;
+                try {
+                    const parsedError = JSON.parse(errorBody);
+                    if (parsedError.error) errorMsg += `: ${parsedError.error}`;
+                } catch (e) {
+                    // JSONパース失敗時は無視
+                }
+
+                throw new Error(errorMsg);
             }
 
             const result = await res.json();
 
-            // サーバーからのログを表示
-            if (result.logs && Array.isArray(result.logs)) {
-                result.logs.forEach((log: string) => addLogEntry(`SERVER: ${log}`));
-            }
+            setStatus('公開リクエスト完了！');
+            addLogEntry(`[${new Date().toISOString()}] GitHubへの更新が完了しました。数分後に本番サイトに反映されます。`);
 
-            if (res.ok) { // api/deployは通常200を返すが、内部のエラーはlogsやsuccessフラグで判断する場合もある
-                setStatus('公開リクエスト完了！');
-                addLogEntry(`[${new Date().toISOString()}] 公開リクエストが正常に完了しました。Vercelでの反映を待ってください。`);
-            } else {
-                // res.okがfalseの場合はここに来るが、上でチェック済み
-                setStatus('公開に失敗しました');
-                addLogEntry('エラー: 公開処理に失敗しました。');
-            }
         } catch (e: unknown) {
-            setStatus('エラーが発生しました');
+            setStatus('公開エラー');
             const msg = e instanceof Error ? e.message : String(e);
             addLogEntry(`通信エラー: ${msg}`);
-            console.error('[デプロイ例外]', e);
+            console.error('[公開例外]', e);
         } finally {
             setIsDeploying(false);
             setTimeout(() => setStatus(''), 5000);

@@ -301,7 +301,7 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
                                     setActiveTab(tab.id);
                                     window.scrollTo({ top: 0, behavior: 'smooth' });
                                 }}
-                                className={`py-2 md:py-4 text-xs md:text-sm font-bold border-b-2 transition-all duration-300 px-3 md:px-4 ${activeTab === tab.id
+                                className={`py-2 md:py-2 text-xs md:text-sm font-bold border-b-2 transition-all duration-300 px-3 md:px-4 ${activeTab === tab.id
                                     ? 'border-accent text-accent'
                                     : 'border-transparent text-subtext hover:text-foreground'
                                     }`}

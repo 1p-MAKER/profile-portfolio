@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Footer from '@/components/Footer';
 import AppCard from '@/components/AppCard';
 import SimpleCard from './SimpleCard';
@@ -11,28 +11,72 @@ import ShopifyProductCard from '@/components/ShopifyProductCard';
 import AudioCard from '@/components/AudioCard';
 import Image from 'next/image';
 import { ContentData } from '@/types/content';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useDrag } from '@use-gesture/react';
 
-// TabType is now derived from the data structure loosely, or kept as a union for safety
-// For simplicity in this refactor, we accept string as activeTab to match dynamic data
 type TabType = string;
 
 import HeroSection from './HeroSection';
 
 export default function PortfolioContent({ data }: { data: ContentData }) {
-    // データがない場合のフォールバック（初回ロード時など）
     const initialTab = data.tabs && data.tabs.length > 0 ? data.tabs[0].id : 'leather';
     const [activeTab, setActiveTab] = useState<TabType>(initialTab);
+    const [direction, setDirection] = useState(0);
 
     // Image Lightbox Modal State
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
-    // Use tabs from data
     const tabs = data.tabs || [];
+
+    // Find current tab index for swipe logic
+    const tabIndex = tabs.findIndex(t => t.id === activeTab);
+
+    const paginate = (newDirection: number) => {
+        const newIndex = (tabIndex + newDirection + tabs.length) % tabs.length;
+        setDirection(newDirection);
+        setActiveTab(tabs[newIndex].id);
+        // Scroll to top when changing tabs via swipe/click
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    // Swipe handler
+    const bind = useDrag(({ swipe: [swipeX], cancel, active }) => {
+        // swipe logic: swipeX is 1 for right, -1 for left
+        if (swipeX === -1) {
+            cancel();
+            paginate(1); // Next tab (Left swipe)
+        } else if (swipeX === 1) {
+            cancel();
+            paginate(-1); // Prev tab (Right swipe)
+        }
+    }, {
+        axis: 'x',
+        filterTaps: true,
+        threshold: 50, // Sensitivity
+    });
+
+    // Animation variants
+    const variants = {
+        enter: (direction: number) => ({
+            x: direction > 0 ? 300 : -300,
+            opacity: 0
+        }),
+        center: {
+            zIndex: 1,
+            x: 0,
+            opacity: 1
+        },
+        exit: (direction: number) => ({
+            zIndex: 0,
+            x: direction < 0 ? 300 : -300,
+            opacity: 0
+        })
+    };
 
     // Featured items collection
     const getFeaturedItems = () => {
         const items: Array<{
-            id?: string; // Add optional ID for sorting
+            id?: string;
             type: 'ios' | 'leather' | 'shopify' | 'sns' | 'youtube' | 'furusato' | 'videoProduction';
             data: any;
         }> = [];
@@ -44,17 +88,17 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
 
         // Leather Products
         data.leatherProducts?.filter(p => p.isFeatured && p.handle).forEach(p => {
-            items.push({ type: 'leather', data: p, id: p.handle }); // Use handle as ID
+            items.push({ type: 'leather', data: p, id: p.handle });
         });
 
         // Shopify Apps
         data.shopifyApps?.filter(p => p.isFeatured).forEach(p => {
-            items.push({ type: 'shopify', data: p, id: p.url }); // Use url as fallback ID
+            items.push({ type: 'shopify', data: p, id: p.url });
         });
 
         // SNS Accounts
         data.snsAccounts?.filter(p => p.isFeatured).forEach(p => {
-            items.push({ type: 'sns', data: p, id: p.url }); // Use url as fallback ID
+            items.push({ type: 'sns', data: p, id: p.url });
         });
 
         // YouTube Videos
@@ -64,7 +108,7 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
 
         // Furusato Items
         data.furusatoItems?.filter(item => item.isFeatured).forEach(item => {
-            items.push({ type: 'furusato', data: item, id: item.url }); // Use url as ID
+            items.push({ type: 'furusato', data: item, id: item.url });
         });
 
         // Video Production Videos
@@ -72,7 +116,6 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
             items.push({ type: 'videoProduction', data: v, id: v.id });
         });
 
-        // Sorting Logic
         const order = data.settings?.featuredOrder || [];
         if (order.length > 0) {
             items.sort((a, b) => {
@@ -81,15 +124,9 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
                 const indexA = order.indexOf(idA);
                 const indexB = order.indexOf(idB);
 
-                // If both are in the order list, sort by index
-                if (indexA !== -1 && indexB !== -1) {
-                    return indexA - indexB;
-                }
-                // If only A is in the list, A comes first
+                if (indexA !== -1 && indexB !== -1) return indexA - indexB;
                 if (indexA !== -1) return -1;
-                // If only B is in the list, B comes first
                 if (indexB !== -1) return 1;
-                // If neither, keep original order (or maybe new items at end)
                 return 0;
             });
         }
@@ -97,16 +134,158 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
         return items;
     };
 
-    return (
-        <div className="min-h-screen flex flex-col font-sans">
+    // Render Content Logic moved to a function for clarity inside AnimatePresence
+    const renderTabContent = () => {
+        switch (activeTab) {
+            case 'home':
+                return (
+                    <div className="space-y-8">
+                        <HeroSection
+                            profileName={data.settings?.profileName}
+                            profileTagline={data.settings?.profileTagline}
+                            featuredIntro={data.settings?.featuredIntro}
+                        />
 
-            <nav className="sticky top-16 z-40 bg-background/95 backdrop-blur-sm border-b border-stone-200 overflow-x-auto">
+                        <h2 className="text-3xl font-bold mb-8 text-center">Featured Works</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {getFeaturedItems().map((item, index) => {
+                                if (item.type === 'ios') return <div key={`f-ios-${index}`} className="h-full"><AppCard appId={item.data.id} /></div>;
+                                if (item.type === 'leather') return <div key={`f-leather-${index}`} className="h-full"><ShopifyProductCard handle={item.data.handle} /></div>;
+                                if (item.type === 'shopify' || item.type === 'sns') return <div key={`f-${item.type}-${index}`} className="h-full"><SimpleCard title={item.data.title} description={item.data.description} url={item.data.url} category={item.data.category} /></div>;
+                                if (item.type === 'youtube' || item.type === 'videoProduction') return <div key={`f-yt-${index}`} className="h-full"><div className="bg-white dark:bg-stone-800 rounded-2xl overflow-hidden shadow-sm border border-stone-200 dark:border-stone-700"><YouTubeEmbed url={item.data.url} /><div className="p-4"><h3 className="font-bold text-lg">{item.data.title}</h3></div></div></div>;
+                                if (item.type === 'furusato') {
+                                    if (!item.data.title || !item.data.imageUrl) return null;
+                                    return <div key={`f-furu-${index}`} className="h-full"><FurusatoCard title={item.data.title} url={item.data.url} imageUrl={item.data.imageUrl} siteName={item.data.siteName} /></div>;
+                                }
+                                return null;
+                            })}
+                        </div>
+                        {getFeaturedItems().length === 0 && (
+                            <p className="text-center text-stone-500 py-12">まだピックアップアイテムが設定されていません。</p>
+                        )}
+                    </div>
+                );
+            case 'leather':
+                return (
+                    <>
+                        {data.settings?.leatherIntro && <p className="text-center text-stone-600 mb-8 whitespace-pre-wrap leading-relaxed">{data.settings.leatherIntro}</p>}
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {data.leatherProducts.filter(product => product.handle).map((product, index) => (
+                                <div key={index} className="h-full"><ShopifyProductCard handle={product.handle} /></div>
+                            ))}
+                        </div>
+                    </>
+                );
+            case 'ios':
+                return (
+                    <>
+                        {data.settings?.iosIntro && <p className="text-center text-stone-600 mb-8 whitespace-pre-wrap leading-relaxed">{data.settings.iosIntro}</p>}
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                            {data.iosApps.map((app) => (
+                                <div key={app.id} className="h-full"><AppCard appId={app.id} /></div>
+                            ))}
+                        </div>
+                    </>
+                );
+            case 'shopify':
+                return (
+                    <>
+                        {data.settings?.shopifyIntro && <p className="text-center text-stone-600 mb-8 whitespace-pre-wrap leading-relaxed">{data.settings.shopifyIntro}</p>}
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {data.shopifyApps.map((product, index) => (
+                                <div key={index} className="h-full"><SimpleCard title={product.title} description={product.description} url={product.url} category={product.category} /></div>
+                            ))}
+                        </div>
+                    </>
+                );
+            case '3d-printer':
+                return (
+                    <>
+                        {data.settings?.printer3dIntro && <p className="text-center text-stone-600 mb-8 whitespace-pre-wrap leading-relaxed">{data.settings.printer3dIntro}</p>}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                            {data.printImages.map((src, index) => (
+                                <div key={index} className="relative aspect-square rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer" onClick={() => setSelectedImage(src)}>
+                                    <Image src={src} alt={`3D Print Work ${index + 1}`} fill className="object-cover hover:scale-105 transition-transform duration-500" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" />
+                                </div>
+                            ))}
+                        </div>
+                        <p className="text-center text-subtext mt-8 text-sm">作品の一部を掲載しています。</p>
+                    </>
+                );
+            case 'sns':
+                return (
+                    <>
+                        {data.settings?.snsIntro && <p className="text-center text-stone-600 mb-8 whitespace-pre-wrap leading-relaxed">{data.settings.snsIntro}</p>}
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {data.snsAccounts.map((account, index) => <SNSCard key={index} account={account} />)}
+                        </div>
+                    </>
+                );
+            case 'furusato':
+                return (
+                    <>
+                        {data.settings?.furusatoIntro && <p className="text-center text-stone-600 mb-8 whitespace-pre-wrap leading-relaxed">{data.settings.furusatoIntro}</p>}
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {data.furusatoItems && data.furusatoItems.filter(item => item.title && item.imageUrl).map((item, index) => (
+                                <div key={index} className="h-full"><FurusatoCard title={item.title} url={item.url} imageUrl={item.imageUrl} siteName={item.siteName} /></div>
+                            ))}
+                        </div>
+                        {(!data.furusatoItems || data.furusatoItems.length === 0) && <p className="text-center text-stone-500 py-12">現在掲載されている返礼品はありません。</p>}
+                    </>
+                );
+            case 'youtube':
+                return (
+                    <>
+                        {data.settings?.youtubeIntro && <p className="text-center text-stone-600 mb-8 whitespace-pre-wrap leading-relaxed">{data.settings.youtubeIntro}</p>}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {data.youtubeVideos && data.youtubeVideos.map((video) => (
+                                <div key={video.id} className="h-full"><div className="bg-white dark:bg-stone-800 rounded-2xl overflow-hidden shadow-sm border border-stone-200 dark:border-stone-700"><YouTubeEmbed url={video.url} /><div className="p-4"><h3 className="font-bold text-lg">{video.title}</h3></div></div></div>
+                            ))}
+                        </div>
+                        {(!data.youtubeVideos || data.youtubeVideos.length === 0) && <p className="text-center text-stone-500 py-12">まだ動画が登録されていません。</p>}
+                    </>
+                );
+            case 'videoProduction':
+                return (
+                    <>
+                        {data.settings?.videoProductionIntro && <p className="text-center text-stone-600 mb-8 whitespace-pre-wrap leading-relaxed">{data.settings.videoProductionIntro}</p>}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {data.videoProductionVideos && data.videoProductionVideos.map((video) => (
+                                <div key={video.id} className="h-full"><div className="bg-white dark:bg-stone-800 rounded-2xl overflow-hidden shadow-sm border border-stone-200 dark:border-stone-700"><YouTubeEmbed url={video.url} /><div className="p-4"><h3 className="font-bold text-lg">{video.title}</h3></div></div></div>
+                            ))}
+                        </div>
+                        {(!data.videoProductionVideos || data.videoProductionVideos.length === 0) && <p className="text-center text-stone-500 py-12">まだ動画が登録されていません。</p>}
+                    </>
+                );
+            case 'audio':
+                return (
+                    <>
+                        {data.settings?.audioIntro && <p className="text-center text-stone-600 mb-8 whitespace-pre-wrap leading-relaxed">{data.settings.audioIntro}</p>}
+                        <div className="grid grid-cols-1 gap-4">
+                            {data.audioTracks && data.audioTracks.map((track) => <AudioCard key={track.id} track={track} />)}
+                        </div>
+                        {(!data.audioTracks || data.audioTracks.length === 0) && <p className="text-center text-stone-500 py-12">まだBGMが登録されていません。</p>}
+                    </>
+                );
+            default:
+                return null;
+        }
+    };
+
+    return (
+        <div className="min-h-screen flex flex-col font-sans overflow-x-hidden">
+            <nav className="sticky top-16 z-40 bg-background/95 backdrop-blur-sm border-b border-stone-200 overflow-x-auto no-scrollbar">
                 <div className="container mx-auto px-4">
                     <div className="flex justify-start md:justify-center gap-6 min-w-max pb-px">
                         {tabs.map((tab) => (
                             <button
                                 key={tab.id}
-                                onClick={() => setActiveTab(tab.id)}
+                                onClick={() => {
+                                    const newIndex = tabs.findIndex(t => t.id === tab.id);
+                                    setDirection(newIndex > tabIndex ? 1 : -1);
+                                    setActiveTab(tab.id);
+                                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                                }}
                                 className={`py-4 text-sm font-bold border-b-2 transition-all duration-300 px-2 ${activeTab === tab.id
                                     ? 'border-accent text-accent'
                                     : 'border-transparent text-subtext hover:text-foreground'
@@ -119,296 +298,30 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
                 </div>
             </nav>
 
-            <main className="flex-grow container mx-auto px-4 py-12">
+            <main className="flex-grow container mx-auto px-4 py-8 overflow-hidden touch-pan-y" {...bind()}>
                 <div className="min-h-[50vh]">
-                    {activeTab === 'home' && (
-                        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                            <HeroSection
-                                profileName={data.settings?.profileName}
-                                profileTagline={data.settings?.profileTagline}
-                                featuredIntro={data.settings?.featuredIntro}
-                            />
-
-                            <h2 className="text-3xl font-bold mb-8 text-center">Featured Works</h2>
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {getFeaturedItems().map((item, index) => {
-                                    if (item.type === 'ios') {
-                                        return (
-                                            <div key={`featured-ios-${index}`} className="h-full">
-                                                <AppCard appId={item.data.id} />
-                                            </div>
-                                        );
-                                    }
-                                    if (item.type === 'leather') {
-                                        return (
-                                            <div key={`featured-leather-${index}`} className="h-full">
-                                                <ShopifyProductCard handle={item.data.handle} />
-                                            </div>
-                                        );
-                                    }
-                                    if (item.type === 'shopify' || item.type === 'sns') {
-                                        return (
-                                            <div key={`featured-${item.type}-${index}`} className="h-full">
-                                                <SimpleCard
-                                                    title={item.data.title}
-                                                    description={item.data.description}
-                                                    url={item.data.url}
-                                                    category={item.data.category}
-                                                />
-                                            </div>
-                                        );
-                                    }
-                                    if (item.type === 'youtube' || item.type === 'videoProduction') {
-                                        return (
-                                            <div key={`featured-${item.type}-${index}`} className="h-full">
-                                                <div className="bg-white dark:bg-stone-800 rounded-2xl overflow-hidden shadow-sm border border-stone-200 dark:border-stone-700">
-                                                    <YouTubeEmbed url={item.data.url} />
-                                                    <div className="p-4">
-                                                        <h3 className="font-bold text-lg">{item.data.title}</h3>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        );
-                                    }
-                                    if (item.type === 'furusato') {
-                                        // データ不整合（titleやimageUrlがない）場合のガード
-                                        if (!item.data.title || !item.data.imageUrl) return null;
-
-                                        return (
-                                            <div key={`featured-furusato-${index}`} className="h-full">
-                                                <FurusatoCard
-                                                    title={item.data.title}
-                                                    url={item.data.url}
-                                                    imageUrl={item.data.imageUrl}
-                                                    siteName={item.data.siteName}
-                                                />
-                                            </div>
-                                        );
-                                    }
-                                    return null;
-                                })}
-                            </div>
-                            {getFeaturedItems().length === 0 && (
-                                <p className="text-center text-stone-500 py-12">
-                                    まだピックアップアイテムが設定されていません。
-                                </p>
-                            )}
-                        </div>
-                    )}
-
-                    {activeTab === 'leather' && (
-                        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                            {data.settings?.leatherIntro && (
-                                <p className="text-center text-stone-600 mb-8 whitespace-pre-wrap leading-relaxed">
-                                    {data.settings.leatherIntro}
-                                </p>
-                            )}
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {data.leatherProducts.filter(product => product.handle).map((product, index) => (
-                                    <div key={index} className="h-full">
-                                        <ShopifyProductCard handle={product.handle} />
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-
-                    {activeTab === 'ios' && (
-                        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                            {data.settings?.iosIntro && (
-                                <p className="text-center text-stone-600 mb-8 whitespace-pre-wrap leading-relaxed">
-                                    {data.settings.iosIntro}
-                                </p>
-                            )}
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                                {data.iosApps.map((app) => (
-                                    <div key={app.id} className="h-full">
-                                        <AppCard appId={app.id} />
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-
-                    {activeTab === 'shopify' && (
-                        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                            {data.settings?.shopifyIntro && (
-                                <p className="text-center text-stone-600 mb-8 whitespace-pre-wrap leading-relaxed">
-                                    {data.settings.shopifyIntro}
-                                </p>
-                            )}
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {data.shopifyApps.map((product, index) => (
-                                    <div key={index} className="h-full">
-                                        <SimpleCard
-                                            title={product.title}
-                                            description={product.description}
-                                            url={product.url}
-                                            category={product.category}
-                                        />
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-
-                    {activeTab === '3d-printer' && (
-                        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                            {data.settings?.printer3dIntro && (
-                                <p className="text-center text-stone-600 mb-8 whitespace-pre-wrap leading-relaxed">
-                                    {data.settings.printer3dIntro}
-                                </p>
-                            )}
-                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                                {data.printImages.map((src, index) => (
-                                    <div
-                                        key={index}
-                                        className="relative aspect-square rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer"
-                                        onClick={() => setSelectedImage(src)}
-                                    >
-                                        <Image
-                                            src={src}
-                                            alt={`3D Print Work ${index + 1}`}
-                                            fill
-                                            className="object-cover hover:scale-105 transition-transform duration-500"
-                                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                        />
-                                    </div>
-                                ))}
-                            </div>
-                            <p className="text-center text-subtext mt-8 text-sm">
-                                作品の一部を掲載しています。
-                            </p>
-                        </div>
-                    )}
-
-                    {activeTab === 'sns' && (
-                        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                            {data.settings?.snsIntro && (
-                                <p className="text-center text-stone-600 mb-8 whitespace-pre-wrap leading-relaxed">
-                                    {data.settings.snsIntro}
-                                </p>
-                            )}
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {data.snsAccounts.map((account, index) => (
-                                    <SNSCard key={index} account={account} />
-                                ))}
-                            </div>
-                        </div>
-                    )}
-
-                    {activeTab === 'furusato' && (
-                        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                            {data.settings?.furusatoIntro && (
-                                <p className="text-center text-stone-600 mb-8 whitespace-pre-wrap leading-relaxed">
-                                    {data.settings.furusatoIntro}
-                                </p>
-                            )}
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {data.furusatoItems && data.furusatoItems
-                                    .filter(item => item.title && item.imageUrl) // データ不整合対策: 必須項目がないアイテムは表示しない
-                                    .map((item, index) => (
-                                        <div key={index} className="h-full">
-                                            <FurusatoCard
-                                                title={item.title}
-                                                url={item.url}
-                                                imageUrl={item.imageUrl}
-                                                siteName={item.siteName}
-                                            />
-                                        </div>
-                                    ))}
-                            </div>
-                            {(!data.furusatoItems || data.furusatoItems.length === 0) && (
-                                <p className="text-center text-stone-500 py-12">
-                                    現在掲載されている返礼品はありません。
-                                </p>
-                            )}
-                        </div>
-                    )}
-
-                    {activeTab === 'youtube' && (
-                        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                            {data.settings?.youtubeIntro && (
-                                <p className="text-center text-stone-600 mb-8 whitespace-pre-wrap leading-relaxed">
-                                    {data.settings.youtubeIntro}
-                                </p>
-                            )}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                {data.youtubeVideos && data.youtubeVideos.map((video) => (
-                                    <div key={video.id} className="h-full">
-                                        <div className="bg-white dark:bg-stone-800 rounded-2xl overflow-hidden shadow-sm border border-stone-200 dark:border-stone-700">
-                                            <YouTubeEmbed url={video.url} />
-                                            <div className="p-4">
-                                                <h3 className="font-bold text-lg">{video.title}</h3>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                            {(!data.youtubeVideos || data.youtubeVideos.length === 0) && (
-                                <p className="text-center text-stone-500 py-12">
-                                    まだ動画が登録されていません。
-                                </p>
-                            )}
-                        </div>
-                    )}
-
-                    {/* Video Production Tab */}
-                    {activeTab === 'videoProduction' && (
-                        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                            {data.settings?.videoProductionIntro && (
-                                <p className="text-center text-stone-600 mb-8 whitespace-pre-wrap leading-relaxed">
-                                    {data.settings.videoProductionIntro}
-                                </p>
-                            )}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                {data.videoProductionVideos && data.videoProductionVideos.map((video) => (
-                                    <div key={video.id} className="h-full">
-                                        <div className="bg-white dark:bg-stone-800 rounded-2xl overflow-hidden shadow-sm border border-stone-200 dark:border-stone-700">
-                                            <YouTubeEmbed url={video.url} />
-                                            <div className="p-4">
-                                                <h3 className="font-bold text-lg">{video.title}</h3>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                            {(!data.videoProductionVideos || data.videoProductionVideos.length === 0) && (
-                                <p className="text-center text-stone-500 py-12">
-                                    まだ動画が登録されていません。
-                                </p>
-                            )}
-                        </div>
-                    )}
-
-                    {/* Audio (BGM) Tab */}
-                    {activeTab === 'audio' && (
-                        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                            {data.settings?.audioIntro && (
-                                <p className="text-center text-stone-600 mb-8 whitespace-pre-wrap leading-relaxed">
-                                    {data.settings.audioIntro}
-                                </p>
-                            )}
-                            <div className="grid grid-cols-1 gap-4">
-                                {data.audioTracks && data.audioTracks.map((track) => (
-                                    <AudioCard key={track.id} track={track} />
-                                ))}
-                            </div>
-                            {(!data.audioTracks || data.audioTracks.length === 0) && (
-                                <p className="text-center text-stone-500 py-12">
-                                    まだBGMが登録されていません。
-                                </p>
-                            )}
-                        </div>
-                    )}
-
-
+                    <AnimatePresence initial={false} custom={direction} mode="wait">
+                        <motion.div
+                            key={activeTab}
+                            custom={direction}
+                            variants={variants}
+                            initial="enter"
+                            animate="center"
+                            exit="exit"
+                            transition={{
+                                x: { type: "spring", stiffness: 300, damping: 30 },
+                                opacity: { duration: 0.2 }
+                            }}
+                            className="w-full"
+                        >
+                            {renderTabContent()}
+                        </motion.div>
+                    </AnimatePresence>
                 </div>
-            </main >
+            </main>
 
             <Footer />
 
-            {/* Image Lightbox Modal */}
             {selectedImage && (
                 <div
                     className="fixed inset-0 z-50 bg-black bg-opacity-90 flex items-center justify-center p-4"
@@ -433,6 +346,6 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
                     </div>
                 </div>
             )}
-        </div >
+        </div>
     );
 }

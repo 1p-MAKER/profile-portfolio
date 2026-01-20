@@ -18,6 +18,16 @@ export async function generateMetadata(): Promise<Metadata> {
     return {
       title: data.settings?.siteTitle || 'Profile & Portfolio | 1pei',
       description: 'iOSアプリ開発者・革製品作家のポートフォリオサイト',
+      manifest: '/manifest.json',
+      icons: {
+        icon: '/icon-192.png',
+        apple: '/apple-touch-icon.png',
+      },
+      appleWebApp: {
+        capable: true,
+        statusBarStyle: 'default',
+        title: data.settings?.siteTitle || '1pei',
+      },
     };
   } catch (error) {
     console.error('Failed to read content data for metadata:', error);

@@ -29,21 +29,21 @@
   "snsAccounts": [
     {
       "title": "Instagram",
-      "description": "個人の活動記録です。",
+      "description": "日々の個人活動記録です。",
       "url": "https://www.instagram.com/1pei_okinawa",
       "category": "SNS",
       "platformType": "instagram"
     },
     {
       "title": "X (Twitter)",
-      "description": "アプリの開発記録や最新情報です。",
+      "description": "アプリの開発記録です。",
       "url": "https://x.com/DevCat123",
       "category": "SNS",
       "platformType": "x"
     },
     {
       "title": "Sora (Video Generation)",
-      "description": "AI動画を生成して遊んでいます",
+      "description": "AI動画を生成して遊んでいます。",
       "url": "https://sora.chatgpt.com/profile/1ppn",
       "category": "SNS",
       "platformType": "sora"
@@ -158,7 +158,8 @@
     "youtubeIntro": "様々なチャレンジのアーカイブ",
     "printer3dIntro": "３Dモデルから作り、３Dプリンタで成形。日常に便利なものから、仕事で使う治具も製作。過去にはパーツ製作の依頼も。",
     "furusatoIntro": "「しぜんのしるし」は沖縄県豊見城市のふるさと納税返礼品事業に協力しています。",
-    "iosIntro": "AIを活用したアプリ開発に夢中です。"
+    "iosIntro": "AIを活用したアプリ開発に夢中です。",
+    "snsIntro": ""
   },
   "furusatoItems": [
     {

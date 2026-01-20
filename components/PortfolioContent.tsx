@@ -289,7 +289,7 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
 
     return (
         <div className="min-h-screen flex flex-col font-sans overflow-x-hidden">
-            <nav className="sticky top-12 z-40 bg-background/95 backdrop-blur-sm border-b border-stone-200 overflow-x-auto no-scrollbar">
+            <nav className="sticky top-10 z-40 bg-background/95 backdrop-blur-sm border-b border-stone-200 overflow-x-auto no-scrollbar">
                 <div className="container mx-auto px-2">
                     <div className="flex justify-start md:justify-center gap-2 md:gap-6 min-w-max pb-px">
                         {tabs.map((tab) => (

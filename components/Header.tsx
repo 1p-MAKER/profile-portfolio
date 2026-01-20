@@ -9,7 +9,7 @@ interface HeaderProps {
 export default function Header({ profileName, profileTagline }: HeaderProps) {
     return (
         <header className="sticky top-0 z-50 w-full backdrop-blur-md bg-background/80 border-b border-stone-200">
-            <div className="container mx-auto px-2 h-12 flex items-center justify-between md:justify-center">
+            <div className="container mx-auto px-2 h-10 flex items-center justify-between md:justify-center">
                 <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
                     <div className="relative w-7 h-7 md:w-10 md:h-10 rounded-full overflow-hidden border border-stone-200 shadow-sm shrink-0">
                         <Image

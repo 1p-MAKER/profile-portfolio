@@ -41,8 +41,9 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
         lastSwipeTime.current = now;
         setIsAnimating(true);
 
-        const newIndex = (tabIndex + newDirection + tabs.length) % tabs.length;
-        setDirection(newDirection);
+        const safeDirection = newDirection > 0 ? 1 : -1; // Force 1 or -1
+        const newIndex = (tabIndex + safeDirection + tabs.length) % tabs.length;
+        setDirection(safeDirection);
         setActiveTab(tabs[newIndex].id);
         // Scroll to top when changing tabs via swipe/click
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -288,9 +289,9 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
 
     return (
         <div className="min-h-screen flex flex-col font-sans overflow-x-hidden">
-            <nav className="sticky top-16 z-40 bg-background/95 backdrop-blur-sm border-b border-stone-200 overflow-x-auto no-scrollbar">
+            <nav className="sticky top-14 z-40 bg-background/95 backdrop-blur-sm border-b border-stone-200 overflow-x-auto no-scrollbar">
                 <div className="container mx-auto px-4">
-                    <div className="flex justify-start md:justify-center gap-6 min-w-max pb-px">
+                    <div className="flex justify-start md:justify-center gap-4 md:gap-6 min-w-max pb-px">
                         {tabs.map((tab) => (
                             <button
                                 key={tab.id}
@@ -300,7 +301,7 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
                                     setActiveTab(tab.id);
                                     window.scrollTo({ top: 0, behavior: 'smooth' });
                                 }}
-                                className={`py-4 text-sm font-bold border-b-2 transition-all duration-300 px-2 ${activeTab === tab.id
+                                className={`py-3 md:py-4 text-xs md:text-sm font-bold border-b-2 transition-all duration-300 px-1 md:px-2 ${activeTab === tab.id
                                     ? 'border-accent text-accent'
                                     : 'border-transparent text-subtext hover:text-foreground'
                                     }`}

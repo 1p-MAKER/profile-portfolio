@@ -125,8 +125,14 @@ export default function AdminPage() {
 
         } catch (e: unknown) {
             console.error('[保存エラー]', e);
+            let msg = e instanceof Error ? e.message : String(e);
+
+            // Handle QuotaExceededError (Storage Warning)
+            if (e instanceof DOMException && (e.name === 'QuotaExceededError' || e.name === 'NS_ERROR_DOM_QUOTA_REACHED')) {
+                msg = 'ブラウザの保存容量を超えました。画像などを減らしてください。';
+            }
+
             setStatus('エラー: ブラウザ保存失敗');
-            const msg = e instanceof Error ? e.message : String(e);
             addLogEntry(`保存エラー: ${msg}`);
         }
 

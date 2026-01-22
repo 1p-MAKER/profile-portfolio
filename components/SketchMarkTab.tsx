@@ -164,13 +164,10 @@ export default function SketchMarkTab() {
 
                         {/* Info */}
                         <div className="p-4 space-y-3">
-                            <h3 className="font-medium text-stone-900 dark:text-stone-100 line-clamp-1">
+                            <h3 className="font-medium text-stone-900 dark:text-stone-100 line-clamp-2">
                                 {item.title}
                             </h3>
-                            <div className="flex items-center justify-between">
-                                <span className="text-stone-600 dark:text-stone-400 text-sm">
-                                    ¥{item.price.toLocaleString()}
-                                </span>
+                            <div className="flex justify-end">
                                 <a
                                     href={item.url}
                                     target="_blank"

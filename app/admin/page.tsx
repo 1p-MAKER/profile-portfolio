@@ -76,6 +76,10 @@ export default function AdminPage() {
                 if (parsed.tabs && !parsed.tabs.find((t: any) => t.id === 'note')) {
                     parsed.tabs.push({ id: 'note', label: 'Note記事リスト' });
                 }
+                // Migration: Ensure 'sketchMark' tab exists if not present
+                if (parsed.tabs && !parsed.tabs.find((t: any) => t.id === 'sketchMark')) {
+                    parsed.tabs.push({ id: 'sketchMark', label: 'Sketch Mark' });
+                }
 
                 setData(parsed);
                 return; // Skip server fetch if local data exists
@@ -97,6 +101,7 @@ export default function AdminPage() {
                         { id: 'sns', label: 'SNSリスト' },
                         { id: 'furusato', label: 'ふるさと納税リスト' },
                         { id: 'note', label: 'Note記事リスト' },
+                        { id: 'sketchMark', label: 'Sketch Mark' },
                     ];
                 }
                 setData(fetchedData);
@@ -973,6 +978,43 @@ export default function AdminPage() {
                                         )}
                                         itemKey={(item) => item.url}
                                     />
+                                </div>
+                            </section>
+                        )}
+
+                        {/* Sketch Mark Section */}
+                        {activeAdminTab === 'sketchMark' && (
+                            <section>
+                                <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200 text-stone-900">Sketch Mark</h2>
+
+                                {/* Intro Text Input */}
+                                <div className="bg-white p-6 rounded-xl shadow-sm mb-6">
+                                    <label className="block text-sm font-bold text-stone-700 mb-2">このタブの導入文</label>
+                                    <textarea
+                                        className="w-full p-3 border rounded-lg min-h-[120px]"
+                                        value={data.settings?.sketchMarkIntro || 'いつか意味を持つ'}
+                                        onChange={(e) => setData({ ...data, settings: { ...data.settings, sketchMarkIntro: e.target.value } })}
+                                        placeholder="Sketch Markに関する紹介文を入力してください"
+                                    />
+                                </div>
+
+                                {/* BASE Sync Status */}
+                                <div className="bg-white p-6 rounded-xl shadow-sm">
+                                    <div className="flex items-center gap-3 mb-4">
+                                        <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                                        <span className="font-bold text-stone-900">BASEと連携中</span>
+                                    </div>
+                                    <p className="text-stone-600 text-sm mb-4">
+                                        商品データはBASE APIから自動取得されます。手動登録は不要です。
+                                    </p>
+                                    <a
+                                        href="https://sketchmark.thebase.in/"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center gap-2 text-blue-600 hover:underline text-sm"
+                                    >
+                                        BASEショップを開く →
+                                    </a>
                                 </div>
                             </section>
                         )}

@@ -99,4 +99,5 @@ export interface Settings {
     shopifyIntro?: string;
     furusatoIntro?: string;
     noteIntro?: string;
+    sketchMarkIntro?: string;
 }

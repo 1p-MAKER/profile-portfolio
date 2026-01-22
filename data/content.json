@@ -88,6 +88,10 @@
       "label": "動画制作"
     },
     {
+      "id": "note",
+      "label": "Note記事リスト"
+    },
+    {
       "id": "youtube",
       "label": "YouTube"
     },
@@ -110,10 +114,6 @@
     {
       "id": "shopify",
       "label": "Shopifyアプリ"
-    },
-    {
-      "id": "note",
-      "label": "Note記事リスト"
     }
   ],
   "audioTracks": [

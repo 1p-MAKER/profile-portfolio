@@ -152,7 +152,13 @@ export default function SketchMarkTab() {
             {baseItems.length > 0 && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                     {baseItems.map((item) => (
-                        <div key={item.id} className="group bg-white dark:bg-stone-800 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-stone-100 dark:border-stone-700">
+                        <a
+                            key={item.id}
+                            href={item.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="group bg-white dark:bg-stone-800 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-stone-100 dark:border-stone-700 block"
+                        >
                             {/* Image */}
                             <div className="relative aspect-square overflow-hidden bg-stone-100">
                                 {item.imageUrl ? (
@@ -172,18 +178,18 @@ export default function SketchMarkTab() {
                                 <h3 className="font-medium text-stone-900 dark:text-stone-100 line-clamp-2">
                                     {item.title}
                                 </h3>
-                                <div className="flex justify-end">
-                                    <a
-                                        href={item.url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="text-xs bg-stone-900 text-white dark:bg-stone-700 px-3 py-1.5 rounded-full hover:opacity-80 transition-opacity"
-                                    >
-                                        View on Shop
-                                    </a>
+                                <div className="flex items-center justify-between">
+                                    {item.price && (
+                                        <span className="text-stone-600 dark:text-stone-400 font-semibold">
+                                            ¥{item.price.toLocaleString()}
+                                        </span>
+                                    )}
+                                    <span className="text-xs bg-stone-900 text-white dark:bg-stone-700 px-3 py-1.5 rounded-full group-hover:opacity-80 transition-opacity ml-auto">
+                                        View →
+                                    </span>
                                 </div>
                             </div>
-                        </div>
+                        </a>
                     ))}
                 </div>
             )}
@@ -200,7 +206,13 @@ export default function SketchMarkTab() {
                     {/* Instagram Posts Grid */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                         {instagramItems.map((item) => (
-                            <div key={item.id} className="group bg-white dark:bg-stone-800 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-stone-100 dark:border-stone-700">
+                            <a
+                                key={item.id}
+                                href={item.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="group bg-white dark:bg-stone-800 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-stone-100 dark:border-stone-700 block"
+                            >
                                 {/* Image */}
                                 <div className="relative aspect-square overflow-hidden bg-stone-100">
                                     {item.imageUrl ? (
@@ -221,17 +233,12 @@ export default function SketchMarkTab() {
                                         {item.title}
                                     </h3>
                                     <div className="flex justify-end">
-                                        <a
-                                            href={item.url}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="text-xs bg-stone-900 text-white dark:bg-stone-700 px-3 py-1.5 rounded-full hover:opacity-80 transition-opacity"
-                                        >
-                                            View on Instagram
-                                        </a>
+                                        <span className="text-xs bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 text-white px-4 py-1.5 rounded-full group-hover:opacity-90 transition-opacity font-medium">
+                                            Instagram →
+                                        </span>
                                     </div>
                                 </div>
-                            </div>
+                            </a>
                         ))}
                     </div>
                 </>

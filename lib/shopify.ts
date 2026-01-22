@@ -3,14 +3,14 @@
 const domain = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN;
 const storefrontAccessToken = process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN;
 
-if (!domain || !storefrontAccessToken) {
-  throw new Error('Missing Shopify environment variables');
-}
-
-const endpoint = `https://${domain}/api/2024-01/graphql.json`;
+// Validation is now lazy to allow build without these vars
+const endpoint = domain ? `https://${domain}/api/2024-01/graphql.json` : '';
 
 async function shopifyFetch<T>(query: string, variables: Record<string, any> = {}): Promise<T> {
-  // 環境変数は上でチェック済みなので、ここでは確実に存在する
+  if (!domain || !storefrontAccessToken) {
+    throw new Error('Missing Shopify environment variables');
+  }
+
   const token = storefrontAccessToken!;
   try {
     const response = await fetch(endpoint, {

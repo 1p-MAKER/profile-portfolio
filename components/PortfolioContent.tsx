@@ -10,6 +10,7 @@ import YouTubeEmbed from './YouTubeEmbed';
 import ShopifyProductCard from '@/components/ShopifyProductCard';
 import AudioCard from '@/components/AudioCard';
 import NoteCard from '@/components/NoteCard';
+import SketchMarkTab from '@/components/SketchMarkTab';
 import Image from 'next/image';
 import { ContentData } from '@/types/content';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -30,6 +31,12 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
     const tabs = data.tabs || [];
+
+    // Inject Sketch Mark tab if not present (system override)
+    const normalizedTabs = [...tabs];
+    if (!normalizedTabs.find(t => t.id === 'sketchMark')) {
+        normalizedTabs.push({ id: 'sketchMark', label: 'Sketch Mark' });
+    }
 
     // Find current tab index for swipe logic
     const tabIndex = tabs.findIndex(t => t.id === activeTab);
@@ -303,6 +310,8 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
                         {(!data.noteItems || data.noteItems.length === 0) && <p className="text-center text-stone-500 py-12">まだ記事が登録されていません。</p>}
                     </>
                 );
+            case 'sketchMark':
+                return <SketchMarkTab />;
             default:
                 return null;
         }
@@ -313,11 +322,11 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
             <nav className="sticky top-12 z-40 bg-background/95 backdrop-blur-sm border-b border-stone-200 overflow-x-auto no-scrollbar">
                 <div className="container mx-auto px-2">
                     <div className="flex justify-start md:justify-center gap-2 md:gap-6 min-w-max pb-px">
-                        {tabs.map((tab) => (
+                        {normalizedTabs.map((tab) => (
                             <button
                                 key={tab.id}
                                 onClick={() => {
-                                    const newIndex = tabs.findIndex(t => t.id === tab.id);
+                                    const newIndex = normalizedTabs.findIndex(t => t.id === tab.id);
                                     setDirection(newIndex > tabIndex ? 1 : -1);
                                     setActiveTab(tab.id);
                                     window.scrollTo({ top: 0, behavior: 'smooth' });

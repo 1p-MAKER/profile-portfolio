@@ -113,7 +113,7 @@
     },
     {
       "id": "note",
-      "label": "note"
+      "label": "Note記事リスト"
     }
   ],
   "audioTracks": [
@@ -142,7 +142,6 @@
       "url": "/audio/upload_1768806584969_school_of_rock_BUNKO.mp3"
     }
   ],
-  "noteItems": [],
   "settings": {
     "siteTitle": "Dev cat's Portfolio | 長嶺一平",
     "profileName": "Dev cat's Archive",
@@ -164,8 +163,7 @@
     "printer3dIntro": "３Dモデルから作り、３Dプリンタで成形\n日常に便利なものから、仕事で使う治具も製作\n過去にはパーツ製作の依頼も",
     "furusatoIntro": "「しぜんのしるし」は沖縄県豊見城市のふるさと納税返礼品事業に協力しています。",
     "iosIntro": "AIを活用したアプリ開発\nトリプルモニターで眠気と戦っています",
-    "snsIntro": "",
-    "noteIntro": ""
+    "snsIntro": ""
   },
   "furusatoItems": [
     {
@@ -432,6 +430,14 @@
       "id": "1768800908338",
       "url": "https://www.youtube.com/watch?v=0fcwAMl12rg",
       "title": "【コンパクトな三つ折り財布】-comet R2-【しぜんのしるし】"
+    }
+  ],
+  "noteItems": [
+    {
+      "title": "【コピペOK】Xを自動運用！Gemini × GASで作る「人間味あふれるAIゴーストライター」の作り方｜長嶺一平｜12のアプリを作る革職人 × AI業務自動化",
+      "url": "https://note.com/ippei_automation/n/na19d6fe64027",
+      "imageUrl": "",
+      "siteName": "note"
     }
   ]
 }

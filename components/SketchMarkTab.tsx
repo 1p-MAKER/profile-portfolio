@@ -25,7 +25,7 @@ export default function SketchMarkTab() {
         setLoading(true);
         setError(null);
         try {
-            const res = await fetch('/api/base/items');
+            const res = await fetch('/api/sketch-mark');
             const data = await res.json();
 
             if (!res.ok) {

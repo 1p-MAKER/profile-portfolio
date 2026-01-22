@@ -8,6 +8,7 @@ export interface ContentData {
     youtubeVideos: YouTubeVideo[];
     videoProductionVideos: YouTubeVideo[];
     audioTracks: AudioTrack[];
+    noteItems: NoteItem[];
     tabs: TabItem[];
     settings: Settings;
 }
@@ -47,8 +48,16 @@ export interface AudioTrack {
     description: string;
 }
 
+export interface NoteItem {
+    title: string;
+    url: string;
+    imageUrl: string;
+    siteName?: string;
+    isFeatured?: boolean;
+}
+
 export interface TabItem {
-    id: 'home' | 'leather' | 'ios' | 'shopify' | 'sns' | '3d-printer' | 'furusato' | 'youtube' | 'videoProduction' | 'audio';
+    id: 'home' | 'leather' | 'ios' | 'shopify' | 'sns' | '3d-printer' | 'furusato' | 'youtube' | 'videoProduction' | 'audio' | 'note';
     label: string;
 }
 
@@ -89,4 +98,5 @@ export interface Settings {
     youtubeIntro?: string;
     shopifyIntro?: string;
     furusatoIntro?: string;
+    noteIntro?: string;
 }

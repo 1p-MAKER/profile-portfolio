@@ -2,11 +2,12 @@ import { useEffect, useState, useCallback } from 'react';
 import Image from 'next/image';
 
 interface SketchItem {
-    id: number;
+    id: number | string;
     title: string;
-    price: number;
+    price: number | null;
     imageUrl: string;
     url: string;
+    type?: 'base' | 'instagram';
 }
 
 interface ApiError {
@@ -132,6 +133,9 @@ export default function SketchMarkTab() {
     }
 
     // Success State
+    const baseItems = items.filter(item => item.type === 'base');
+    const instagramItems = items.filter(item => item.type === 'instagram');
+
     return (
         <div className="space-y-12">
             {/* Intro */}
@@ -144,43 +148,94 @@ export default function SketchMarkTab() {
                 </p>
             </div>
 
-            {/* Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                {items.map((item) => (
-                    <div key={item.id} className="group bg-white dark:bg-stone-800 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-stone-100 dark:border-stone-700">
-                        {/* Image */}
-                        <div className="relative aspect-square overflow-hidden bg-stone-100">
-                            {item.imageUrl ? (
-                                <Image
-                                    src={item.imageUrl}
-                                    alt={item.title}
-                                    fill
-                                    className="object-cover group-hover:scale-105 transition-transform duration-500"
-                                />
-                            ) : (
-                                <div className="flex items-center justify-center h-full text-stone-300">No Image</div>
-                            )}
-                        </div>
+            {/* BASE Products Grid */}
+            {baseItems.length > 0 && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {baseItems.map((item) => (
+                        <div key={item.id} className="group bg-white dark:bg-stone-800 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-stone-100 dark:border-stone-700">
+                            {/* Image */}
+                            <div className="relative aspect-square overflow-hidden bg-stone-100">
+                                {item.imageUrl ? (
+                                    <Image
+                                        src={item.imageUrl}
+                                        alt={item.title}
+                                        fill
+                                        className="object-cover group-hover:scale-105 transition-transform duration-500"
+                                    />
+                                ) : (
+                                    <div className="flex items-center justify-center h-full text-stone-300">No Image</div>
+                                )}
+                            </div>
 
-                        {/* Info */}
-                        <div className="p-4 space-y-3">
-                            <h3 className="font-medium text-stone-900 dark:text-stone-100 line-clamp-2">
-                                {item.title}
-                            </h3>
-                            <div className="flex justify-end">
-                                <a
-                                    href={item.url}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-xs bg-stone-900 text-white dark:bg-stone-700 px-3 py-1.5 rounded-full hover:opacity-80 transition-opacity"
-                                >
-                                    View on Shop
-                                </a>
+                            {/* Info */}
+                            <div className="p-4 space-y-3">
+                                <h3 className="font-medium text-stone-900 dark:text-stone-100 line-clamp-2">
+                                    {item.title}
+                                </h3>
+                                <div className="flex justify-end">
+                                    <a
+                                        href={item.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-xs bg-stone-900 text-white dark:bg-stone-700 px-3 py-1.5 rounded-full hover:opacity-80 transition-opacity"
+                                    >
+                                        View on Shop
+                                    </a>
+                                </div>
                             </div>
                         </div>
+                    ))}
+                </div>
+            )}
+
+            {/* Instagram Section Heading */}
+            {instagramItems.length > 0 && (
+                <>
+                    <div className="text-center border-t border-stone-200 dark:border-stone-700 pt-12">
+                        <h2 className="text-2xl font-bold font-serif text-stone-800 dark:text-stone-100">
+                            Sketch Mark Instagram
+                        </h2>
                     </div>
-                ))}
-            </div>
+
+                    {/* Instagram Posts Grid */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {instagramItems.map((item) => (
+                            <div key={item.id} className="group bg-white dark:bg-stone-800 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-stone-100 dark:border-stone-700">
+                                {/* Image */}
+                                <div className="relative aspect-square overflow-hidden bg-stone-100">
+                                    {item.imageUrl ? (
+                                        <Image
+                                            src={item.imageUrl}
+                                            alt={item.title}
+                                            fill
+                                            className="object-cover group-hover:scale-105 transition-transform duration-500"
+                                        />
+                                    ) : (
+                                        <div className="flex items-center justify-center h-full text-stone-300">No Image</div>
+                                    )}
+                                </div>
+
+                                {/* Info */}
+                                <div className="p-4 space-y-3">
+                                    <h3 className="font-medium text-stone-900 dark:text-stone-100 line-clamp-2">
+                                        {item.title}
+                                    </h3>
+                                    <div className="flex justify-end">
+                                        <a
+                                            href={item.url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-xs bg-stone-900 text-white dark:bg-stone-700 px-3 py-1.5 rounded-full hover:opacity-80 transition-opacity"
+                                        >
+                                            View on Instagram
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </>
+            )}
 
             {/* Footer */}
             <div className="text-center border-t border-stone-200 dark:border-stone-700 pt-12 space-y-6">

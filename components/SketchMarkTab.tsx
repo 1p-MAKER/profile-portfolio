@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import Image from 'next/image';
 
 interface SketchItem {
@@ -9,39 +9,129 @@ interface SketchItem {
     url: string;
 }
 
+interface ApiError {
+    error: string;
+    code?: string;
+    hint?: string;
+}
+
 export default function SketchMarkTab() {
     const [items, setItems] = useState<SketchItem[]>([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    const [error, setError] = useState<ApiError | null>(null);
+    const [retryCount, setRetryCount] = useState(0);
 
-    useEffect(() => {
-        const fetchItems = async () => {
-            try {
-                const res = await fetch('/api/base/items');
-                if (!res.ok) {
-                    throw new Error('Failed to fetch items');
-                }
-                const data = await res.json();
+    const fetchItems = useCallback(async () => {
+        setLoading(true);
+        setError(null);
+        try {
+            const res = await fetch('/api/base/items');
+            const data = await res.json();
+
+            if (!res.ok) {
+                setError(data as ApiError);
+                setItems([]);
+            } else {
                 setItems(data.items || []);
-            } catch (err) {
-                console.error(err);
-                setError('商品データの読み込みに失敗しました。');
-            } finally {
-                setLoading(false);
+                setError(null);
             }
-        };
-
-        fetchItems();
+        } catch (err) {
+            console.error(err);
+            setError({ error: '通信エラーが発生しました。', code: 'NETWORK_ERROR' });
+            setItems([]);
+        } finally {
+            setLoading(false);
+        }
     }, []);
 
+    useEffect(() => {
+        fetchItems();
+    }, [fetchItems, retryCount]);
+
+    const handleRetry = () => {
+        setRetryCount(prev => prev + 1);
+    };
+
+    // Loading State
     if (loading) {
-        return <div className="text-center py-20 text-stone-500">Loading Sketch Mark Items...</div>;
+        return (
+            <div className="flex flex-col items-center justify-center py-20 space-y-4">
+                <div className="w-8 h-8 border-2 border-stone-300 border-t-stone-800 rounded-full animate-spin"></div>
+                <p className="text-stone-500 text-sm">Loading Sketch Mark Items...</p>
+            </div>
+        );
     }
 
+    // Error State with Retry
     if (error) {
-        return <div className="text-center py-20 text-red-500">{error}</div>;
+        return (
+            <div className="flex flex-col items-center justify-center py-20 space-y-6 text-center">
+                <div className="w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center">
+                    <svg className="w-8 h-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                </div>
+                <div className="space-y-2">
+                    <p className="text-stone-700 dark:text-stone-300 font-medium">
+                        {error.error}
+                    </p>
+                    {error.hint && (
+                        <p className="text-stone-500 dark:text-stone-400 text-sm max-w-md">
+                            {error.hint}
+                        </p>
+                    )}
+                    {error.code && (
+                        <p className="text-stone-400 text-xs font-mono">
+                            Code: {error.code}
+                        </p>
+                    )}
+                </div>
+                <button
+                    onClick={handleRetry}
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-stone-800 dark:bg-stone-700 text-white rounded-full hover:bg-stone-700 dark:hover:bg-stone-600 transition-colors text-sm"
+                >
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    再読み込み
+                </button>
+
+                {/* Fallback: Show Instagram link when API fails */}
+                <div className="pt-8 border-t border-stone-200 dark:border-stone-700 w-full max-w-md">
+                    <p className="text-stone-500 text-sm mb-4">
+                        直接ショップをご覧いただけます
+                    </p>
+                    <a
+                        href="https://sketchmark.thebase.in/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 text-stone-700 dark:text-stone-300 hover:text-pink-600 transition-colors"
+                    >
+                        Visit Sketch Mark Shop →
+                    </a>
+                </div>
+            </div>
+        );
     }
 
+    // Empty State
+    if (items.length === 0) {
+        return (
+            <div className="text-center py-20 space-y-4">
+                <p className="text-stone-500">現在公開中の商品はありません。</p>
+                <a
+                    href="https://sketchmark.thebase.in/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-stone-600 hover:text-pink-600 transition-colors"
+                >
+                    Visit Sketch Mark Shop →
+                </a>
+            </div>
+        );
+    }
+
+    // Success State
     return (
         <div className="space-y-12">
             {/* Intro */}

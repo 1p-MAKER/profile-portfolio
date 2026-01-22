@@ -1,36 +1,36 @@
-"use client";
-import { useState } from 'react';
+import PortfolioContent from '@/components/PortfolioContent';
 import Header from '@/components/Header';
-import SketchMarkTab from '@/components/SketchMarkTab';
+import { promises as fs } from 'fs';
+import path from 'path';
 
-export default function Home() {
-  const [activeTab, setActiveTab] = useState('sketch-mark');
+// Force dynamic rendering to ensure fresh data on every request
+export const dynamic = 'force-dynamic';
 
+async function getData() {
+  const jsonDirectory = path.join(process.cwd(), 'data');
+  try {
+    const fileContents = await fs.readFile(path.join(jsonDirectory, 'content.json'), 'utf8');
+    return JSON.parse(fileContents);
+  } catch (error) {
+    console.error('Failed to read content data:', error);
+    // Fallback to empty structure if file is missing (though it shouldn't be)
+    return {
+      leatherProducts: [],
+      iosAppIds: [],
+      shopifyApps: [],
+      snsAccounts: [],
+      printImages: [],
+      settings: {}
+    };
+  }
+}
+
+export default async function Home() {
+  const data = await getData();
   return (
-    <main className="min-h-screen pt-20 pb-20 px-4 md:px-8 max-w-7xl mx-auto">
-      <Header activeTab={activeTab} setActiveTab={setActiveTab} />
-
-      <div className="mt-8 animate-in fade-in duration-500">
-        {activeTab === 'sketch-mark' && (
-          <div className="space-y-8">
-            <div className="text-center space-y-2 mb-12">
-              <h2 className="text-3xl md:text-4xl font-light tracking-widest">SKETCH MARK</h2>
-              <p className="text-xs md:text-sm text-gray-500 tracking-wider">いつか意味を持つ</p>
-            </div>
-            <SketchMarkTab />
-          </div>
-        )}
-
-        {activeTab === 'leather' && (
-          <div className="text-center py-20 text-gray-400 tracking-widest">LEATHER WORKS COMING SOON</div>
-        )}
-        {activeTab === 'video' && (
-           <div className="text-center py-20 text-gray-400 tracking-widest">VIDEO WORKS COMING SOON</div>
-        )}
-        {activeTab === 'note' && (
-           <div className="text-center py-20 text-gray-400 tracking-widest">NOTE ARTICLES COMING SOON</div>
-        )}
-      </div>
-    </main>
+    <>
+      <Header profileName={data.settings?.profileName} profileTagline={data.settings?.profileTagline} />
+      <PortfolioContent data={data} />
+    </>
   );
 }

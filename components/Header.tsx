@@ -1,31 +1,71 @@
-import Link from 'next/link';
-import Image from 'next/image';
+"use client";
+import { useState } from 'react';
 
-interface HeaderProps {
-    profileName?: string;
-    profileTagline?: string;
-}
+type HeaderProps = {
+  activeTab: string;
+  setActiveTab: (tab: string) => void;
+};
 
-export default function Header({ profileName, profileTagline }: HeaderProps) {
-    return (
-        <header className="sticky top-0 z-50 w-full backdrop-blur-md bg-background/80 border-b border-stone-200">
-            <div className="container mx-auto px-2 h-12 flex items-center justify-center">
-                <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-                    <div className="relative w-7 h-7 md:w-10 md:h-10 rounded-full overflow-hidden border border-stone-200 shadow-sm shrink-0">
-                        <Image
-                            src="/profile-icon.png"
-                            alt={profileName || "1pei"}
-                            fill
-                            className="object-cover"
-                            sizes="40px"
-                        />
-                    </div>
-                    <div className="flex flex-row items-center gap-2 overflow-hidden">
-                        <h1 className="text-sm md:text-lg font-bold leading-tight whitespace-nowrap shrink-0">{profileName || "長嶺 一平"}</h1>
-                        <p className="text-[10px] md:text-xs text-subtext truncate">{profileTagline || "ものづくりで貢献"}</p>
-                    </div>
-                </Link>
-            </div>
-        </header>
-    );
+export default function Header({ activeTab, setActiveTab }: HeaderProps) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const tabs = [
+    { id: 'leather', label: 'LEATHER' },
+    { id: 'video', label: 'VIDEO' },
+    { id: 'note', label: 'NOTE' },
+    { id: 'sketch-mark', label: 'SKETCH MARK' }
+  ];
+
+  const handleTabClick = (id: string) => {
+    setActiveTab(id);
+    setIsMenuOpen(false);
+  };
+
+  return (
+    <header className="fixed top-0 left-0 right-0 bg-white/90 backdrop-blur-md z-50 border-b border-gray-100 h-16 flex items-center justify-between px-6">
+      <h1 className="text-xl font-bold tracking-tighter cursor-pointer" onClick={() => handleTabClick('leather')}>
+        PROFILE PORTFOLIO
+      </h1>
+
+      <nav className="hidden md:flex gap-8">
+        {tabs.map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className={`text-sm tracking-widest transition-colors duration-300 ${
+              activeTab === tab.id ? 'text-black border-b-2 border-black pb-1' : 'text-gray-400 hover:text-black'
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </nav>
+
+      <button 
+        className="md:hidden p-2 z-50 relative"
+        onClick={() => setIsMenuOpen(!isMenuOpen)}
+      >
+        <div className={`w-6 h-0.5 bg-black transition-all duration-300 ${isMenuOpen ? 'rotate-45 translate-y-1.5' : ''}`} />
+        <div className={`w-6 h-0.5 bg-black my-1 transition-all duration-300 ${isMenuOpen ? 'opacity-0' : ''}`} />
+        <div className={`w-6 h-0.5 bg-black transition-all duration-300 ${isMenuOpen ? '-rotate-45 -translate-y-1.5' : ''}`} />
+      </button>
+
+      <div className={`fixed inset-0 bg-white z-40 flex flex-col items-center justify-center transition-opacity duration-300 md:hidden ${
+        isMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+      }`}>
+        <div className="flex flex-col gap-8 text-center">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => handleTabClick(tab.id)}
+              className={`text-2xl font-light tracking-widest transition-all duration-300 ${
+                activeTab === tab.id ? 'text-black scale-110' : 'text-gray-400'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+      </div>
+    </header>
+  );
 }

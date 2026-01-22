@@ -21,6 +21,12 @@ export default function AdminPage() {
     const [newFurusatoSite, setNewFurusatoSite] = useState('');
     const [isFetchingMeta, setIsFetchingMeta] = useState(false);
 
+    // Note Input State
+    const [newNoteUrl, setNewNoteUrl] = useState('');
+    const [newNoteTitle, setNewNoteTitle] = useState('');
+    const [newNoteImage, setNewNoteImage] = useState('');
+    const [newNoteSite, setNewNoteSite] = useState('');
+
     // iOS App Input State
     const [newAppId, setNewAppId] = useState('');
 
@@ -46,6 +52,7 @@ export default function AdminPage() {
     const [featuredIntro, setFeaturedIntro] = useState('');
     const [videoProductionIntro, setVideoProductionIntro] = useState('');
     const [audioIntro, setAudioIntro] = useState('');
+    const [noteIntro, setNoteIntro] = useState('');
 
     useEffect(() => {
         // 1. Try to load from LocalStorage first
@@ -63,6 +70,7 @@ export default function AdminPage() {
                 if (parsed.settings?.featuredIntro) setFeaturedIntro(parsed.settings.featuredIntro);
                 if (parsed.settings?.videoProductionIntro) setVideoProductionIntro(parsed.settings.videoProductionIntro);
                 if (parsed.settings?.audioIntro) setAudioIntro(parsed.settings.audioIntro);
+                if (parsed.settings?.noteIntro) setNoteIntro(parsed.settings.noteIntro);
                 return; // Skip server fetch if local data exists
             } catch (e) {
                 console.error('Failed to parse local storage data', e);
@@ -81,6 +89,7 @@ export default function AdminPage() {
                         { id: 'shopify', label: 'Shopifyアプリリスト' },
                         { id: 'sns', label: 'SNSリスト' },
                         { id: 'furusato', label: 'ふるさと納税リスト' },
+                        { id: 'note', label: 'Note記事リスト' },
                     ];
                 }
                 setData(fetchedData);
@@ -99,6 +108,9 @@ export default function AdminPage() {
                 }
                 if (fetchedData.settings?.audioIntro) {
                     setAudioIntro(fetchedData.settings.audioIntro);
+                }
+                if (fetchedData.settings?.noteIntro) {
+                    setNoteIntro(fetchedData.settings.noteIntro);
                 }
             });
     }, []);
@@ -396,6 +408,63 @@ export default function AdminPage() {
         setData({ ...data, furusatoItems: newList });
     };
 
+    // Note Logic
+    const fetchNoteMeta = async () => {
+        if (!newNoteUrl) return;
+        setIsFetchingMeta(true);
+        setStatus('Note記事データ取得中...');
+        try {
+            const res = await fetch(`/api/metadata?url=${encodeURIComponent(newNoteUrl)}`);
+            const meta = await res.json();
+            if (meta.error) {
+                setStatus('データ取得失敗');
+                addLogEntry(`データ取得エラー: ${meta.error}`);
+            } else {
+                setNewNoteTitle(meta.title);
+                setNewNoteImage(meta.imageUrl);
+                setNewNoteSite(meta.siteName || 'note');
+                setStatus('データ取得成功');
+            }
+        } catch (e: unknown) {
+            setStatus('データ取得エラー');
+            console.error(e);
+        }
+        setIsFetchingMeta(false);
+    };
+
+    const addNoteItem = () => {
+        if (!data) return;
+        const newItem = {
+            title: newNoteTitle,
+            url: newNoteUrl,
+            imageUrl: newNoteImage,
+            siteName: newNoteSite
+        };
+        const currentItems = data.noteItems || [];
+        setData({ ...data, noteItems: [...currentItems, newItem] });
+
+        // Reset inputs
+        setNewNoteUrl('');
+        setNewNoteTitle('');
+        setNewNoteImage('');
+        setNewNoteSite('');
+        setStatus('Note記事を追加しました（保存ボタンを押してください）');
+    };
+
+    const removeNoteItem = (index: number) => {
+        if (!data || !data.noteItems) return;
+        const newList = [...data.noteItems];
+        newList.splice(index, 1);
+        setData({ ...data, noteItems: newList });
+    };
+
+    const updateNoteItem = (index: number, field: string, value: string) => {
+        if (!data || !data.noteItems) return;
+        const newList = [...data.noteItems];
+        newList[index] = { ...newList[index], [field]: value };
+        setData({ ...data, noteItems: newList });
+    };
+
     // YouTube Logic
     const fetchYouTubeMeta = async () => {
         if (!newYouTubeUrl) return;
@@ -495,7 +564,7 @@ export default function AdminPage() {
     };
 
     // Featured Toggle Logic
-    const toggleFeatured = (listName: 'iosApps' | 'leatherProducts' | 'shopifyApps' | 'snsAccounts' | 'youtubeVideos' | 'furusatoItems', index: number) => {
+    const toggleFeatured = (listName: 'iosApps' | 'leatherProducts' | 'shopifyApps' | 'snsAccounts' | 'youtubeVideos' | 'furusatoItems' | 'noteItems', index: number) => {
         if (!data) return;
         const newList = [...data[listName]] as any[];
         newList[index] = { ...newList[index], isFeatured: !newList[index].isFeatured };
@@ -683,6 +752,7 @@ export default function AdminPage() {
                                         data.snsAccounts?.filter((x: any) => x.isFeatured).forEach((x: any) => items.push({ id: x.url, title: `[SNS] ${x.title}`, type: 'sns' }));
                                         data.youtubeVideos?.filter((x: any) => x.isFeatured).forEach((x: any) => items.push({ id: x.id, title: `[YouTube] ${x.title}`, type: 'youtube' }));
                                         data.furusatoItems?.filter((x: any) => x.isFeatured).forEach((x: any) => items.push({ id: x.url, title: `[Furusato] ${x.title}`, type: 'furusato' }));
+                                        data.noteItems?.filter((x: any) => x.isFeatured).forEach((x: any) => items.push({ id: x.url, title: `[Note] ${x.title}`, type: 'note' }));
                                         data.videoProductionVideos?.filter((x: any) => x.isFeatured).forEach((x: any) => items.push({ id: x.id, title: `[VideoProd] ${x.title}`, type: 'videoProduction' }));
 
                                         // Current Order
@@ -769,7 +839,136 @@ export default function AdminPage() {
                             </section>
                         )}
 
-                        {/* Leather Products Section */}
+                        {/* Note Section */}
+                        {activeAdminTab === 'note' && (
+                            <section>
+                                <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200 text-stone-900">Note記事リスト</h2>
+
+                                {/* Intro Text Input */}
+                                <div className="bg-white p-6 rounded-xl shadow-sm mb-6">
+                                    <label className="block text-sm font-bold text-stone-700 mb-2">このタブの導入文（スキル紹介）</label>
+                                    <textarea
+                                        className="w-full p-3 border rounded-lg min-h-[120px]"
+                                        value={data.settings?.noteIntro || ''}
+                                        onChange={(e) => setData({ ...data, settings: { ...data.settings, noteIntro: e.target.value } })}
+                                        placeholder="Noteに関する紹介文を入力してください"
+                                    />
+                                </div>
+
+                                {/* Add New Note Item */}
+                                <div className="bg-white p-6 rounded-xl shadow-sm mb-6">
+                                    <h3 className="text-lg font-bold mb-4 text-stone-900">新しい記事を追加</h3>
+                                    <div className="grid gap-4">
+                                        <div className="flex gap-2">
+                                            <input
+                                                type="text"
+                                                placeholder="Note記事のURL (例: https://note.com/...)"
+                                                className="flex-1 p-3 border rounded-lg"
+                                                value={newNoteUrl}
+                                                onChange={(e) => setNewNoteUrl(e.target.value)}
+                                            />
+                                            <button
+                                                onClick={fetchNoteMeta}
+                                                disabled={!newNoteUrl || isFetchingMeta}
+                                                className="bg-stone-800 text-white px-4 py-2 rounded-lg hover:bg-stone-700 disabled:opacity-50 whitespace-nowrap"
+                                            >
+                                                {isFetchingMeta ? '取得中...' : '情報取得'}
+                                            </button>
+                                        </div>
+
+                                        {newNoteTitle && (
+                                            <div className="p-4 bg-stone-50 rounded-lg border border-stone-200">
+                                                <div className="mb-2">
+                                                    <label className="text-xs font-bold text-stone-500">タイトル</label>
+                                                    <input
+                                                        type="text"
+                                                        className="w-full p-2 border rounded mt-1"
+                                                        value={newNoteTitle}
+                                                        onChange={(e) => setNewNoteTitle(e.target.value)}
+                                                    />
+                                                </div>
+                                                <div className="flex gap-4">
+                                                    {newNoteImage && (
+                                                        <div className="relative w-24 h-24 flex-shrink-0">
+                                                            <Image src={newNoteImage} alt="Preview" fill className="object-cover rounded" />
+                                                        </div>
+                                                    )}
+                                                    <div className="flex-1">
+                                                        <label className="text-xs font-bold text-stone-500">画像URL</label>
+                                                        <input
+                                                            type="text"
+                                                            className="w-full p-2 border rounded mt-1 text-sm"
+                                                            value={newNoteImage}
+                                                            onChange={(e) => setNewNoteImage(e.target.value)}
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <button
+                                                    onClick={addNoteItem}
+                                                    className="w-full mt-4 bg-blue-500 text-white font-bold py-2 rounded-lg hover:bg-blue-600"
+                                                >
+                                                    リストに追加
+                                                </button>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* Note List with DND */}
+                                <div className="bg-white p-6 rounded-xl shadow-sm mb-4">
+                                    <h3 className="text-lg font-bold mb-4 text-stone-900">記事リスト</h3>
+                                    <p className="text-xs text-stone-700 mb-4">ドラッグ&ドロップで並び替えられます</p>
+
+                                    <DraggableList
+                                        items={data.noteItems || []}
+                                        onReorder={(newList) => setData({ ...data, noteItems: newList })}
+                                        renderItem={(item, index) => (
+                                            <div className="p-4 bg-stone-50 rounded-lg border border-stone-200">
+                                                <div className="flex gap-4">
+                                                    <div className="flex-1 space-y-2">
+                                                        <input
+                                                            type="text"
+                                                            className="w-full p-2 border rounded font-bold"
+                                                            value={item.title}
+                                                            onChange={(e) => updateNoteItem(index, 'title', e.target.value)}
+                                                        />
+                                                        <input
+                                                            type="text"
+                                                            className="w-full p-2 border rounded text-sm text-stone-600"
+                                                            value={item.url}
+                                                            onChange={(e) => updateNoteItem(index, 'url', e.target.value)}
+                                                        />
+                                                    </div>
+                                                    <div className="relative w-20 h-20 flex-shrink-0 bg-stone-200 rounded overflow-hidden">
+                                                        {item.imageUrl && (
+                                                            <Image src={item.imageUrl} alt={item.title} fill className="object-cover" />
+                                                        )}
+                                                    </div>
+                                                    <div className="flex flex-col gap-2">
+                                                        <button
+                                                            onClick={() => toggleFeatured('noteItems', index)}
+                                                            className={`p-2 rounded text-xs font-bold border ${item.isFeatured
+                                                                ? 'bg-yellow-100 text-yellow-800 border-yellow-300'
+                                                                : 'bg-white text-stone-400 border-stone-200'
+                                                                }`}
+                                                        >
+                                                            ★ Featured
+                                                        </button>
+                                                        <button
+                                                            onClick={() => removeNoteItem(index)}
+                                                            className="p-2 bg-red-100 text-red-600 rounded hover:bg-red-200 text-xs font-bold"
+                                                        >
+                                                            削除
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+                                        itemKey={(item) => item.url}
+                                    />
+                                </div>
+                            </section>
+                        )}
                         {activeAdminTab === 'leather' && (
                             <section>
                                 <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200 text-stone-900">革製品リスト</h2>

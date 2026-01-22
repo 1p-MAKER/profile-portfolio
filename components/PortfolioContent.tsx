@@ -9,6 +9,7 @@ import FurusatoCard from '@/components/FurusatoCard';
 import YouTubeEmbed from './YouTubeEmbed';
 import ShopifyProductCard from '@/components/ShopifyProductCard';
 import AudioCard from '@/components/AudioCard';
+import NoteCard from '@/components/NoteCard';
 import Image from 'next/image';
 import { ContentData } from '@/types/content';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -92,7 +93,7 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
     const getFeaturedItems = () => {
         const items: Array<{
             id?: string;
-            type: 'ios' | 'leather' | 'shopify' | 'sns' | 'youtube' | 'furusato' | 'videoProduction';
+            type: 'ios' | 'leather' | 'shopify' | 'sns' | 'youtube' | 'furusato' | 'videoProduction' | 'note';
             data: any;
         }> = [];
 
@@ -129,6 +130,11 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
         // Video Production Videos
         data.videoProductionVideos?.filter(v => v.isFeatured).forEach(v => {
             items.push({ type: 'videoProduction', data: v, id: v.id });
+        });
+
+        // Note Items
+        data.noteItems?.filter(item => item.isFeatured).forEach(item => {
+            items.push({ type: 'note', data: item, id: item.url });
         });
 
         const order = data.settings?.featuredOrder || [];
@@ -171,6 +177,9 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
                                 if (item.type === 'furusato') {
                                     if (!item.data.title || !item.data.imageUrl) return null;
                                     return <div key={`f-furu-${index}`} className="h-full"><FurusatoCard title={item.data.title} url={item.data.url} imageUrl={item.data.imageUrl} siteName={item.data.siteName} /></div>;
+                                }
+                                if (item.type === 'note') {
+                                    return <div key={`f-note-${index}`} className="h-full"><NoteCard title={item.data.title} url={item.data.url} imageUrl={item.data.imageUrl} siteName={item.data.siteName} /></div>;
                                 }
                                 return null;
                             })}
@@ -280,6 +289,18 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
                             {data.audioTracks && data.audioTracks.map((track) => <AudioCard key={track.id} track={track} />)}
                         </div>
                         {(!data.audioTracks || data.audioTracks.length === 0) && <p className="text-center text-stone-500 py-12">まだBGMが登録されていません。</p>}
+                    </>
+                );
+            case 'note':
+                return (
+                    <>
+                        {data.settings?.noteIntro && <p className="text-center text-stone-600 mb-8 whitespace-pre-wrap leading-relaxed">{data.settings.noteIntro}</p>}
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {data.noteItems && data.noteItems.map((item, index) => (
+                                <div key={index} className="h-full"><NoteCard title={item.title} url={item.url} imageUrl={item.imageUrl} siteName={item.siteName} /></div>
+                            ))}
+                        </div>
+                        {(!data.noteItems || data.noteItems.length === 0) && <p className="text-center text-stone-500 py-12">まだ記事が登録されていません。</p>}
                     </>
                 );
             default:

@@ -71,6 +71,13 @@ export default function AdminPage() {
                 if (parsed.settings?.videoProductionIntro) setVideoProductionIntro(parsed.settings.videoProductionIntro);
                 if (parsed.settings?.audioIntro) setAudioIntro(parsed.settings.audioIntro);
                 if (parsed.settings?.noteIntro) setNoteIntro(parsed.settings.noteIntro);
+
+                // Migration: Ensure 'note' tab exists if not present
+                if (parsed.tabs && !parsed.tabs.find((t: any) => t.id === 'note')) {
+                    parsed.tabs.push({ id: 'note', label: 'Note記事リスト' });
+                }
+
+                setData(parsed);
                 return; // Skip server fetch if local data exists
             } catch (e) {
                 console.error('Failed to parse local storage data', e);
@@ -1564,41 +1571,8 @@ export default function AdminPage() {
                                         <p className="mt-1 text-xs text-stone-700">
                                             Featured Worksセクションの上部に表示される導入文です。改行が反映されます。
                                         </p>
-                                    </div>
-
-                                    <div>
-                                        <label className="block text-sm font-bold text-stone-700 mb-2">
-                                            動画編集タブ導入文 (Video Production Intro)
-                                        </label>
-                                        <textarea
-                                            className="w-full border p-3 rounded text-stone-900 h-24 font-sans"
-                                            value={videoProductionIntro}
-                                            onChange={(e) => {
-                                                setVideoProductionIntro(e.target.value);
-                                                setData({ ...data!, settings: { ...data!.settings, videoProductionIntro: e.target.value } });
-                                            }}
-                                            placeholder="過去に制作した動画です"
-                                        />
                                         <p className="mt-1 text-xs text-stone-700">
-                                            動画編集タブに表示される説明文です。
-                                        </p>
-                                    </div>
-
-                                    <div>
-                                        <label className="block text-sm font-bold text-stone-700 mb-2">
-                                            BGMタブ導入文 (Audio Intro)
-                                        </label>
-                                        <textarea
-                                            className="w-full border p-3 rounded text-stone-900 h-24 font-sans"
-                                            value={audioIntro}
-                                            onChange={(e) => {
-                                                setAudioIntro(e.target.value);
-                                                setData({ ...data!, settings: { ...data!.settings, audioIntro: e.target.value } });
-                                            }}
-                                            placeholder="DTMで制作したBGM素材です。楽器演奏と打ち込みを組み合わせて作成しています。"
-                                        />
-                                        <p className="mt-1 text-xs text-stone-700">
-                                            BGMタブに表示される説明文です。
+                                            Featured Worksセクションの上部に表示される導入文です。改行が反映されます。
                                         </p>
                                     </div>
                                 </div>

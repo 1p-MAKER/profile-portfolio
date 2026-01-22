@@ -20,8 +20,12 @@ export default function Footer() {
                         X (Twitter)
                     </a>
                 </div>
-                <p className="text-xs text-subtext copy-right">
-                    &copy; {new Date().getFullYear()} Ippei Nagamine. All rights reserved.
+                <p className="text-xs text-stone-400">
+                    © {new Date().getFullYear()} 1p-MAKER / Dev cat&apos;s Archive
+                    <span className="mx-2">|</span>
+                    <a href="/privacy" className="hover:text-stone-600 transition-colors">Privacy Policy</a>
+                    <span className="mx-2">|</span>
+                    <a href="/contact" className="hover:text-stone-600 transition-colors">Contact</a>
                 </p>
             </div>
         </footer>

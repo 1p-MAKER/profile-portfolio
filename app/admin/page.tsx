@@ -970,60 +970,61 @@ export default function AdminPage() {
                                             </div>
                                         )}
                                     </div>
+                                </div>
 
-                                    {/* Note List with DND */}
-                                    <div className="bg-white p-6 rounded-xl shadow-sm mb-4">
-                                        <h3 className="text-lg font-bold mb-4 text-stone-900">記事リスト</h3>
-                                        <p className="text-xs text-stone-700 mb-4">ドラッグ&ドロップで並び替えられます</p>
+                                {/* Note List with DND */}
+                                <div className="bg-white p-6 rounded-xl shadow-sm mb-4">
+                                    <h3 className="text-lg font-bold mb-4 text-stone-900">記事リスト</h3>
+                                    <p className="text-xs text-stone-700 mb-4">ドラッグ&ドロップで並び替えられます</p>
 
-                                        <DraggableList
-                                            items={data.noteItems || []}
-                                            onReorder={(newList) => setData({ ...data, noteItems: newList })}
-                                            renderItem={(item, index) => (
-                                                <div className="p-4 bg-stone-50 rounded-lg border border-stone-200">
-                                                    <div className="flex gap-4">
-                                                        <div className="flex-1 space-y-2">
-                                                            <input
-                                                                type="text"
-                                                                className="w-full p-2 border rounded font-bold"
-                                                                value={item.title}
-                                                                onChange={(e) => updateNoteItem(index, 'title', e.target.value)}
-                                                            />
-                                                            <input
-                                                                type="text"
-                                                                className="w-full p-2 border rounded text-sm text-stone-600"
-                                                                value={item.url}
-                                                                onChange={(e) => updateNoteItem(index, 'url', e.target.value)}
-                                                            />
-                                                        </div>
-                                                        <div className="relative w-20 h-20 flex-shrink-0 bg-stone-200 rounded overflow-hidden">
-                                                            {item.imageUrl && (
-                                                                <Image src={item.imageUrl} alt={item.title} fill className="object-cover" />
-                                                            )}
-                                                        </div>
-                                                        <div className="flex flex-col gap-2">
-                                                            <button
-                                                                onClick={() => toggleFeatured('noteItems', index)}
-                                                                className={`p-2 rounded text-xs font-bold border ${item.isFeatured
-                                                                    ? 'bg-yellow-100 text-yellow-800 border-yellow-300'
-                                                                    : 'bg-white text-stone-400 border-stone-200'
-                                                                    }`}
-                                                            >
-                                                                ★ Featured
-                                                            </button>
-                                                            <button
-                                                                onClick={() => removeNoteItem(index)}
-                                                                className="p-2 bg-red-100 text-red-600 rounded hover:bg-red-200 text-xs font-bold"
-                                                            >
-                                                                削除
-                                                            </button>
-                                                        </div>
+                                    <DraggableList
+                                        items={data.noteItems || []}
+                                        onReorder={(newList) => setData({ ...data, noteItems: newList })}
+                                        renderItem={(item, index) => (
+                                            <div className="p-4 bg-stone-50 rounded-lg border border-stone-200">
+                                                <div className="flex gap-4">
+                                                    <div className="flex-1 space-y-2">
+                                                        <input
+                                                            type="text"
+                                                            className="w-full p-2 border rounded font-bold"
+                                                            value={item.title}
+                                                            onChange={(e) => updateNoteItem(index, 'title', e.target.value)}
+                                                        />
+                                                        <input
+                                                            type="text"
+                                                            className="w-full p-2 border rounded text-sm text-stone-600"
+                                                            value={item.url}
+                                                            onChange={(e) => updateNoteItem(index, 'url', e.target.value)}
+                                                        />
+                                                    </div>
+                                                    <div className="relative w-20 h-20 flex-shrink-0 bg-stone-200 rounded overflow-hidden">
+                                                        {item.imageUrl && (
+                                                            <Image src={item.imageUrl} alt={item.title} fill className="object-cover" />
+                                                        )}
+                                                    </div>
+                                                    <div className="flex flex-col gap-2">
+                                                        <button
+                                                            onClick={() => toggleFeatured('noteItems', index)}
+                                                            className={`p-2 rounded text-xs font-bold border ${item.isFeatured
+                                                                ? 'bg-yellow-100 text-yellow-800 border-yellow-300'
+                                                                : 'bg-white text-stone-400 border-stone-200'
+                                                                }`}
+                                                        >
+                                                            ★ Featured
+                                                        </button>
+                                                        <button
+                                                            onClick={() => removeNoteItem(index)}
+                                                            className="p-2 bg-red-100 text-red-600 rounded hover:bg-red-200 text-xs font-bold"
+                                                        >
+                                                            削除
+                                                        </button>
                                                     </div>
                                                 </div>
-                                            )}
-                                            itemKey={(item) => item.url}
-                                        />
-                                    </div>
+                                            </div>
+                                        )}
+                                        itemKey={(item) => item.url}
+                                    />
+                                </div>
                             </section>
                         )}
 

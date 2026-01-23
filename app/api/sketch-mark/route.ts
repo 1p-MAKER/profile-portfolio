@@ -56,7 +56,7 @@ async function getBaseItems() {
                 type: 'base',
                 title: item.title,
                 imageUrl: item.img1_640 || item.img1_origin,
-                link: `https://sketchmark.thebase.in/items/${item.item_id}`,
+                url: `https://sketchmark.thebase.in/items/${item.item_id}`,
                 date: item.modified || item.created || new Date().toISOString(),
                 price: null, // ギャラリー表示のため非表示
             }));
@@ -90,7 +90,7 @@ async function getInstagramItems() {
             type: 'instagram',
             title: item.caption ? item.caption.split('\n')[0].substring(0, 50) : 'Sketch',
             imageUrl: item.media_type === 'VIDEO' ? item.thumbnail_url : item.media_url,
-            link: item.permalink,
+            url: item.permalink,
             date: item.timestamp,
             price: null,
         }));

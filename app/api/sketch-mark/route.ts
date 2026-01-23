@@ -8,6 +8,25 @@ const BASE_CLIENT_SECRET = process.env.BASE_CLIENT_SECRET;
 const BASE_REFRESH_TOKEN = process.env.BASE_REFRESH_TOKEN;
 const INSTAGRAM_ACCESS_TOKEN = process.env.INSTAGRAM_ACCESS_TOKEN;
 
+// ショップ情報取得用ヘルパー関数
+async function getShopUrl(accessToken: string): Promise<string> {
+    try {
+        const shopResponse = await fetch('https://api.thebase.in/1/users/me', {
+            headers: { 'Authorization': `Bearer ${accessToken}` },
+        });
+
+        if (shopResponse.ok) {
+            const shopData = await shopResponse.json();
+            if (shopData.user && shopData.user.shop_url) {
+                return shopData.user.shop_url;
+            }
+        }
+    } catch (error) {
+        console.error('Shop Info Fetch Error:', error);
+    }
+    return 'https://sketchmark.thebase.in';
+}
+
 // BASE商品取得
 async function getBaseItems() {
     if (!BASE_CLIENT_ID || !BASE_CLIENT_SECRET || !BASE_REFRESH_TOKEN) {
@@ -36,7 +55,10 @@ async function getBaseItems() {
         const tokenData = await tokenResponse.json();
         const accessToken = tokenData.access_token;
 
-        // 2. 商品一覧取得
+        // 2. ショップ情報取得 (URL解決のため)
+        const shopUrl = await getShopUrl(accessToken);
+
+        // 3. 商品一覧取得
         const itemsResponse = await fetch('https://api.thebase.in/1/items?limit=20', {
             headers: { 'Authorization': `Bearer ${accessToken}` },
         });
@@ -48,7 +70,7 @@ async function getBaseItems() {
 
         const itemsData = await itemsResponse.json();
 
-        // 3. フィルタとマッピング
+        // 4. フィルタとマッピング
         return (itemsData.items || [])
             .filter((item: any) => item.visible === 1 || item.visible === true)
             .map((item: any) => ({
@@ -56,7 +78,7 @@ async function getBaseItems() {
                 type: 'base',
                 title: item.title,
                 imageUrl: item.img1_640 || item.img1_origin,
-                url: `https://sketchmark.thebase.in/items/${item.item_id}`,
+                url: `${shopUrl}/items/${item.item_id}`,
                 date: item.modified || item.created || new Date().toISOString(),
                 price: null, // ギャラリー表示のため非表示
             }));

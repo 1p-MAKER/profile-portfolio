@@ -96,7 +96,7 @@ async function getInstagramItems() {
     }
 
     const fields = 'id,caption,media_type,media_url,permalink,timestamp,thumbnail_url';
-    const url = `https://graph.instagram.com/me/media?fields=${fields}&access_token=${INSTAGRAM_ACCESS_TOKEN}`;
+    const url = `https://graph.instagram.com/me/media?fields=${fields}&access_token=${INSTAGRAM_ACCESS_TOKEN}&limit=100`;
 
     try {
         const res = await fetch(url);

@@ -107,7 +107,7 @@ export default function SNSCard({ account }: SNSCardProps) {
                             {account.tagline}
                         </p>
                     )}
-                    <p className="text-sm text-stone-600 dark:text-stone-400">
+                    <p className={`text-sm text-stone-600 dark:text-stone-400 ${account.platformType === 'instagram' ? 'whitespace-pre-wrap' : ''}`}>
                         {account.description}
                     </p>
                 </div>

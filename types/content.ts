@@ -46,6 +46,7 @@ export interface AudioTrack {
     title: string;
     url: string;
     description: string;
+    isFeatured?: boolean;
 }
 
 export interface NoteItem {

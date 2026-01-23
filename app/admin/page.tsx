@@ -596,7 +596,7 @@ export default function AdminPage() {
     };
 
     // Featured Toggle Logic
-    const toggleFeatured = (listName: 'iosApps' | 'leatherProducts' | 'shopifyApps' | 'snsAccounts' | 'youtubeVideos' | 'furusatoItems' | 'noteItems', index: number) => {
+    const toggleFeatured = (listName: 'iosApps' | 'leatherProducts' | 'shopifyApps' | 'snsAccounts' | 'youtubeVideos' | 'furusatoItems' | 'noteItems' | 'audioTracks', index: number) => {
         if (!data) return;
         const newList = [...data[listName]] as any[];
         newList[index] = { ...newList[index], isFeatured: !newList[index].isFeatured };
@@ -1866,12 +1866,23 @@ export default function AdminPage() {
                                                     <p className="font-bold text-lg">{track.title}</p>
                                                     <p className="text-stone-700 text-sm">{track.description}</p>
                                                 </div>
-                                                <button
-                                                    onClick={() => removeAudioTrack(track.id)}
-                                                    className="text-red-500 hover:bg-red-50 p-2 rounded"
-                                                >
-                                                    ✕
-                                                </button>
+                                                <div className="flex gap-2">
+                                                    <button
+                                                        onClick={() => {
+                                                            const index = data.audioTracks?.findIndex(t => t.id === track.id) ?? -1;
+                                                            if (index >= 0) toggleFeatured('audioTracks', index);
+                                                        }}
+                                                        className={`px-3 py-1 rounded text-sm font-bold ${track.isFeatured ? 'bg-yellow-500 text-white' : 'bg-gray-200 text-gray-600'}`}
+                                                    >
+                                                        ★
+                                                    </button>
+                                                    <button
+                                                        onClick={() => removeAudioTrack(track.id)}
+                                                        className="text-red-500 hover:bg-red-50 p-2 rounded"
+                                                    >
+                                                        ✕
+                                                    </button>
+                                                </div>
                                             </div>
                                             <audio controls src={track.url} className="w-full mt-2" />
                                             <p className="text-xs text-stone-600 mt-2 break-all">{track.url}</p>

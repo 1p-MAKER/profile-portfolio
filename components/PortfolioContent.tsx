@@ -100,7 +100,7 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
     const getFeaturedItems = () => {
         const items: Array<{
             id?: string;
-            type: 'ios' | 'leather' | 'shopify' | 'sns' | 'youtube' | 'furusato' | 'videoProduction' | 'note';
+            type: 'ios' | 'leather' | 'shopify' | 'sns' | 'youtube' | 'furusato' | 'videoProduction' | 'note' | 'audio';
             data: any;
         }> = [];
 
@@ -142,6 +142,11 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
         // Note Items
         data.noteItems?.filter(item => item.isFeatured).forEach(item => {
             items.push({ type: 'note', data: item, id: item.url });
+        });
+
+        // Audio Tracks
+        data.audioTracks?.filter(item => item.isFeatured).forEach(item => {
+            items.push({ type: 'audio', data: item, id: item.id });
         });
 
         const order = data.settings?.featuredOrder || [];
@@ -187,6 +192,9 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
                                 }
                                 if (item.type === 'note') {
                                     return <div key={`f-note-${index}`} className="h-full"><NoteCard title={item.data.title} url={item.data.url} imageUrl={item.data.imageUrl} siteName={item.data.siteName} /></div>;
+                                }
+                                if (item.type === 'audio') {
+                                    return <div key={`f-audio-${index}`} className="h-full"><AudioCard track={item.data} /></div>;
                                 }
                                 return null;
                             })}

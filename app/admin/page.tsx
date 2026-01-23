@@ -74,11 +74,11 @@ export default function AdminPage() {
 
                 // Migration: Ensure 'note' tab exists if not present
                 if (parsed.tabs && !parsed.tabs.find((t: any) => t.id === 'note')) {
-                    parsed.tabs.push({ id: 'note', label: 'Note' });
+                    parsed.tabs.push({ id: 'note', label: 'note' });
                 } else if (parsed.tabs) {
                     // Force update label if it exists (for migration from 'Note記事リスト')
                     const noteTab = parsed.tabs.find((t: any) => t.id === 'note');
-                    if (noteTab) noteTab.label = 'Note';
+                    if (noteTab) noteTab.label = 'note';
                 }
                 // Migration: Ensure 'sketchMark' tab exists if not present
                 if (parsed.tabs && !parsed.tabs.find((t: any) => t.id === 'sketchMark')) {
@@ -104,7 +104,7 @@ export default function AdminPage() {
                         { id: 'shopify', label: 'Shopifyアプリリスト' },
                         { id: 'sns', label: 'SNSリスト' },
                         { id: 'furusato', label: 'ふるさと納税リスト' },
-                        { id: 'note', label: 'Note' },
+                        { id: 'note', label: 'note' },
                         { id: 'sketchMark', label: 'Sketch Mark' },
                     ];
                 }

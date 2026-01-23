@@ -75,6 +75,10 @@ export default function AdminPage() {
                 // Migration: Ensure 'note' tab exists if not present
                 if (parsed.tabs && !parsed.tabs.find((t: any) => t.id === 'note')) {
                     parsed.tabs.push({ id: 'note', label: 'Note' });
+                } else if (parsed.tabs) {
+                    // Force update label if it exists (for migration from 'Note記事リスト')
+                    const noteTab = parsed.tabs.find((t: any) => t.id === 'note');
+                    if (noteTab) noteTab.label = 'Note';
                 }
                 // Migration: Ensure 'sketchMark' tab exists if not present
                 if (parsed.tabs && !parsed.tabs.find((t: any) => t.id === 'sketchMark')) {

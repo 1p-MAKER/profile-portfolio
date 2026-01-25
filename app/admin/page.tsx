@@ -270,7 +270,7 @@ export default function AdminPage() {
 
         try {
             // LocalStorageに保存
-            localStorage.setItem('portfolio_admin_data', JSON.stringify(data));
+            localStorage.setItem('portfolio_admin_data_v2', JSON.stringify(data));
 
             setStatus('ブラウザに保存しました');
             addLogEntry(`[${startTime}] ブラウザへの一時保存に成功しました`);
@@ -302,7 +302,7 @@ export default function AdminPage() {
         addLogEntry('公開前のブラウザ保存を実行中...');
         try {
             if (data) {
-                localStorage.setItem('portfolio_admin_data', JSON.stringify(data));
+                localStorage.setItem('portfolio_admin_data_v2', JSON.stringify(data));
                 addLogEntry('ブラウザへの自動保存完了。');
             }
         } catch (e) {
@@ -388,7 +388,7 @@ export default function AdminPage() {
                 addLogEntry(`画像アップロード成功: ${result.path}`);
 
                 // 自動保存もしてしまう (LocalStorage)
-                localStorage.setItem('portfolio_admin_data', JSON.stringify(newData));
+                localStorage.setItem('portfolio_admin_data_v2', JSON.stringify(newData));
                 addLogEntry('アップロード後のデータをブラウザに自動保存しました');
 
             } else {

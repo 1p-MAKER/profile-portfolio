@@ -27,6 +27,12 @@ export default function AdminPage() {
     const [newNoteImage, setNewNoteImage] = useState('');
     const [newNoteSite, setNewNoteSite] = useState('');
 
+    // Brain Input State
+    const [newBrainUrl, setNewBrainUrl] = useState('');
+    const [newBrainTitle, setNewBrainTitle] = useState('');
+    const [newBrainImage, setNewBrainImage] = useState('');
+    const [newBrainSite, setNewBrainSite] = useState('');
+
     // iOS App Input State
     const [newAppId, setNewAppId] = useState('');
 
@@ -53,6 +59,7 @@ export default function AdminPage() {
     const [videoProductionIntro, setVideoProductionIntro] = useState('');
     const [audioIntro, setAudioIntro] = useState('');
     const [noteIntro, setNoteIntro] = useState('');
+    const [brainIntro, setBrainIntro] = useState(''); // New
 
     useEffect(() => {
         // 1. Try to load from LocalStorage first
@@ -70,7 +77,9 @@ export default function AdminPage() {
                 if (parsed.settings?.featuredIntro) setFeaturedIntro(parsed.settings.featuredIntro);
                 if (parsed.settings?.videoProductionIntro) setVideoProductionIntro(parsed.settings.videoProductionIntro);
                 if (parsed.settings?.audioIntro) setAudioIntro(parsed.settings.audioIntro);
+                if (parsed.settings?.audioIntro) setAudioIntro(parsed.settings.audioIntro);
                 if (parsed.settings?.noteIntro) setNoteIntro(parsed.settings.noteIntro);
+                if (parsed.settings?.brainIntro) setBrainIntro(parsed.settings.brainIntro); // New
 
                 // Migration: Ensure 'note' tab exists if not present
                 if (parsed.tabs && !parsed.tabs.find((t: any) => t.id === 'note')) {
@@ -128,8 +137,93 @@ export default function AdminPage() {
                 if (fetchedData.settings?.noteIntro) {
                     setNoteIntro(fetchedData.settings.noteIntro);
                 }
+                if (fetchedData.settings?.brainIntro) { // New
+                    setBrainIntro(fetchedData.settings.brainIntro); // New
+                }
             });
     }, []);
+
+    // --- Brain Item Management ---
+    const fetchBrainMeta = async () => {
+        if (!newBrainUrl) return;
+        setIsFetchingMeta(true);
+        try {
+            // Noteと同じAPIを使用（OGP取得ロジックが共通であれば）
+            // もしBrain専用の処理が必要なら別途APIを用意するが、
+            // 現状の /api/ogp が汎用的であればそのまま使える。
+            // ここでは簡易的に /api/ogp を使用すると仮定。
+            // なければ note と同様の手法、あるいは手動入力を促す。
+
+            // Noteの実装に合わせて手動入力を基本としつつ、OGP取得があればそれを使う。
+            // ここではNoteの実装を真似る。
+            // Note実装を確認すると fetchNoteMeta 関数があるはず。
+            // 後ほど fetchNoteMeta を確認して共通化するか複製する。
+
+            // 既存の fetchNoteMeta が単純なOGP取得なら共有できる。
+            // 一旦プレースホルダー。実際のロジックはNoteの実装を見て合わせる。
+            const res = await fetch(`/api/ogp?url=${encodeURIComponent(newBrainUrl)}`);
+            if (res.ok) {
+                const meta = await res.json();
+                if (meta.title) setNewBrainTitle(meta.title);
+                if (meta.image) setNewBrainImage(meta.image);
+                if (meta.site_name) setNewBrainSite(meta.site_name);
+            }
+        } catch (e) {
+            console.error(e);
+        } finally {
+            setIsFetchingMeta(false);
+        }
+    };
+
+    const addBrainItem = () => {
+        if (!data) return;
+        if (!newBrainTitle || !newBrainUrl) return;
+
+        const newItem = {
+            title: newBrainTitle,
+            url: newBrainUrl,
+            imageUrl: newBrainImage,
+            siteName: newBrainSite
+        };
+
+        const newItems = [...(data.brainItems || []), newItem];
+        setData({ ...data, brainItems: newItems });
+
+        // Reset inputs
+        setNewBrainUrl('');
+        setNewBrainTitle('');
+        setNewBrainImage('');
+        setNewBrainSite('');
+    };
+
+    const updateBrainItem = (index: number, field: string, value: string) => {
+        if (!data || !data.brainItems) return;
+        const newItems = [...data.brainItems];
+        newItems[index] = { ...newItems[index], [field]: value };
+        setData({ ...data, brainItems: newItems });
+    };
+
+    const removeBrainItem = (index: number) => {
+        if (!data || !data.brainItems) return;
+        if (!confirm('削除しますか？')) return;
+        const newItems = [...data.brainItems];
+        newItems.splice(index, 1);
+        setData({ ...data, brainItems: newItems });
+    };
+
+    // Handle Brain Image Selection (DND / File Input)
+    const handleBrainImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            const base64 = reader.result as string;
+            setNewBrainImage(base64);
+        };
+        reader.readAsDataURL(file);
+    };
+
 
     const [logs, setLogs] = useState<string[]>([]);
 
@@ -1014,6 +1108,162 @@ export default function AdminPage() {
                                                         </button>
                                                         <button
                                                             onClick={() => removeNoteItem(index)}
+                                                            className="p-2 bg-red-100 text-red-600 rounded hover:bg-red-200 text-xs font-bold"
+                                                        >
+                                                            削除
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+                                        itemKey={(item) => item.url}
+                                    />
+                                </div>
+
+                                {/* Brain Section Divider */}
+                                <div className="my-12 border-t-4 border-stone-200 border-dashed" />
+
+                                {/* Brain Intro Text Input */}
+                                <div className="bg-white p-6 rounded-xl shadow-sm mb-6">
+                                    <h2 className="text-xl font-bold mb-4 text-stone-900">Brain導入文</h2>
+                                    <textarea
+                                        className="w-full p-3 border rounded-lg min-h-[120px]"
+                                        value={data.settings?.brainIntro || ''}
+                                        onChange={(e) => setData({ ...data, settings: { ...data.settings, brainIntro: e.target.value } })}
+                                        placeholder="Brainに関する紹介文を入力してください"
+                                    />
+                                </div>
+
+                                {/* Add New Brain Item */}
+                                <div className="bg-white p-6 rounded-xl shadow-sm mb-6">
+                                    <h3 className="text-lg font-bold mb-4 text-stone-900">新しいBrain記事を追加</h3>
+                                    <div className="grid gap-4">
+                                        <div className="flex gap-2">
+                                            <input
+                                                type="text"
+                                                placeholder="Brain記事のURL (例: https://brain-market.com/...)"
+                                                className="flex-1 p-3 border rounded-lg"
+                                                value={newBrainUrl}
+                                                onChange={(e) => setNewBrainUrl(e.target.value)}
+                                            />
+                                            <button
+                                                onClick={fetchBrainMeta}
+                                                disabled={!newBrainUrl || isFetchingMeta}
+                                                className="bg-stone-800 text-white px-4 py-2 rounded-lg hover:bg-stone-700 disabled:opacity-50 whitespace-nowrap"
+                                            >
+                                                {isFetchingMeta ? '取得中...' : '情報取得'}
+                                            </button>
+                                        </div>
+
+                                        {newBrainTitle && (
+                                            <div className="p-4 bg-stone-50 rounded-lg border border-stone-200">
+                                                <div className="mb-2">
+                                                    <label className="text-xs font-bold text-stone-500">タイトル</label>
+                                                    <input
+                                                        type="text"
+                                                        className="w-full p-2 border rounded mt-1"
+                                                        value={newBrainTitle}
+                                                        onChange={(e) => setNewBrainTitle(e.target.value)}
+                                                    />
+                                                </div>
+                                                <div className="flex gap-4">
+                                                    <div className="flex gap-4 items-start">
+                                                        <div className="relative w-32 h-32 flex-shrink-0 group cursor-pointer bg-white border-2 border-dashed border-stone-300 rounded-lg hover:bg-stone-50 transition-colors flex items-center justify-center overflow-hidden">
+                                                            {newBrainImage ? (
+                                                                <>
+                                                                    <Image src={newBrainImage} alt="Preview" fill className="object-cover" />
+                                                                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white text-xs font-bold transition-opacity">
+                                                                        変更する
+                                                                    </div>
+                                                                </>
+                                                            ) : (
+                                                                <div className="text-center p-2 text-stone-400">
+                                                                    <span className="text-2xl block mb-1">📷</span>
+                                                                    <span className="text-[10px] font-bold">画像を選択</span>
+                                                                </div>
+                                                            )}
+                                                            <input
+                                                                type="file"
+                                                                accept="image/*"
+                                                                className="absolute inset-0 opacity-0 cursor-pointer"
+                                                                onChange={handleBrainImageSelect}
+                                                            />
+                                                        </div>
+                                                        <div className="flex-1 space-y-2">
+                                                            <div>
+                                                                <label className="text-xs font-bold text-stone-500">画像URL (Base64/URL)</label>
+                                                                <input
+                                                                    type="text"
+                                                                    className="w-full p-2 border rounded mt-1 text-sm bg-stone-100 text-stone-500"
+                                                                    value={newBrainImage ? (newBrainImage.length > 50 ? newBrainImage.substring(0, 50) + '...' : newBrainImage) : ''}
+                                                                    onChange={(e) => setNewBrainImage(e.target.value)}
+                                                                    placeholder="（ファイルを選択すると自動入力されます）"
+                                                                    readOnly={newBrainImage.startsWith('data:')}
+                                                                />
+                                                            </div>
+                                                            <p className="text-xs text-stone-400">
+                                                                ※ DNDまたはクリックで画像を選択できます。<br />
+                                                                ※ 自動取得やURL入力も可能です。
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <button
+                                                        onClick={addBrainItem}
+                                                        className="w-full mt-4 bg-blue-500 text-white font-bold py-2 rounded-lg hover:bg-blue-600"
+                                                    >
+                                                        リストに追加
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* Brain List with DND */}
+                                <div className="bg-white p-6 rounded-xl shadow-sm mb-4">
+                                    <h3 className="text-lg font-bold mb-4 text-stone-900">Brain記事リスト</h3>
+                                    <p className="text-xs text-stone-700 mb-4">ドラッグ&ドロップで並び替えられます</p>
+
+                                    <DraggableList
+                                        items={data.brainItems || []}
+                                        onReorder={(newList) => setData({ ...data, brainItems: newList })}
+                                        renderItem={(item, index) => (
+                                            <div className="p-4 bg-stone-50 rounded-lg border border-stone-200">
+                                                <div className="flex gap-4">
+                                                    <div className="flex-1 space-y-2">
+                                                        <input
+                                                            type="text"
+                                                            className="w-full p-2 border rounded font-bold"
+                                                            value={item.title}
+                                                            onChange={(e) => updateBrainItem(index, 'title', e.target.value)}
+                                                        />
+                                                        <input
+                                                            type="text"
+                                                            className="w-full p-2 border rounded text-sm text-stone-600"
+                                                            value={item.url}
+                                                            onChange={(e) => updateBrainItem(index, 'url', e.target.value)}
+                                                        />
+                                                    </div>
+                                                    <div className="relative w-20 h-20 flex-shrink-0 bg-stone-200 rounded overflow-hidden">
+                                                        {item.imageUrl && (
+                                                            <Image src={item.imageUrl} alt={item.title} fill className="object-cover" />
+                                                        )}
+                                                    </div>
+                                                    <div className="flex flex-col gap-2">
+                                                        {/* Featured Toggle for Brain Items if needed (Optional) */}
+                                                        {/* 
+                                                        <button
+                                                            onClick={() => toggleFeatured('brainItems', index)}
+                                                            className={`p-2 rounded text-xs font-bold border ${item.isFeatured
+                                                                ? 'bg-yellow-100 text-yellow-800 border-yellow-300'
+                                                                : 'bg-white text-stone-400 border-stone-200'
+                                                                }`}
+                                                        >
+                                                            ★ Featured
+                                                        </button>
+                                                        */}
+                                                        <button
+                                                            onClick={() => removeBrainItem(index)}
                                                             className="p-2 bg-red-100 text-red-600 rounded hover:bg-red-200 text-xs font-bold"
                                                         >
                                                             削除

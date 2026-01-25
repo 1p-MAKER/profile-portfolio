@@ -9,6 +9,7 @@ export interface ContentData {
     videoProductionVideos: YouTubeVideo[];
     audioTracks: AudioTrack[];
     noteItems: NoteItem[];
+    brainItems: NoteItem[];
     tabs: TabItem[];
     settings: Settings;
 }
@@ -100,5 +101,6 @@ export interface Settings {
     shopifyIntro?: string;
     furusatoIntro?: string;
     noteIntro?: string;
+    brainIntro?: string;
     sketchMarkIntro?: string;
 }

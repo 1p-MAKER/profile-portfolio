@@ -12,7 +12,7 @@ import AudioCard from '@/components/AudioCard';
 import NoteCard from '@/components/NoteCard';
 import SketchMarkTab from '@/components/SketchMarkTab';
 import Image from 'next/image';
-import { ContentData } from '@/types/content';
+import { ContentData, FeaturedItem } from '@/types/content';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useDrag } from '@use-gesture/react';
 
@@ -103,11 +103,7 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
 
     // Featured items collection
     const getFeaturedItems = () => {
-        const items: Array<{
-            id?: string;
-            type: 'ios' | 'leather' | 'shopify' | 'sns' | 'youtube' | 'furusato' | 'videoProduction' | 'note' | 'audio';
-            data: any;
-        }> = [];
+        const items: FeaturedItem[] = [];
 
         // iOS Apps
         data.iosApps?.filter(app => app.isFeatured).forEach(app => {

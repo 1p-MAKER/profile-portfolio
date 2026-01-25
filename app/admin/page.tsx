@@ -226,35 +226,30 @@ export default function AdminPage() {
         setData({ ...data, brainItems: newItems });
     };
 
-    // Handle Brain Image Selection (Upload)
+    // Handle Brain Image Selection (Base64 with compression)
     const handleBrainImageSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        // Validation
-        if (file.size > 5 * 1024 * 1024) {
-            alert('画像サイズが大きすぎます (5MB以下推奨)');
+        // Strict size limit for Base64 (500KB original to keep JSON smaller)
+        if (file.size > 500 * 1024) {
+            alert('画像サイズが大きすぎます (500KB以下にしてください)。\n画像を圧縮するか、小さいサイズのものを選択してください。');
             return;
         }
 
-        setStatus('画像アップロード中...');
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('type', 'general');
+        setStatus('画像を処理中...');
 
-        try {
-            const res = await fetch('/api/upload', { method: 'POST', body: formData });
-            const result = await res.json();
-            if (result.success) {
-                setNewBrainImage(result.path);
-                setStatus('画像をアップロードしました');
-            } else {
-                setStatus('アップロード失敗: ' + (result.error || 'Unknown error'));
-            }
-        } catch (e) {
-            console.error(e);
-            setStatus('アップロードエラー');
-        }
+        // Convert to Base64 directly
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            const base64String = reader.result as string;
+            setNewBrainImage(base64String);
+            setStatus('画像を設定しました');
+        };
+        reader.onerror = () => {
+            setStatus('画像の読み込みに失敗しました');
+        };
+        reader.readAsDataURL(file);
     };
 
 
@@ -578,33 +573,27 @@ export default function AdminPage() {
     const handleNoteImageSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
-            // Validation
-            if (file.size > 5 * 1024 * 1024) {
-                alert('画像サイズが大きすぎます (5MB以下推奨)');
+            // Strict size limit for Base64 (500KB original to keep JSON smaller)
+            if (file.size > 500 * 1024) {
+                alert('画像サイズが大きすぎます (500KB以下にしてください)。\n画像を圧縮するか、小さいサイズのものを選択してください。');
                 return;
             }
 
-            setStatus('画像アップロード中...');
-            const formData = new FormData();
-            formData.append('file', file);
-            formData.append('type', 'general');
+            setStatus('画像を処理中...');
 
-            try {
-                const res = await fetch('/api/upload', { method: 'POST', body: formData });
-                const result = await res.json();
-                if (result.success) {
-                    setNewNoteImage(result.path);
-                    setStatus('画像をアップロードしました');
-                } else {
-                    setStatus('アップロード失敗: ' + (result.error || 'Unknown error'));
-                }
-            } catch (e) {
-                console.error(e);
-                setStatus('アップロードエラー');
-            }
+            // Convert to Base64 directly
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                const base64String = reader.result as string;
+                setNewNoteImage(base64String);
+                setStatus('画像を設定しました');
+            };
+            reader.onerror = () => {
+                setStatus('画像の読み込みに失敗しました');
+            };
+            reader.readAsDataURL(file);
         }
     };
-
     const addNoteItem = () => {
         if (!data) return;
         const newItem = {

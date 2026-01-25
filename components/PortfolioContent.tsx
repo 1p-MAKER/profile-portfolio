@@ -154,6 +154,11 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
             items.push({ type: 'audio', data: item, id: item.id });
         });
 
+        // Sketch Mark Items
+        data.sketchMarkItems?.forEach(item => {
+            items.push({ type: 'sketchMark', data: item, id: item.id.toString() });
+        });
+
         const order = data.settings?.featuredOrder || [];
         if (order.length > 0) {
             items.sort((a, b) => {
@@ -200,6 +205,45 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
                                 }
                                 if (item.type === 'audio') {
                                     return <div key={`f-audio-${index}`} className="h-full"><AudioCard track={item.data} /></div>;
+                                }
+                                if (item.type === 'sketchMark') {
+                                    return (
+                                        <div key={`f-sm-${index}`} className="h-full">
+                                            <a
+                                                href={item.data.url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="group block h-full bg-white dark:bg-stone-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-stone-200 dark:border-stone-700"
+                                            >
+                                                <div className="relative aspect-square overflow-hidden bg-stone-100">
+                                                    {item.data.imageUrl ? (
+                                                        <Image
+                                                            src={item.data.imageUrl}
+                                                            alt={item.data.title}
+                                                            fill
+                                                            className="object-cover group-hover:scale-105 transition-transform duration-500"
+                                                        />
+                                                    ) : (
+                                                        <div className="flex items-center justify-center h-full text-stone-300">No Image</div>
+                                                    )}
+                                                    <span className={`absolute top-2 right-2 text-xs font-bold px-2 py-1 rounded shadow-sm text-white ${item.data.type === 'base' ? 'bg-stone-800' : 'bg-gradient-to-r from-purple-500 to-pink-500'}`}>
+                                                        {item.data.type === 'base' ? 'BASE' : 'Instagram'}
+                                                    </span>
+                                                </div>
+                                                <div className="p-4">
+                                                    <h3 className="font-bold text-stone-900 dark:text-stone-100 line-clamp-2 mb-2">
+                                                        {item.data.title}
+                                                    </h3>
+                                                    <div className="flex justify-between items-center mt-2 text-sm">
+                                                        {item.data.price ? (
+                                                            <span className="font-medium text-stone-600 dark:text-stone-400">¥{item.data.price.toLocaleString()}</span>
+                                                        ) : <span></span>}
+                                                        <span className="text-stone-400 group-hover:text-stone-800 dark:group-hover:text-stone-200 transition-colors">View →</span>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    );
                                 }
                                 return null;
                             })}

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { ContentData, Product, TabItem } from '@/types/content';
+import { ContentData, Product, TabItem, SketchMarkItem } from '@/types/content';
 import Image from 'next/image';
 import DraggableList from '@/components/DraggableList';
 
@@ -60,6 +60,10 @@ export default function AdminPage() {
     const [audioIntro, setAudioIntro] = useState('');
     const [noteIntro, setNoteIntro] = useState('');
     const [brainIntro, setBrainIntro] = useState(''); // New
+
+    // Sketch Mark State
+    const [fetchedSketchMarkItems, setFetchedSketchMarkItems] = useState<SketchMarkItem[]>([]);
+    const [isFetchingSketchMark, setIsFetchingSketchMark] = useState(false);
 
     useEffect(() => {
         // 1. Try to load from LocalStorage first
@@ -1352,6 +1356,79 @@ export default function AdminPage() {
                                         onChange={(e) => setData({ ...data, settings: { ...data.settings, sketchMarkIntro: e.target.value } })}
                                         placeholder="Sketch Markに関する紹介文を入力してください"
                                     />
+                                </div>
+
+                                {/* Fetch Latest Data */}
+                                <div className="bg-white p-6 rounded-xl shadow-sm mb-6">
+                                    <div className="flex justify-between items-center mb-4">
+                                        <h3 className="text-lg font-bold text-stone-900">最新データを取得・Featured設定</h3>
+                                        <button
+                                            onClick={async () => {
+                                                setIsFetchingSketchMark(true);
+                                                try {
+                                                    const res = await fetch('/api/sketch-mark');
+                                                    const resData = await res.json();
+                                                    if (resData.items) {
+                                                        setFetchedSketchMarkItems(resData.items);
+                                                    }
+                                                } catch (e) {
+                                                    console.error(e);
+                                                    alert('データの取得に失敗しました');
+                                                } finally {
+                                                    setIsFetchingSketchMark(false);
+                                                }
+                                            }}
+                                            disabled={isFetchingSketchMark}
+                                            className="bg-stone-800 text-white px-4 py-2 rounded-lg hover:bg-stone-700 disabled:opacity-50 text-sm font-bold"
+                                        >
+                                            {isFetchingSketchMark ? '取得中...' : '最新データを読み込む'}
+                                        </button>
+                                    </div>
+
+                                    {fetchedSketchMarkItems.length > 0 && (
+                                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[600px] overflow-y-auto p-2">
+                                            {fetchedSketchMarkItems.map((item) => {
+                                                // Check if already in featured list
+                                                const isFeatured = data.sketchMarkItems?.some(existing => existing.id === item.id);
+
+                                                return (
+                                                    <div key={item.id} className={`p-3 rounded-lg border-2 ${isFeatured ? 'border-yellow-400 bg-yellow-50' : 'border-stone-200 bg-white'}`}>
+                                                        <div className="relative aspect-square mb-2 bg-stone-100 rounded overflow-hidden">
+                                                            {item.imageUrl ? (
+                                                                <Image src={item.imageUrl} alt={item.title} fill className="object-cover" />
+                                                            ) : (
+                                                                <div className="flex items-center justify-center h-full text-xs text-stone-400">No Image</div>
+                                                            )}
+                                                            <span className="absolute top-1 right-1 text-[10px] font-bold px-2 py-0.5 rounded bg-black/50 text-white block">
+                                                                {item.type === 'base' ? 'BASE' : 'Instagram'}
+                                                            </span>
+                                                        </div>
+                                                        <p className="text-xs font-bold text-stone-800 line-clamp-2 mb-2 h-8">{item.title}</p>
+                                                        <button
+                                                            onClick={() => {
+                                                                const currentFeatured = data.sketchMarkItems || [];
+                                                                let newFeatured;
+                                                                if (isFeatured) {
+                                                                    // Remove
+                                                                    newFeatured = currentFeatured.filter(f => f.id !== item.id);
+                                                                } else {
+                                                                    // Add
+                                                                    newFeatured = [...currentFeatured, item];
+                                                                }
+                                                                setData({ ...data, sketchMarkItems: newFeatured });
+                                                            }}
+                                                            className={`w-full py-2 rounded text-xs font-bold transition-colors ${isFeatured
+                                                                    ? 'bg-yellow-400 text-yellow-900 hover:bg-yellow-500'
+                                                                    : 'bg-stone-200 text-stone-600 hover:bg-stone-300'
+                                                                }`}
+                                                        >
+                                                            {isFeatured ? '★ Featured (TOP表示中)' : '☆ TOPに表示する'}
+                                                        </button>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    )}
                                 </div>
 
                                 {/* BASE Sync Status */}

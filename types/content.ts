@@ -10,6 +10,7 @@ export interface ContentData {
     audioTracks: AudioTrack[];
     noteItems: NoteItem[];
     brainItems: NoteItem[];
+    sketchMarkItems: SketchMarkItem[];
     tabs: TabItem[];
     settings: Settings;
 }
@@ -58,6 +59,15 @@ export interface NoteItem {
     isFeatured?: boolean;
 }
 
+export interface SketchMarkItem {
+    id: string | number;
+    title: string;
+    url: string;
+    imageUrl: string;
+    type: 'base' | 'instagram';
+    price?: number | null;
+}
+
 export interface TabItem {
     id: 'home' | 'leather' | 'ios' | 'shopify' | 'sns' | '3d-printer' | 'furusato' | 'youtube' | 'videoProduction' | 'audio' | 'note' | 'sketchMark';
     label: string;
@@ -104,3 +114,15 @@ export interface Settings {
     brainIntro?: string;
     sketchMarkIntro?: string;
 }
+
+export type FeaturedItem =
+    | { type: 'ios'; data: IosApp; id: string }
+    | { type: 'leather'; data: ShopifyLeatherProduct; id: string }
+    | { type: 'shopify'; data: Product; id: string }
+    | { type: 'sns'; data: SNSAccount; id: string }
+    | { type: 'youtube'; data: YouTubeVideo; id: string }
+    | { type: 'videoProduction'; data: YouTubeVideo; id: string }
+    | { type: 'furusato'; data: FurusatoItem; id: string }
+    | { type: 'audio'; data: AudioTrack; id: string }
+    | { type: 'note'; data: NoteItem; id: string }
+    | { type: 'sketchMark'; data: SketchMarkItem; id: string };

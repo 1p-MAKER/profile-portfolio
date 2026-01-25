@@ -226,30 +226,63 @@ export default function AdminPage() {
         setData({ ...data, brainItems: newItems });
     };
 
+    // Image Compression Helper
+    const compressImage = (file: File): Promise<string> => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = (event) => {
+                const img = document.createElement('img');
+                img.src = event.target?.result as string;
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 800;
+                    const MAX_HEIGHT = 800;
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > height) {
+                        if (width > MAX_WIDTH) {
+                            height *= MAX_WIDTH / width;
+                            width = MAX_WIDTH;
+                        }
+                    } else {
+                        if (height > MAX_HEIGHT) {
+                            width *= MAX_HEIGHT / height;
+                            height = MAX_HEIGHT;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx?.drawImage(img, 0, 0, width, height);
+
+                    // Compress to JPEG with 0.7 quality
+                    const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+                    resolve(dataUrl);
+                };
+                img.onerror = (e) => reject(e);
+            };
+            reader.onerror = (e) => reject(e);
+        });
+    };
+
     // Handle Brain Image Selection (Base64 with compression)
     const handleBrainImageSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        // Strict size limit for Base64 (500KB original to keep JSON smaller)
-        if (file.size > 500 * 1024) {
-            alert('画像サイズが大きすぎます (500KB以下にしてください)。\n画像を圧縮するか、小さいサイズのものを選択してください。');
-            return;
+        setStatus('画像を圧縮・処理中...');
+        try {
+            const compressedBase64 = await compressImage(file);
+            setNewBrainImage(compressedBase64);
+            setStatus('画像を設定しました (自動圧縮済み)');
+        } catch (error) {
+            console.error('Image compression failed', error);
+            setStatus('画像の処理に失敗しました');
         }
 
-        setStatus('画像を処理中...');
-
-        // Convert to Base64 directly
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            const base64String = reader.result as string;
-            setNewBrainImage(base64String);
-            setStatus('画像を設定しました');
-        };
-        reader.onerror = () => {
-            setStatus('画像の読み込みに失敗しました');
-        };
-        reader.readAsDataURL(file);
     };
 
 
@@ -573,25 +606,16 @@ export default function AdminPage() {
     const handleNoteImageSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
-            // Strict size limit for Base64 (500KB original to keep JSON smaller)
-            if (file.size > 500 * 1024) {
-                alert('画像サイズが大きすぎます (500KB以下にしてください)。\n画像を圧縮するか、小さいサイズのものを選択してください。');
-                return;
+            setStatus('画像を圧縮・処理中...');
+            try {
+                const compressedBase64 = await compressImage(file);
+                setNewNoteImage(compressedBase64);
+                setStatus('画像を設定しました (自動圧縮済み)');
+            } catch (error) {
+                console.error('Image compression failed', error);
+                setStatus('画像の処理に失敗しました');
             }
 
-            setStatus('画像を処理中...');
-
-            // Convert to Base64 directly
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                const base64String = reader.result as string;
-                setNewNoteImage(base64String);
-                setStatus('画像を設定しました');
-            };
-            reader.onerror = () => {
-                setStatus('画像の読み込みに失敗しました');
-            };
-            reader.readAsDataURL(file);
         }
     };
     const addNoteItem = () => {

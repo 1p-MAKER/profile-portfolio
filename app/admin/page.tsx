@@ -223,17 +223,35 @@ export default function AdminPage() {
         setData({ ...data, brainItems: newItems });
     };
 
-    // Handle Brain Image Selection (DND / File Input)
-    const handleBrainImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Handle Brain Image Selection (Upload)
+    const handleBrainImageSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            const base64 = reader.result as string;
-            setNewBrainImage(base64);
-        };
-        reader.readAsDataURL(file);
+        // Validation
+        if (file.size > 5 * 1024 * 1024) {
+            alert('画像サイズが大きすぎます (5MB以下推奨)');
+            return;
+        }
+
+        setStatus('画像アップロード中...');
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('type', 'general');
+
+        try {
+            const res = await fetch('/api/upload', { method: 'POST', body: formData });
+            const result = await res.json();
+            if (result.success) {
+                setNewBrainImage(result.path);
+                setStatus('画像をアップロードしました');
+            } else {
+                setStatus('アップロード失敗: ' + (result.error || 'Unknown error'));
+            }
+        } catch (e) {
+            console.error(e);
+            setStatus('アップロードエラー');
+        }
     };
 
 
@@ -554,19 +572,33 @@ export default function AdminPage() {
         setIsFetchingMeta(false);
     };
 
-    const handleNoteImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleNoteImageSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
-            // Check size (e.g. 2MB limit for base64 safety)
-            if (file.size > 2 * 1024 * 1024) {
-                alert('画像サイズが大きすぎます (2MB以下推奨)');
+            // Validation
+            if (file.size > 5 * 1024 * 1024) {
+                alert('画像サイズが大きすぎます (5MB以下推奨)');
                 return;
             }
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setNewNoteImage(reader.result as string);
-            };
-            reader.readAsDataURL(file);
+
+            setStatus('画像アップロード中...');
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('type', 'general');
+
+            try {
+                const res = await fetch('/api/upload', { method: 'POST', body: formData });
+                const result = await res.json();
+                if (result.success) {
+                    setNewNoteImage(result.path);
+                    setStatus('画像をアップロードしました');
+                } else {
+                    setStatus('アップロード失敗: ' + (result.error || 'Unknown error'));
+                }
+            } catch (e) {
+                console.error(e);
+                setStatus('アップロードエラー');
+            }
         }
     };
 

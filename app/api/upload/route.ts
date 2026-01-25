@@ -24,6 +24,8 @@ export async function POST(request: Request) {
             targetFilename = 'profile.jpg'; // Force filename for profile image
         } else if (file.type === 'audio/mpeg' || file.type === 'audio/mp3' || file.name.endsWith('.mp3')) {
             uploadSubDir = 'audio';
+        } else if (uploadType === 'general') {
+            uploadSubDir = 'uploads';
         }
 
         // Create specific filename with timestamp to avoid collisions (unless overridden)

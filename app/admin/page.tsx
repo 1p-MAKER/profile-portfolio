@@ -337,12 +337,41 @@ export default function AdminPage() {
         addLogEntry('公開前のブラウザ保存を実行中...');
         try {
             if (data) {
-                localStorage.setItem('portfolio_admin_data_v2', JSON.stringify(data));
-                addLogEntry('ブラウザへの自動保存完了。');
+                try {
+                    localStorage.setItem('portfolio_admin_data_v2', JSON.stringify(data));
+                    addLogEntry('ブラウザへの自動保存完了。');
+                } catch (e: any) {
+                    // Quota exceeded? Try saving without Base64 images
+                    if (e.name === 'QuotaExceededError' || e.name === 'NS_ERROR_DOM_QUOTA_REACHED' || (e.message && e.message.includes('quota'))) {
+                        console.warn('LocalStorage quota exceeded. Trying textual backup...');
+
+                        const liteData = JSON.parse(JSON.stringify(data)); // Deep clone
+
+                        // Strip Base64 images from common fields
+                        const stripImage = (item: any) => {
+                            if (item.imageUrl && item.imageUrl.startsWith('data:')) {
+                                item.imageUrl = ''; // Clear heavy image for local backup
+                            }
+                            return item;
+                        };
+
+                        if (liteData.noteItems) liteData.noteItems = liteData.noteItems.map(stripImage);
+                        if (liteData.brainItems) liteData.brainItems = liteData.brainItems.map(stripImage);
+                        if (liteData.sketchMarkItems) liteData.sketchMarkItems = liteData.sketchMarkItems.map(stripImage);
+                        if (liteData.furusatoItems) liteData.furusatoItems = liteData.furusatoItems.map(stripImage);
+
+                        // Try saving lite version
+                        localStorage.setItem('portfolio_admin_data_v2', JSON.stringify(liteData));
+                        addLogEntry('※容量制限のため、テキスト情報のみブラウザにバックアップしました（画像はGitHubへ直接保存されます）。');
+                    } else {
+                        throw e;
+                    }
+                }
             }
         } catch (e) {
             console.error('Auto-save failed', e);
-            addLogEntry('警告: ブラウザ自動保存に失敗しましたが、公開処理を続行します。');
+            // User requested to suppress this warning if it persists. 
+            // We just log to console and proceed silently as the main saving method is GitHub.
         }
 
         // Step 2: GitHub API経由で直接更新 (/api/publish)
@@ -1418,8 +1447,8 @@ export default function AdminPage() {
                                                                 setData({ ...data, sketchMarkItems: newFeatured });
                                                             }}
                                                             className={`w-full py-2 rounded text-xs font-bold transition-colors ${isFeatured
-                                                                    ? 'bg-yellow-400 text-yellow-900 hover:bg-yellow-500'
-                                                                    : 'bg-stone-200 text-stone-600 hover:bg-stone-300'
+                                                                ? 'bg-yellow-400 text-yellow-900 hover:bg-yellow-500'
+                                                                : 'bg-stone-200 text-stone-600 hover:bg-stone-300'
                                                                 }`}
                                                         >
                                                             {isFeatured ? '★ Featured (TOP表示中)' : '☆ TOPに表示する'}

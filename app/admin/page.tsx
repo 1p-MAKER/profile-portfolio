@@ -63,7 +63,7 @@ export default function AdminPage() {
 
     useEffect(() => {
         // 1. Try to load from LocalStorage first
-        const localData = localStorage.getItem('portfolio_admin_data');
+        const localData = localStorage.getItem('portfolio_admin_data_v2');
         if (localData) {
             try {
                 const parsed = JSON.parse(localData);
@@ -119,7 +119,7 @@ export default function AdminPage() {
                 }
                 setData(fetchedData);
                 // Also save to local storage to sync
-                localStorage.setItem('portfolio_admin_data', JSON.stringify(fetchedData));
+                localStorage.setItem('portfolio_admin_data_v2', JSON.stringify(fetchedData));
 
                 if (fetchedData.settings?.xUsername) {
                     setXUsername(fetchedData.settings.xUsername);

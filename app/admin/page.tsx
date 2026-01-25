@@ -147,6 +147,7 @@ export default function AdminPage() {
     const fetchBrainMeta = async () => {
         if (!newBrainUrl) return;
         setIsFetchingMeta(true);
+        setStatus('情報を取得中...');
         try {
             // Noteと同じAPIを使用（OGP取得ロジックが共通であれば）
             // もしBrain専用の処理が必要なら別途APIを用意するが、
@@ -161,15 +162,23 @@ export default function AdminPage() {
 
             // 既存の fetchNoteMeta が単純なOGP取得なら共有できる。
             // 一旦プレースホルダー。実際のロジックはNoteの実装を見て合わせる。
-            const res = await fetch(`/api/ogp?url=${encodeURIComponent(newBrainUrl)}`);
+            const res = await fetch(`/api/metadata?url=${encodeURIComponent(newBrainUrl)}`);
             if (res.ok) {
                 const meta = await res.json();
-                if (meta.title) setNewBrainTitle(meta.title);
-                if (meta.image) setNewBrainImage(meta.image);
-                if (meta.site_name) setNewBrainSite(meta.site_name);
+                if (meta.error) {
+                    setStatus('情報の取得に失敗しました。手動で入力してください。');
+                } else {
+                    if (meta.title) setNewBrainTitle(meta.title);
+                    if (meta.image) setNewBrainImage(meta.image);
+                    if (meta.site_name) setNewBrainSite(meta.site_name);
+                    setStatus('情報を取得しました');
+                }
+            } else {
+                setStatus('情報の取得に失敗しました。詳細を入力してください。');
             }
         } catch (e) {
             console.error(e);
+            setStatus('情報の取得中にエラーが発生しました。');
         } finally {
             setIsFetchingMeta(false);
         }
@@ -177,7 +186,10 @@ export default function AdminPage() {
 
     const addBrainItem = () => {
         if (!data) return;
-        if (!newBrainTitle || !newBrainUrl) return;
+        if (!newBrainTitle || !newBrainUrl) {
+            alert('タイトルとURLは必須です。情報を取得するか、手動で入力してください。');
+            return;
+        }
 
         const newItem = {
             title: newBrainTitle,

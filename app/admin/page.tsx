@@ -1155,7 +1155,7 @@ export default function AdminPage() {
                                             </button>
                                         </div>
 
-                                        {newBrainTitle && (
+                                        {newBrainUrl && (
                                             <div className="p-4 bg-stone-50 rounded-lg border border-stone-200">
                                                 <div className="mb-2">
                                                     <label className="text-xs font-bold text-stone-500">タイトル</label>

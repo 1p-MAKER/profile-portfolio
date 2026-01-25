@@ -21,6 +21,11 @@ type TabType = string;
 import HeroSection from './HeroSection';
 
 export default function PortfolioContent({ data }: { data: ContentData }) {
+    console.log('Portfolio Content Data:', {
+        settings: data.settings,
+        brainItems: data.brainItems,
+        brainIntro: data.settings?.brainIntro
+    });
     const initialTab = data.tabs && data.tabs.length > 0 ? data.tabs[0].id : 'leather';
     const [activeTab, setActiveTab] = useState<TabType>(initialTab);
     const [direction, setDirection] = useState(0);

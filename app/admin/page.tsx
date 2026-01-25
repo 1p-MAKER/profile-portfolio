@@ -140,6 +140,9 @@ export default function AdminPage() {
                 if (fetchedData.settings?.brainIntro) { // New
                     setBrainIntro(fetchedData.settings.brainIntro); // New
                 }
+
+                // Cleanup old data to free up space
+                localStorage.removeItem('portfolio_admin_data');
             });
     }, []);
 

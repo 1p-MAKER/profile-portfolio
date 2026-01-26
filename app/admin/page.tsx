@@ -790,6 +790,17 @@ export default function AdminPage() {
         setData({ ...data, [listName]: newList } as any);
     };
 
+    const updateLegal = (field: string, val: string) => {
+        if (!data) return;
+        setData({
+            ...data,
+            legalInfo: {
+                ...(data.legalInfo || { businessName: '', contactEmail: '', addressInfo: '', shippingInfo: '', returnPolicy: '' }),
+                [field]: val
+            }
+        });
+    };
+
 
     const handleProfileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files || !e.target.files[0]) return;
@@ -2078,6 +2089,58 @@ export default function AdminPage() {
                                         <p className="mt-1 text-xs text-stone-700">
                                             Featured Worksセクションの上部に表示される導入文です。改行が反映されます。
                                         </p>
+                                    </div>
+
+                                    {/* Legal Information Section */}
+                                    <div className="border-t border-stone-200 mt-8 pt-6">
+                                        <h3 className="font-bold text-xl mb-4 text-stone-800">特定商取引法に基づく表記</h3>
+                                        <div className="grid gap-4">
+                                            <div>
+                                                <label className="text-xs font-bold text-stone-500">販売業者名</label>
+                                                <input
+                                                    className="w-full border p-2 rounded"
+                                                    value={data.legalInfo?.businessName || ''}
+                                                    onChange={e => updateLegal('businessName', e.target.value)}
+                                                    placeholder="例: 山田 太郎"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="text-xs font-bold text-stone-500">連絡先メール</label>
+                                                <input
+                                                    className="w-full border p-2 rounded"
+                                                    value={data.legalInfo?.contactEmail || ''}
+                                                    onChange={e => updateLegal('contactEmail', e.target.value)}
+                                                    placeholder="例: info@example.com"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="text-xs font-bold text-stone-500">所在地・連絡先開示文言</label>
+                                                <textarea
+                                                    className="w-full border p-2 rounded h-20"
+                                                    value={data.legalInfo?.addressInfo || ''}
+                                                    onChange={e => updateLegal('addressInfo', e.target.value)}
+                                                    placeholder="例: ご請求があれば遅滞なく開示いたします。"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="text-xs font-bold text-stone-500">発送・提供時期の説明</label>
+                                                <textarea
+                                                    className="w-full border p-2 rounded h-20"
+                                                    value={data.legalInfo?.shippingInfo || ''}
+                                                    onChange={e => updateLegal('shippingInfo', e.target.value)}
+                                                    placeholder="例: お支払いから3営業日以内に発送いたします。"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="text-xs font-bold text-stone-500">返品・キャンセル説明</label>
+                                                <textarea
+                                                    className="w-full border p-2 rounded h-20"
+                                                    value={data.legalInfo?.returnPolicy || ''}
+                                                    onChange={e => updateLegal('returnPolicy', e.target.value)}
+                                                    placeholder="例: 商品に欠陥がある場合を除き、返品には応じかねます。"
+                                                />
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </section>

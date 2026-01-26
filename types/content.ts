@@ -13,6 +13,15 @@ export interface ContentData {
     sketchMarkItems: SketchMarkItem[];
     tabs: TabItem[];
     settings: Settings;
+    legalInfo?: LegalInfo;
+}
+
+export interface LegalInfo {
+    businessName: string;
+    contactEmail: string;
+    addressInfo: string;
+    shippingInfo: string;
+    returnPolicy: string;
 }
 
 // Shopify商品（革製品用）

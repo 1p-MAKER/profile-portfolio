@@ -22,6 +22,10 @@ export interface LegalInfo {
     addressInfo: string;
     shippingInfo: string;
     returnPolicy: string;
+    sellingPrice?: string;
+    additionalCharges?: string;
+    paymentMethod?: string;
+    paymentTiming?: string;
 }
 
 // Shopify商品（革製品用）

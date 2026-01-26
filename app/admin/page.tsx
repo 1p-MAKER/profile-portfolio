@@ -2140,6 +2140,42 @@ export default function AdminPage() {
                                                     placeholder="例: 商品に欠陥がある場合を除き、返品には応じかねます。"
                                                 />
                                             </div>
+                                            <div>
+                                                <label className="text-xs font-bold text-stone-500">販売価格</label>
+                                                <textarea
+                                                    className="w-full border p-2 rounded h-20"
+                                                    value={data.legalInfo?.sellingPrice || ''}
+                                                    onChange={e => updateLegal('sellingPrice', e.target.value)}
+                                                    placeholder="例: 各商品ページに記載の金額（消費税込み）"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="text-xs font-bold text-stone-500">商品代金以外に必要な料金</label>
+                                                <textarea
+                                                    className="w-full border p-2 rounded h-32"
+                                                    value={data.legalInfo?.additionalCharges || ''}
+                                                    onChange={e => updateLegal('additionalCharges', e.target.value)}
+                                                    placeholder="例: &#13;&#10;物販： 配送料（詳細は各商品ページに記載）&#13;&#10;サービス： 対面時の各自の飲食代、オンラインの通信料"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="text-xs font-bold text-stone-500">支払方法</label>
+                                                <textarea
+                                                    className="w-full border p-2 rounded h-20"
+                                                    value={data.legalInfo?.paymentMethod || ''}
+                                                    onChange={e => updateLegal('paymentMethod', e.target.value)}
+                                                    placeholder="例: クレジットカード決済（Stripe）"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="text-xs font-bold text-stone-500">支払時期</label>
+                                                <textarea
+                                                    className="w-full border p-2 rounded h-20"
+                                                    value={data.legalInfo?.paymentTiming || ''}
+                                                    onChange={e => updateLegal('paymentTiming', e.target.value)}
+                                                    placeholder="例: 商品注文時、または予約確定時の事前決済"
+                                                />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

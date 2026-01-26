@@ -22,7 +22,20 @@ export default function Legal() {
                     <section><h2 className="font-bold text-stone-500 mb-2 uppercase text-xs">所在地・連絡先</h2><p className="text-stone-400 text-xs">{info.addressInfo}</p></section>
                     <section><h2 className="font-bold text-stone-500 mb-2 uppercase text-xs">お問い合わせ先</h2><p className="text-base">{info.contactEmail}</p></section>
                     <section><h2 className="font-bold text-stone-500 mb-2 uppercase text-xs">商品の引き渡し時期</h2><p className="text-base">{info.shippingInfo}</p></section>
-                    <section><h2 className="font-bold text-stone-500 mb-2 uppercase text-xs">返品・交換・キャンセル</h2><p className="text-base">{info.returnPolicy}</p></section>
+                    <section><h2 className="font-bold text-stone-500 mb-2 uppercase text-xs">返品・交換・キャンセル</h2><p className="text-base whitespace-pre-wrap">{info.returnPolicy}</p></section>
+
+                    {info.sellingPrice && (
+                        <section><h2 className="font-bold text-stone-500 mb-2 uppercase text-xs">販売価格</h2><p className="text-base whitespace-pre-wrap">{info.sellingPrice}</p></section>
+                    )}
+                    {info.additionalCharges && (
+                        <section><h2 className="font-bold text-stone-500 mb-2 uppercase text-xs">商品代金以外に必要な料金</h2><p className="text-base whitespace-pre-wrap">{info.additionalCharges}</p></section>
+                    )}
+                    {info.paymentMethod && (
+                        <section><h2 className="font-bold text-stone-500 mb-2 uppercase text-xs">支払方法</h2><p className="text-base whitespace-pre-wrap">{info.paymentMethod}</p></section>
+                    )}
+                    {info.paymentTiming && (
+                        <section><h2 className="font-bold text-stone-500 mb-2 uppercase text-xs">支払時期</h2><p className="text-base whitespace-pre-wrap">{info.paymentTiming}</p></section>
+                    )}
                 </div>
             </div>
         </main>

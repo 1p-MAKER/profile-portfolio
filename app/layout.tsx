@@ -16,7 +16,7 @@ export async function generateMetadata(): Promise<Metadata> {
     const data = JSON.parse(fileContents);
 
     return {
-      title: data.settings?.siteTitle || 'Profile & Portfolio | 1pei',
+      title: data.settings?.siteTitle || "Dev cat's Studio & Office | 長嶺一平",
       description: 'iOSアプリ開発者・革製品作家のポートフォリオサイト',
       manifest: '/manifest.json',
       icons: {
@@ -26,13 +26,13 @@ export async function generateMetadata(): Promise<Metadata> {
       appleWebApp: {
         capable: true,
         statusBarStyle: 'default',
-        title: data.settings?.siteTitle || '1pei',
+        title: data.settings?.siteTitle || "Dev cat's Studio & Office | 長嶺一平",
       },
     };
   } catch (error) {
     console.error('Failed to read content data for metadata:', error);
     return {
-      title: 'Profile & Portfolio | 1pei',
+      title: "Dev cat's Studio & Office | 長嶺一平",
       description: 'iOSアプリ開発者・革製品作家のポートフォリオサイト',
     };
   }

@@ -17,14 +17,16 @@ export default function Legal() {
                     </section>
 
                     <section>
-                        <h2 className="font-bold text-stone-500 mb-2 uppercase tracking-widest text-xs">所在地</h2>
-                        <p className="text-base font-serif">〒000-0000 沖縄県[以下、住所を記入]</p>
-                        <p className="text-stone-400 text-xs mt-1">※所在地および電話番号については、請求があれば遅滞なく電子メールにて提供いたします。</p>
+                        <h2 className="font-bold text-stone-500 mb-2 uppercase tracking-widest text-xs">所在地・連絡先</h2>
+                        <p className="text-stone-400 text-xs leading-loose">
+                            所在地および電話番号については、特定商取引法に基づき、消費者様からの請求があれば遅滞なく電子メール等の方法により提供いたします。<br />
+                            開示をご希望の方は、以下のお問い合わせ先よりご請求ください。
+                        </p>
                     </section>
 
                     <section>
                         <h2 className="font-bold text-stone-500 mb-2 uppercase tracking-widest text-xs">お問い合わせ先</h2>
-                        <p className="text-base font-mono">[メールアドレスを記入]</p>
+                        <p className="text-base font-mono">[ここにメールアドレスを記入]</p>
                     </section>
 
                     <section>
@@ -41,17 +43,9 @@ export default function Legal() {
                     </section>
 
                     <section>
-                        <h2 className="font-bold text-stone-500 mb-2 uppercase tracking-widest text-xs">代金の支払時期および支払方法</h2>
-                        <p className="text-base">
-                            支払方法：クレジットカード決済（Stripe）<br />
-                            支払時期：商品注文時、または予約確定時の事前決済
-                        </p>
-                    </section>
-
-                    <section>
                         <h2 className="font-bold text-stone-500 mb-2 uppercase tracking-widest text-xs">商品の引き渡し・サービス提供時期</h2>
                         <div className="text-base space-y-2">
-                            <p><strong>【物販】</strong><br />事前のご相談、またはお見積もり時に合意した発送目安に基づき、順次発送いたします。</p>
+                            <p><strong>【物販】</strong><br />事前のご相談、またはお見積もり時に合意した発送目安に基づき発送いたします。</p>
                             <p><strong>【サービス】</strong><br />予約確定時に合意した日時</p>
                         </div>
                     </section>
@@ -59,8 +53,8 @@ export default function Legal() {
                     <section>
                         <h2 className="font-bold text-stone-500 mb-2 uppercase tracking-widest text-xs">返品・交換・キャンセルについて</h2>
                         <div className="text-base space-y-2">
-                            <p><strong>【物販】</strong><br />商品に欠陥がある場合を除き、返品・交換には応じられません。万が一不良品であった場合は商品到着後7日以内にご連絡ください。送料当方負担にて修理または交換対応いたします。</p>
-                            <p><strong>【サービス】</strong><br />役務の性質上、提供後の返金には応じられません。日程変更は前日まで受け付けます。それ以降はキャンセル料が発生する場合がございます。</p>
+                            <p><strong>【物販】</strong><br />商品に欠陥がある場合を除き、返品・交換には応じられません。万が一不良品であった場合は商品到着後7日以内にご連絡ください。</p>
+                            <p><strong>【サービス】</strong><br />役務の性質上、提供後の返金には応じられません。</p>
                         </div>
                     </section>
                 </div>

@@ -10,6 +10,7 @@ export interface ContentData {
     audioTracks: AudioTrack[];
     noteItems: NoteItem[];
     brainItems: NoteItem[];
+    officeItems: OfficeItem[];
     sketchMarkItems: SketchMarkItem[];
     tabs: TabItem[];
     settings: Settings;
@@ -82,8 +83,15 @@ export interface SketchMarkItem {
     price?: number | null;
 }
 
+export interface OfficeItem {
+    id: string;
+    buyButtonId: string;
+    publishableKey: string;
+    isFeatured?: boolean;
+}
+
 export interface TabItem {
-    id: 'home' | 'leather' | 'ios' | 'shopify' | 'sns' | '3d-printer' | 'furusato' | 'youtube' | 'videoProduction' | 'audio' | 'note' | 'sketchMark';
+    id: 'home' | 'leather' | 'ios' | 'shopify' | 'sns' | '3d-printer' | 'furusato' | 'youtube' | 'videoProduction' | 'audio' | 'note' | 'sketchMark' | 'office';
     label: string;
 }
 
@@ -127,6 +135,7 @@ export interface Settings {
     noteIntro?: string;
     brainIntro?: string;
     sketchMarkIntro?: string;
+    officeIntro?: string;
 }
 
 export type FeaturedItem =
@@ -139,4 +148,5 @@ export type FeaturedItem =
     | { type: 'furusato'; data: FurusatoItem; id: string }
     | { type: 'audio'; data: AudioTrack; id: string }
     | { type: 'note'; data: NoteItem; id: string }
-    | { type: 'sketchMark'; data: SketchMarkItem; id: string };
+    | { type: 'sketchMark'; data: SketchMarkItem; id: string }
+    | { type: 'office'; data: OfficeItem; id: string };

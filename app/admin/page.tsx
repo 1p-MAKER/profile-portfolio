@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { ContentData, Product, TabItem, SketchMarkItem } from '@/types/content';
+import { ContentData, Product, TabItem, SketchMarkItem, OfficeItem } from '@/types/content';
 import Image from 'next/image';
 import DraggableList from '@/components/DraggableList';
 
@@ -59,7 +59,9 @@ export default function AdminPage() {
     const [videoProductionIntro, setVideoProductionIntro] = useState('');
     const [audioIntro, setAudioIntro] = useState('');
     const [noteIntro, setNoteIntro] = useState('');
-    const [brainIntro, setBrainIntro] = useState(''); // New
+    const [brainIntro, setBrainIntro] = useState('');
+    const [officeIntro, setOfficeIntro] = useState(''); // New Office
+
 
     // Sketch Mark State
     const [fetchedSketchMarkItems, setFetchedSketchMarkItems] = useState<SketchMarkItem[]>([]);
@@ -83,7 +85,9 @@ export default function AdminPage() {
                 if (parsed.settings?.audioIntro) setAudioIntro(parsed.settings.audioIntro);
                 if (parsed.settings?.audioIntro) setAudioIntro(parsed.settings.audioIntro);
                 if (parsed.settings?.noteIntro) setNoteIntro(parsed.settings.noteIntro);
-                if (parsed.settings?.brainIntro) setBrainIntro(parsed.settings.brainIntro); // New
+                if (parsed.settings?.brainIntro) setBrainIntro(parsed.settings.brainIntro);
+                if (parsed.settings?.officeIntro) setOfficeIntro(parsed.settings.officeIntro); // New Office
+
 
                 // Migration: Ensure 'note' tab exists if not present
                 if (parsed.tabs && !parsed.tabs.find((t: any) => t.id === 'note')) {
@@ -96,6 +100,10 @@ export default function AdminPage() {
                 // Migration: Ensure 'sketchMark' tab exists if not present
                 if (parsed.tabs && !parsed.tabs.find((t: any) => t.id === 'sketchMark')) {
                     parsed.tabs.push({ id: 'sketchMark', label: 'Sketch Mark' });
+                }
+                // Migration: Ensure 'office' tab exists if not present
+                if (parsed.tabs && !parsed.tabs.find((t: any) => t.id === 'office')) {
+                    parsed.tabs.push({ id: 'office', label: 'Office' });
                 }
 
                 setData(parsed);
@@ -119,6 +127,7 @@ export default function AdminPage() {
                         { id: 'furusato', label: 'ふるさと納税リスト' },
                         { id: 'note', label: 'note' },
                         { id: 'sketchMark', label: 'Sketch Mark' },
+                        { id: 'office', label: 'Office' },
                     ];
                 }
                 setData(fetchedData);
@@ -141,8 +150,11 @@ export default function AdminPage() {
                 if (fetchedData.settings?.noteIntro) {
                     setNoteIntro(fetchedData.settings.noteIntro);
                 }
-                if (fetchedData.settings?.brainIntro) { // New
-                    setBrainIntro(fetchedData.settings.brainIntro); // New
+                if (fetchedData.settings?.brainIntro) {
+                    setBrainIntro(fetchedData.settings.brainIntro);
+                }
+                if (fetchedData.settings?.officeIntro) {
+                    setOfficeIntro(fetchedData.settings.officeIntro);
                 }
 
                 // Cleanup old data to free up space
@@ -502,6 +514,31 @@ export default function AdminPage() {
         const newList = [...data.leatherProducts];
         newList.splice(index, 1);
         setData({ ...data, leatherProducts: newList });
+    };
+
+    const addOfficeItem = () => {
+        if (!data) return;
+        const newItem: OfficeItem = {
+            id: Date.now().toString(),
+            buyButtonId: '',
+            publishableKey: '',
+            isFeatured: false
+        };
+        setData({ ...data, officeItems: [...(data.officeItems || []), newItem] });
+    };
+
+    const updateOfficeItem = (index: number, field: keyof OfficeItem, value: any) => {
+        if (!data) return;
+        const newItems = [...(data.officeItems || [])];
+        newItems[index] = { ...newItems[index], [field]: value };
+        setData({ ...data, officeItems: newItems });
+    };
+
+    const removeOfficeItem = (index: number) => {
+        if (!data) return;
+        const newItems = [...(data.officeItems || [])];
+        newItems.splice(index, 1);
+        setData({ ...data, officeItems: newItems });
     };
 
     const removeGeneralProduct = (listName: 'shopifyApps' | 'snsAccounts', index: number) => {

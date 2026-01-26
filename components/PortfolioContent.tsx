@@ -20,6 +20,8 @@ type TabType = string;
 
 import HeroSection from './HeroSection';
 
+const StripeBuyButton = 'stripe-buy-button' as any;
+
 export default function PortfolioContent({ data }: { data: ContentData }) {
     console.log('Portfolio Content Data:', {
         settings: data.settings,
@@ -82,6 +84,7 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
             velocity: 0.3
         }
     });
+
 
     // Animation variants
     const variants = {
@@ -376,6 +379,24 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
                 );
             case 'sketchMark':
                 return <SketchMarkTab />;
+            case 'office':
+                return (
+                    <>
+                        {data.settings?.officeIntro && <p className="text-center text-stone-600 mb-8 whitespace-pre-wrap leading-relaxed">{data.settings.officeIntro}</p>}
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {data.officeItems && data.officeItems.map((item, index) => (
+                                <div key={index} className="h-full bg-white dark:bg-stone-800 rounded-2xl overflow-hidden shadow-sm border border-stone-200 dark:border-stone-700 p-4 flex flex-col items-center justify-center">
+                                    {/* Stripe Buy Button Custom Element */}
+                                    <StripeBuyButton
+                                        buy-button-id={item.buyButtonId}
+                                        publishable-key={item.publishableKey}
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                        {(!data.officeItems || data.officeItems.length === 0) && <p className="text-center text-stone-500 py-12">現在販売中の商品はありません。</p>}
+                    </>
+                );
             default:
                 return null;
         }
@@ -431,6 +452,9 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
             </main>
 
             <Footer />
+
+            {/* Helper Script for Stripe */}
+            <script async src="https://js.stripe.com/v3/buy-button.js"></script>
 
             {selectedImage && (
                 <div

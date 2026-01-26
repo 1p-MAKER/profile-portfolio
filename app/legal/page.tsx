@@ -6,7 +6,7 @@ export default function Legal() {
     const [data, setData] = useState<any>(null);
 
     useEffect(() => {
-        fetch('/api/content').then(res => res.json()).then(setData);
+        fetch('/api/data').then(res => res.json()).then(setData);
     }, []);
 
     if (!data) return null;

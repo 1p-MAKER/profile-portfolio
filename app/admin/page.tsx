@@ -9,7 +9,7 @@ export default function Admin() {
     const [data, setData] = useState<any>(null);
 
     useEffect(() => {
-        fetch('/api/content').then(res => res.json()).then(setData).catch(e => setStatus('読込エラー: ' + e.message));
+        fetch('/api/data').then(res => res.json()).then(setData).catch(e => setStatus('読込エラー: ' + e.message));
     }, []);
 
     const updateLegal = (field: string, val: string) => {
@@ -20,13 +20,18 @@ export default function Admin() {
         if (!confirm('公開しますか？')) return;
         setIsDeploying(true); setStatus('保存中... ⏳');
         try {
-            const res = await fetch('/api/update-content', { method: 'POST', body: JSON.stringify(data) });
+            const res = await fetch('/api/data', { method: 'POST', body: JSON.stringify(data) });
             if (!res.ok) throw new Error('保存失敗');
             setStatus('✅ 公開完了！');
         } catch (e: any) { setStatus('❌ ' + e.message); } finally { setIsDeploying(false); }
     };
 
-    if (!data) return <div className="p-10 text-center">読み込み中...</div>;
+    if (!data) return (
+        <div className="p-10 text-center space-y-4">
+            <div className="text-xl font-bold">読み込み中...</div>
+            {status && <div className="text-red-500 font-bold p-4 bg-red-50 border border-red-200 rounded">{status}</div>}
+        </div>
+    );
 
     return (
         <div className="min-h-screen bg-stone-50 p-4 pb-32 font-sans">

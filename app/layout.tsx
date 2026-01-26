@@ -3,6 +3,7 @@ import { Noto_Sans_JP } from 'next/font/google';
 import './globals.css';
 import { promises as fs } from 'fs';
 import path from 'path';
+import Link from 'next/link';
 
 const noto = Noto_Sans_JP({
   variable: '--font-noto-sans-jp',
@@ -49,6 +50,9 @@ export default function RootLayout({
         className={`${noto.variable} antialiased`}
       >
         {children}
+        <footer className="py-10 text-center border-t border-stone-100">
+          <Link href="/legal" className="text-[10px] text-stone-300 hover:text-stone-600 transition-colors">特定商取引法に基づく表記</Link>
+        </footer>
       </body>
     </html>
   );

@@ -1,67 +1,29 @@
+"use client";
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
 export default function Legal() {
+    const [data, setData] = useState<any>(null);
+
+    useEffect(() => {
+        fetch('/api/content').then(res => res.json()).then(setData);
+    }, []);
+
+    if (!data) return null;
+    const info = data.legalInfo;
+
     return (
         <main className="min-h-screen bg-white text-stone-800 p-8 md:p-24 font-sans leading-relaxed">
             <div className="max-w-2xl mx-auto">
-                <Link href="/" className="text-stone-400 hover:text-stone-900 transition-colors mb-12 inline-block text-sm border-b border-transparent hover:border-stone-200">
-                    ← Back to Home
-                </Link>
-
+                <Link href="/" className="text-stone-400 hover:text-stone-900 transition-colors mb-12 inline-block text-sm">← Back to Home</Link>
                 <h1 className="text-2xl font-bold mb-12 border-b pb-4">特定商取引法に基づく表記</h1>
-
                 <div className="space-y-10 text-sm">
-                    <section>
-                        <h2 className="font-bold text-stone-500 mb-2 uppercase tracking-widest text-xs">販売業者 / 事業者名</h2>
-                        <p className="text-base">長嶺一平 (Dev cat&apos;s Studio & Office)</p>
-                    </section>
-
-                    <section>
-                        <h2 className="font-bold text-stone-500 mb-2 uppercase tracking-widest text-xs">所在地・連絡先</h2>
-                        <p className="text-stone-400 text-xs leading-loose">
-                            所在地および電話番号については、特定商取引法に基づき、消費者様からの請求があれば遅滞なく電子メール等の方法により提供いたします。<br />
-                            開示をご希望の方は、以下のお問い合わせ先よりご請求ください。
-                        </p>
-                    </section>
-
-                    <section>
-                        <h2 className="font-bold text-stone-500 mb-2 uppercase tracking-widest text-xs">お問い合わせ先</h2>
-                        <p className="text-base font-mono">[ここにメールアドレスを記入]</p>
-                    </section>
-
-                    <section>
-                        <h2 className="font-bold text-stone-500 mb-2 uppercase tracking-widest text-xs">販売価格</h2>
-                        <p className="text-base">各サービス・商品ページに記載の金額（消費税込み）</p>
-                    </section>
-
-                    <section>
-                        <h2 className="font-bold text-stone-500 mb-2 uppercase tracking-widest text-xs">商品代金以外に必要な料金</h2>
-                        <ul className="list-disc list-inside text-base">
-                            <li>物販：配送料（詳細は各商品ページに記載）</li>
-                            <li>サービス：対面時の各自の飲食代、オンラインの通信料</li>
-                        </ul>
-                    </section>
-
-                    <section>
-                        <h2 className="font-bold text-stone-500 mb-2 uppercase tracking-widest text-xs">商品の引き渡し・サービス提供時期</h2>
-                        <div className="text-base space-y-2">
-                            <p><strong>【物販】</strong><br />事前のご相談、またはお見積もり時に合意した発送目安に基づき発送いたします。</p>
-                            <p><strong>【サービス】</strong><br />予約確定時に合意した日時</p>
-                        </div>
-                    </section>
-
-                    <section>
-                        <h2 className="font-bold text-stone-500 mb-2 uppercase tracking-widest text-xs">返品・交換・キャンセルについて</h2>
-                        <div className="text-base space-y-2">
-                            <p><strong>【物販】</strong><br />商品に欠陥がある場合を除き、返品・交換には応じられません。万が一不良品であった場合は商品到着後7日以内にご連絡ください。</p>
-                            <p><strong>【サービス】</strong><br />役務の性質上、提供後の返金には応じられません。</p>
-                        </div>
-                    </section>
+                    <section><h2 className="font-bold text-stone-500 mb-2 uppercase text-xs">販売業者</h2><p className="text-base">{info.businessName}</p></section>
+                    <section><h2 className="font-bold text-stone-500 mb-2 uppercase text-xs">所在地・連絡先</h2><p className="text-stone-400 text-xs">{info.addressInfo}</p></section>
+                    <section><h2 className="font-bold text-stone-500 mb-2 uppercase text-xs">お問い合わせ先</h2><p className="text-base">{info.contactEmail}</p></section>
+                    <section><h2 className="font-bold text-stone-500 mb-2 uppercase text-xs">商品の引き渡し時期</h2><p className="text-base">{info.shippingInfo}</p></section>
+                    <section><h2 className="font-bold text-stone-500 mb-2 uppercase text-xs">返品・交換・キャンセル</h2><p className="text-base">{info.returnPolicy}</p></section>
                 </div>
-
-                <footer className="mt-24 pt-8 border-t border-stone-100 text-stone-400 text-[10px]">
-                    &copy; {new Date().getFullYear()} Dev cat&apos;s Studio & Office
-                </footer>
             </div>
         </main>
     );

@@ -18,6 +18,7 @@ export interface ContentData {
 
 export interface LegalInfo {
     businessName: string;
+    representativeName?: string;
     contactEmail: string;
     addressInfo: string;
     shippingInfo: string;

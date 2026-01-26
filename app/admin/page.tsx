@@ -2094,18 +2094,43 @@ export default function AdminPage() {
                                     {/* Legal Information Section */}
                                     <div className="border-t border-stone-200 mt-8 pt-6">
                                         <h3 className="font-bold text-xl mb-4 text-stone-800">特定商取引法に基づく表記</h3>
-                                        <div className="grid gap-4">
+                                        <div className="grid gap-6">
+                                            {/* 1. 販売業者 / 事業者名 */}
                                             <div>
-                                                <label className="text-xs font-bold text-stone-500">販売業者名</label>
+                                                <label className="text-xs font-bold text-stone-500">販売業者 / 事業者名</label>
                                                 <input
                                                     className="w-full border p-2 rounded"
                                                     value={data.legalInfo?.businessName || ''}
                                                     onChange={e => updateLegal('businessName', e.target.value)}
-                                                    placeholder="例: 山田 太郎"
+                                                    placeholder="例: 長嶺一平 (Dev cat's Studio & Office)"
                                                 />
                                             </div>
+
+                                            {/* 2. 代表者名 */}
                                             <div>
-                                                <label className="text-xs font-bold text-stone-500">連絡先メール</label>
+                                                <label className="text-xs font-bold text-stone-500">代表者名</label>
+                                                <input
+                                                    className="w-full border p-2 rounded"
+                                                    value={data.legalInfo?.representativeName || ''}
+                                                    onChange={e => updateLegal('representativeName', e.target.value)}
+                                                    placeholder="例: 長嶺一平"
+                                                />
+                                            </div>
+
+                                            {/* 3. 所在地・連絡先 */}
+                                            <div>
+                                                <label className="text-xs font-bold text-stone-500">所在地・連絡先</label>
+                                                <textarea
+                                                    className="w-full border p-2 rounded h-32"
+                                                    value={data.legalInfo?.addressInfo || ''}
+                                                    onChange={e => updateLegal('addressInfo', e.target.value)}
+                                                    placeholder="例: 所在地および電話番号については、特定商取引法に基づき..."
+                                                />
+                                            </div>
+
+                                            {/* 4. お問い合わせ先 */}
+                                            <div>
+                                                <label className="text-xs font-bold text-stone-500">お問い合わせ先</label>
                                                 <input
                                                     className="w-full border p-2 rounded"
                                                     value={data.legalInfo?.contactEmail || ''}
@@ -2113,67 +2138,73 @@ export default function AdminPage() {
                                                     placeholder="例: info@example.com"
                                                 />
                                             </div>
-                                            <div>
-                                                <label className="text-xs font-bold text-stone-500">所在地・連絡先開示文言</label>
-                                                <textarea
-                                                    className="w-full border p-2 rounded h-20"
-                                                    value={data.legalInfo?.addressInfo || ''}
-                                                    onChange={e => updateLegal('addressInfo', e.target.value)}
-                                                    placeholder="例: ご請求があれば遅滞なく開示いたします。"
-                                                />
-                                            </div>
-                                            <div>
-                                                <label className="text-xs font-bold text-stone-500">発送・提供時期の説明</label>
-                                                <textarea
-                                                    className="w-full border p-2 rounded h-20"
-                                                    value={data.legalInfo?.shippingInfo || ''}
-                                                    onChange={e => updateLegal('shippingInfo', e.target.value)}
-                                                    placeholder="例: お支払いから3営業日以内に発送いたします。"
-                                                />
-                                            </div>
-                                            <div>
-                                                <label className="text-xs font-bold text-stone-500">返品・キャンセル説明</label>
-                                                <textarea
-                                                    className="w-full border p-2 rounded h-20"
-                                                    value={data.legalInfo?.returnPolicy || ''}
-                                                    onChange={e => updateLegal('returnPolicy', e.target.value)}
-                                                    placeholder="例: 商品に欠陥がある場合を除き、返品には応じかねます。"
-                                                />
-                                            </div>
+
+                                            {/* 5. 販売価格 */}
                                             <div>
                                                 <label className="text-xs font-bold text-stone-500">販売価格</label>
                                                 <textarea
                                                     className="w-full border p-2 rounded h-20"
                                                     value={data.legalInfo?.sellingPrice || ''}
                                                     onChange={e => updateLegal('sellingPrice', e.target.value)}
-                                                    placeholder="例: 各商品ページに記載の金額（消費税込み）"
+                                                    placeholder="例: 各サービス・商品ページに記載の金額（消費税込み）"
                                                 />
                                             </div>
+
+                                            {/* 6. 商品代金以外に必要な料金 */}
                                             <div>
                                                 <label className="text-xs font-bold text-stone-500">商品代金以外に必要な料金</label>
                                                 <textarea
                                                     className="w-full border p-2 rounded h-32"
                                                     value={data.legalInfo?.additionalCharges || ''}
                                                     onChange={e => updateLegal('additionalCharges', e.target.value)}
-                                                    placeholder="例: &#13;&#10;物販： 配送料（詳細は各商品ページに記載）&#13;&#10;サービス： 対面時の各自の飲食代、オンラインの通信料"
+                                                    placeholder="例: &#13;&#10;物販： 配送料...&#13;&#10;サービス： 対面時の各自の飲食代..."
                                                 />
                                             </div>
+
+                                            {/* 7 & 8. 代金の支払時期および支払方法 */}
+                                            <div className="bg-stone-50 p-4 rounded-lg border border-stone-200">
+                                                <label className="text-sm font-bold text-stone-700 block mb-3">代金の支払時期および支払方法</label>
+                                                <div className="space-y-4">
+                                                    <div>
+                                                        <label className="text-xs font-bold text-stone-500">支払方法</label>
+                                                        <textarea
+                                                            className="w-full border p-2 rounded h-20"
+                                                            value={data.legalInfo?.paymentMethod || ''}
+                                                            onChange={e => updateLegal('paymentMethod', e.target.value)}
+                                                            placeholder="例: クレジットカード決済（Stripe）"
+                                                        />
+                                                    </div>
+                                                    <div>
+                                                        <label className="text-xs font-bold text-stone-500">支払時期</label>
+                                                        <textarea
+                                                            className="w-full border p-2 rounded h-20"
+                                                            value={data.legalInfo?.paymentTiming || ''}
+                                                            onChange={e => updateLegal('paymentTiming', e.target.value)}
+                                                            placeholder="例: 商品注文時、または予約確定時の事前決済"
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* 9. 商品の引き渡し・サービス提供時期 */}
                                             <div>
-                                                <label className="text-xs font-bold text-stone-500">支払方法</label>
+                                                <label className="text-xs font-bold text-stone-500">商品の引き渡し・サービス提供時期</label>
                                                 <textarea
-                                                    className="w-full border p-2 rounded h-20"
-                                                    value={data.legalInfo?.paymentMethod || ''}
-                                                    onChange={e => updateLegal('paymentMethod', e.target.value)}
-                                                    placeholder="例: クレジットカード決済（Stripe）"
+                                                    className="w-full border p-2 rounded h-32"
+                                                    value={data.legalInfo?.shippingInfo || ''}
+                                                    onChange={e => updateLegal('shippingInfo', e.target.value)}
+                                                    placeholder="例: &#13;&#10;物販： 順次発送...&#13;&#10;サービス： 予約確定時に合意した日時"
                                                 />
                                             </div>
+
+                                            {/* 10. 返品・交換・キャンセルについて */}
                                             <div>
-                                                <label className="text-xs font-bold text-stone-500">支払時期</label>
+                                                <label className="text-xs font-bold text-stone-500">返品・交換・キャンセルについて</label>
                                                 <textarea
-                                                    className="w-full border p-2 rounded h-20"
-                                                    value={data.legalInfo?.paymentTiming || ''}
-                                                    onChange={e => updateLegal('paymentTiming', e.target.value)}
-                                                    placeholder="例: 商品注文時、または予約確定時の事前決済"
+                                                    className="w-full border p-2 rounded h-40"
+                                                    value={data.legalInfo?.returnPolicy || ''}
+                                                    onChange={e => updateLegal('returnPolicy', e.target.value)}
+                                                    placeholder="例: &#13;&#10;物販： 商品に欠陥がある場合を除き...&#13;&#10;サービス： サービス提供後の返金には応じられません..."
                                                 />
                                             </div>
                                         </div>

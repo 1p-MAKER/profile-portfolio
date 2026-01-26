@@ -18,24 +18,72 @@ export default function Legal() {
                 <Link href="/" className="text-stone-400 hover:text-stone-900 transition-colors mb-12 inline-block text-sm">← Back to Home</Link>
                 <h1 className="text-2xl font-bold mb-12 border-b pb-4">特定商取引法に基づく表記</h1>
                 <div className="space-y-10 text-sm">
-                    <section><h2 className="font-bold text-stone-500 mb-2 uppercase text-xs">販売業者</h2><p className="text-base">{info.businessName}</p></section>
-                    <section><h2 className="font-bold text-stone-500 mb-2 uppercase text-xs">所在地・連絡先</h2><p className="text-stone-400 text-xs">{info.addressInfo}</p></section>
-                    <section><h2 className="font-bold text-stone-500 mb-2 uppercase text-xs">お問い合わせ先</h2><p className="text-base">{info.contactEmail}</p></section>
-                    <section><h2 className="font-bold text-stone-500 mb-2 uppercase text-xs">商品の引き渡し時期</h2><p className="text-base">{info.shippingInfo}</p></section>
-                    <section><h2 className="font-bold text-stone-500 mb-2 uppercase text-xs">返品・交換・キャンセル</h2><p className="text-base whitespace-pre-wrap">{info.returnPolicy}</p></section>
+                    <section>
+                        <h2 className="font-bold text-stone-500 mb-2 uppercase text-xs">販売業者 / 事業者名</h2>
+                        <p className="text-base">{info.businessName}</p>
+                    </section>
+
+                    {info.representativeName && (
+                        <section>
+                            <h2 className="font-bold text-stone-500 mb-2 uppercase text-xs">代表者名</h2>
+                            <p className="text-base">{info.representativeName}</p>
+                        </section>
+                    )}
+
+                    <section>
+                        <h2 className="font-bold text-stone-500 mb-2 uppercase text-xs">所在地・連絡先</h2>
+                        <p className="text-base whitespace-pre-wrap">{info.addressInfo}</p>
+                    </section>
+
+                    <section>
+                        <h2 className="font-bold text-stone-500 mb-2 uppercase text-xs">お問い合わせ先</h2>
+                        <p className="text-base">{info.contactEmail}</p>
+                    </section>
 
                     {info.sellingPrice && (
-                        <section><h2 className="font-bold text-stone-500 mb-2 uppercase text-xs">販売価格</h2><p className="text-base whitespace-pre-wrap">{info.sellingPrice}</p></section>
+                        <section>
+                            <h2 className="font-bold text-stone-500 mb-2 uppercase text-xs">販売価格</h2>
+                            <p className="text-base whitespace-pre-wrap">{info.sellingPrice}</p>
+                        </section>
                     )}
+
                     {info.additionalCharges && (
-                        <section><h2 className="font-bold text-stone-500 mb-2 uppercase text-xs">商品代金以外に必要な料金</h2><p className="text-base whitespace-pre-wrap">{info.additionalCharges}</p></section>
+                        <section>
+                            <h2 className="font-bold text-stone-500 mb-2 uppercase text-xs">商品代金以外に必要な料金</h2>
+                            <p className="text-base whitespace-pre-wrap">{info.additionalCharges}</p>
+                        </section>
                     )}
-                    {info.paymentMethod && (
-                        <section><h2 className="font-bold text-stone-500 mb-2 uppercase text-xs">支払方法</h2><p className="text-base whitespace-pre-wrap">{info.paymentMethod}</p></section>
+
+                    {/* Grouped Payment Section */}
+                    {(info.paymentMethod || info.paymentTiming) && (
+                        <section>
+                            <h2 className="font-bold text-stone-500 mb-4 uppercase text-xs">代金の支払時期および支払方法</h2>
+                            <div className="space-y-6 pl-4 border-l-2 border-stone-100">
+                                {info.paymentMethod && (
+                                    <div>
+                                        <h3 className="font-bold text-stone-700 mb-1 text-sm">支払方法</h3>
+                                        <p className="text-base whitespace-pre-wrap">{info.paymentMethod}</p>
+                                    </div>
+                                )}
+                                {info.paymentTiming && (
+                                    <div>
+                                        <h3 className="font-bold text-stone-700 mb-1 text-sm">支払時期</h3>
+                                        <p className="text-base whitespace-pre-wrap">{info.paymentTiming}</p>
+                                    </div>
+                                )}
+                            </div>
+                        </section>
                     )}
-                    {info.paymentTiming && (
-                        <section><h2 className="font-bold text-stone-500 mb-2 uppercase text-xs">支払時期</h2><p className="text-base whitespace-pre-wrap">{info.paymentTiming}</p></section>
-                    )}
+
+                    <section>
+                        <h2 className="font-bold text-stone-500 mb-2 uppercase text-xs">商品の引き渡し・サービス提供時期</h2>
+                        <p className="text-base whitespace-pre-wrap">{info.shippingInfo}</p>
+                    </section>
+
+                    <section>
+                        <h2 className="font-bold text-stone-500 mb-2 uppercase text-xs">返品・交換・キャンセルについて</h2>
+                        <p className="text-base whitespace-pre-wrap">{info.returnPolicy}</p>
+                    </section>
                 </div>
             </div>
         </main>

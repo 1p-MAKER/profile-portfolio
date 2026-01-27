@@ -85,6 +85,9 @@ export interface SketchMarkItem {
 
 export interface OfficeItem {
     id: string;
+    title: string;
+    description?: string;
+    consultationUrl?: string; // Google Form URL etc.
     buyButtonId: string;
     publishableKey: string;
     isFeatured?: boolean;

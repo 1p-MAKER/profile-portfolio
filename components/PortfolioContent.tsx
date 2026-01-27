@@ -385,12 +385,26 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
                         {data.settings?.officeIntro && <p className="text-center text-stone-600 mb-8 whitespace-pre-wrap leading-relaxed">{data.settings.officeIntro}</p>}
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {data.officeItems && data.officeItems.map((item, index) => (
-                                <div key={index} className="h-full bg-white dark:bg-stone-800 rounded-2xl overflow-hidden shadow-sm border border-stone-200 dark:border-stone-700 p-4 flex flex-col items-center justify-center">
-                                    {/* Stripe Buy Button Custom Element */}
-                                    <StripeBuyButton
-                                        buy-button-id={item.buyButtonId}
-                                        publishable-key={item.publishableKey}
-                                    />
+                                <div key={index} className="h-full bg-white dark:bg-stone-800 rounded-2xl overflow-hidden shadow-sm border border-stone-200 dark:border-stone-700 p-6 flex flex-col">
+                                    <h3 className="text-xl font-bold mb-2 text-stone-900 dark:text-stone-100">{item.title || '無題のメニュー'}</h3>
+                                    {item.description && <p className="text-sm text-stone-600 dark:text-stone-400 mb-6 flex-grow whitespace-pre-wrap">{item.description}</p>}
+
+                                    <div className="mt-auto">
+                                        {item.consultationUrl ? (
+                                            <a
+                                                href={item.consultationUrl}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="block w-full text-center bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-900 font-bold py-3 rounded-xl hover:opacity-90 transition-opacity"
+                                            >
+                                                相談をリクエストする ↗
+                                            </a>
+                                        ) : (
+                                            <div className="text-center text-xs text-stone-400 py-2 border border-dashed border-stone-300 rounded-xl">
+                                                (相談URLが未設定です)
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                             ))}
                         </div>

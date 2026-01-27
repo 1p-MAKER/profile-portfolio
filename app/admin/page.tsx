@@ -520,6 +520,8 @@ export default function AdminPage() {
         if (!data) return;
         const newItem: OfficeItem = {
             id: Date.now().toString(),
+            title: '',
+            consultationUrl: '',
             buyButtonId: '',
             publishableKey: '',
             isFeatured: false
@@ -2379,6 +2381,125 @@ export default function AdminPage() {
                                 </div>
                             </section>
                         )}
+
+
+                        {/* Office Section */}
+                        {activeAdminTab === 'office' && (
+                            <section>
+                                <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200 text-stone-900">Office (Consultation & Checkout)</h2>
+
+                                {/* Intro Text Input */}
+                                <div className="bg-white p-6 rounded-xl shadow-sm mb-6">
+                                    <label className="block text-sm font-bold text-stone-700 mb-2">このタブの導入文（スキル紹介）</label>
+                                    <textarea
+                                        className="w-full p-3 border rounded-lg min-h-[120px]"
+                                        value={data.settings?.officeIntro || ''}
+                                        onChange={(e) => setData({ ...data, settings: { ...data.settings, officeIntro: e.target.value } })}
+                                        placeholder="Officeタブに関する紹介文を入力してください"
+                                    />
+                                </div>
+
+                                <div className="bg-white p-6 rounded-xl shadow-sm mb-4">
+                                    <h3 className="text-lg font-bold mb-4 text-stone-900">相談メニュー管理</h3>
+                                    <p className="text-xs text-stone-700 mb-4">ドラッグ&ドロップで並び替えられます</p>
+                                    <div className="mb-4 bg-stone-100 p-4 rounded text-xs">
+                                        <p className="font-bold mb-1">Stripe Buy Button設定方法:</p>
+                                        <ol className="list-decimal list-inside space-y-1">
+                                            <li>Stripeダッシュボードで商品を作成し、「購入ボタン」を作成します。</li>
+                                            <li>生成されたコードから <code>buy-button-id</code> と <code>publishable-key</code> をコピーして入力してください。</li>
+                                            <li>※ 公開サイトでは「相談ボタン」が表示され、決済ボタンはこの項目のIDに基づく専用ページ（/checkout/[ID]）でのみ表示されます。</li>
+                                        </ol>
+                                    </div>
+
+                                    <DraggableList
+                                        items={data.officeItems || []}
+                                        onReorder={(newList) => setData({ ...data, officeItems: newList })}
+                                        renderItem={(item, index) => (
+                                            <div className="p-4 bg-stone-50 rounded-lg border border-stone-200">
+                                                <div className="grid gap-3">
+                                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                        <div>
+                                                            <label className="block text-xs font-bold text-stone-700 mb-1">メニュー名 (必須)</label>
+                                                            <input
+                                                                className="border p-2 rounded w-full text-sm font-bold"
+                                                                value={item.title || ''}
+                                                                onChange={(e) => updateOfficeItem(index, 'title', e.target.value)}
+                                                                placeholder="例: Webサイト制作相談"
+                                                            />
+                                                        </div>
+                                                        <div>
+                                                            <label className="block text-xs font-bold text-stone-700 mb-1">相談用URL (Googleフォーム等)</label>
+                                                            <input
+                                                                className="border p-2 rounded w-full text-sm"
+                                                                value={item.consultationUrl || ''}
+                                                                onChange={(e) => updateOfficeItem(index, 'consultationUrl', e.target.value)}
+                                                                placeholder="https://forms.google.com/..."
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <label className="block text-xs font-bold text-stone-700 mb-1">説明 (任意)</label>
+                                                        <textarea
+                                                            className="border p-2 rounded w-full text-sm h-16"
+                                                            value={item.description || ''}
+                                                            onChange={(e) => updateOfficeItem(index, 'description', e.target.value)}
+                                                            placeholder="メニューの簡単な説明"
+                                                        />
+                                                    </div>
+                                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white p-3 rounded border border-stone-200">
+                                                        <div>
+                                                            <label className="block text-xs font-bold text-stone-500 mb-1">Stripe Buy Button ID</label>
+                                                            <input
+                                                                className="border p-2 rounded w-full font-mono text-xs bg-stone-50"
+                                                                value={item.buyButtonId}
+                                                                onChange={(e) => updateOfficeItem(index, 'buyButtonId', e.target.value)}
+                                                                placeholder="buy_btn_..."
+                                                            />
+                                                        </div>
+                                                        <div>
+                                                            <label className="block text-xs font-bold text-stone-500 mb-1">Stripe Publishable Key</label>
+                                                            <input
+                                                                className="border p-2 rounded w-full font-mono text-xs bg-stone-50"
+                                                                value={item.publishableKey}
+                                                                onChange={(e) => updateOfficeItem(index, 'publishableKey', e.target.value)}
+                                                                placeholder="pk_live_..."
+                                                            />
+                                                        </div>
+                                                        <div className="col-span-1 md:col-span-2 text-[10px] text-stone-400 text-right">
+                                                            ID: {item.id} (Checkout URL: .../checkout/{item.id})
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="flex justify-between items-center pt-2">
+                                                        <button
+                                                            onClick={() => updateOfficeItem(index, 'isFeatured', !item.isFeatured)}
+                                                            className={`px-3 py-1 rounded text-sm font-bold ${item.isFeatured ? 'bg-yellow-500 text-white' : 'bg-gray-200 text-gray-600'}`}
+                                                        >
+                                                            {item.isFeatured ? '★ Featured' : '☆ Featured'}
+                                                        </button>
+                                                        <button
+                                                            onClick={() => removeOfficeItem(index)}
+                                                            className="text-red-500 hover:text-red-700 font-bold"
+                                                        >
+                                                            削除
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+                                        itemKey={(item, idx) => item.id || `office-${idx}`}
+                                    />
+
+                                    <button
+                                        onClick={addOfficeItem}
+                                        className="mt-4 w-full bg-stone-200 hover:bg-stone-300 text-stone-700 px-4 py-2 rounded-lg font-bold transition-colors"
+                                    >
+                                        + メニューを追加
+                                    </button>
+                                </div>
+                            </section>
+                        )}
+
 
 
                         {/* Audio (BGM) Section */}

@@ -383,10 +383,19 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
                 return (
                     <>
                         {data.settings?.officeIntro && <p className="text-center text-stone-600 mb-8 whitespace-pre-wrap leading-relaxed">{data.settings.officeIntro}</p>}
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div className="flex flex-wrap justify-center gap-6">
                             {data.officeItems && data.officeItems.map((item, index) => (
-                                <div key={index} className="h-full bg-white dark:bg-stone-800 rounded-2xl overflow-hidden shadow-sm border border-stone-200 dark:border-stone-700 p-6 flex flex-col">
-                                    <h3 className="text-xl font-bold mb-2 text-stone-900 dark:text-stone-100">{item.title || '無題のメニュー'}</h3>
+                                <div key={index} className="w-full md:w-[350px] bg-white dark:bg-stone-800 rounded-2xl overflow-hidden shadow-sm border border-stone-200 dark:border-stone-700 p-6 flex flex-col">
+                                    {item.imageUrl && (
+                                        <div className="relative w-full h-48 mb-4 rounded-xl overflow-hidden bg-stone-100">
+                                            <img
+                                                src={item.imageUrl}
+                                                alt={item.title}
+                                                className="w-full h-full object-cover"
+                                            />
+                                        </div>
+                                    )}
+                                    <h3 className="text-xl font-bold mb-2 text-stone-900 dark:text-stone-100 text-center">{item.title || '無題のメニュー'}</h3>
                                     {item.description && <p className="text-sm text-stone-600 dark:text-stone-400 mb-6 flex-grow whitespace-pre-wrap">{item.description}</p>}
 
                                     <div className="mt-auto">

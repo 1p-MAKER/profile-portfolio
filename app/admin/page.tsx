@@ -5,6 +5,56 @@ import { ContentData, Product, TabItem, SketchMarkItem, OfficeItem } from '@/typ
 import Image from 'next/image';
 import DraggableList from '@/components/DraggableList';
 
+// Helper Component for Image Upload
+interface ImageInputProps {
+    currentImage?: string;
+    onImageChange: (base64: string) => void;
+    label?: string;
+}
+
+const ImageInput = ({ currentImage, onImageChange, label = '画像をアップロード' }: ImageInputProps) => {
+    const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            const base64 = reader.result as string;
+            onImageChange(base64);
+        };
+        reader.readAsDataURL(file);
+    };
+
+    return (
+        <div className="flex items-center gap-4">
+            <div className="relative w-16 h-16 bg-stone-100 rounded overflow-hidden border border-stone-200 flex-shrink-0">
+                {currentImage ? (
+                    <img src={currentImage} alt="Preview" className="w-full h-full object-cover" />
+                ) : (
+                    <div className="flex items-center justify-center h-full text-xs text-stone-400">No Image</div>
+                )}
+            </div>
+            <label className="cursor-pointer bg-white border border-stone-300 hover:bg-stone-50 text-stone-700 px-3 py-1.5 rounded text-xs font-bold transition-colors">
+                <span>{label}</span>
+                <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleUpload}
+                />
+            </label>
+            {currentImage && (
+                <button
+                    onClick={() => onImageChange('')}
+                    className="text-red-500 text-xs hover:underline"
+                >
+                    削除
+                </button>
+            )}
+        </div>
+    );
+};
+
 export default function AdminPage() {
     const [data, setData] = useState<ContentData | null>(null);
     const [status, setStatus] = useState<string>('');
@@ -524,6 +574,7 @@ export default function AdminPage() {
             consultationUrl: '',
             buyButtonId: '',
             publishableKey: '',
+            imageUrl: '',
             isFeatured: false
         };
         setData({ ...data, officeItems: [...(data.officeItems || []), newItem] });
@@ -2437,6 +2488,17 @@ export default function AdminPage() {
                                                             />
                                                         </div>
                                                     </div>
+
+                                                    {/* Image Input */}
+                                                    <div className="mb-4">
+                                                        <label className="block text-xs font-bold text-stone-700 mb-1">画像 (任意)</label>
+                                                        <ImageInput
+                                                            currentImage={item.imageUrl}
+                                                            onImageChange={(base64) => updateOfficeItem(index, 'imageUrl', base64)}
+                                                            label="画像をアップロード"
+                                                        />
+                                                    </div>
+
                                                     <div>
                                                         <label className="block text-xs font-bold text-stone-700 mb-1">説明 (任意)</label>
                                                         <textarea

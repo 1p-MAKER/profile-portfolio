@@ -90,6 +90,7 @@ export interface OfficeItem {
     consultationUrl?: string; // Google Form URL etc.
     buyButtonId: string;
     publishableKey: string;
+    imageUrl?: string;
     isFeatured?: boolean;
 }
 

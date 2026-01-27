@@ -16,7 +16,7 @@ export default function HeroSection({ profileName, profileTagline, featuredIntro
                         {profileName || "長嶺 一平"}
                     </h1>
                     <p className="text-xl text-accent font-medium">
-                        {profileTagline || "Web Developer / Creator"}
+                        {profileTagline || ""}
                     </p>
                 </div>
 

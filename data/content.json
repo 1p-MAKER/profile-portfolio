@@ -511,8 +511,8 @@
       "id": "1769484548752",
       "title": "一平への聞き込み (1時間)",
       "consultationUrl": "リクエストありがとうございます！内容を確認し、2〜3日以内にメールにてお返事（＋日程調整）をさせていただきます。今しばらくお待ちください。",
-      "buyButtonId": "",
-      "publishableKey": "",
+      "buyButtonId": "https://buy.stripe.com/fZudRbfFk88Z2utfzUgrS00",
+      "publishableKey": "pk_live_51StiDSRwsbPDiiPliEVhrQrHtdYVlh7tQd7w14phgHL2fAaJtHqvVezn0Yv4HOR2TFMSQUsy15jKeesprKd4T33Y00vNLIEXI3",
       "isFeatured": false,
       "description": "忙しいと言えば忙しいのでスケジュール的にお断りする可能性もあります。あらかじめご了承ください。"
     }

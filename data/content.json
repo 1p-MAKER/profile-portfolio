@@ -93,6 +93,10 @@
       "label": "note"
     },
     {
+      "id": "office",
+      "label": "Office"
+    },
+    {
       "id": "youtube",
       "label": "YouTube"
     },

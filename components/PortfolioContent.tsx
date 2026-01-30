@@ -371,7 +371,7 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
                         {data.settings?.brainIntro && <p className="text-center text-stone-600 mb-8 whitespace-pre-wrap leading-relaxed">{data.settings.brainIntro}</p>}
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {data.brainItems && data.brainItems.map((item, index) => (
-                                <div key={index} className="h-full"><NoteCard title={item.title} url={item.url} siteName={item.siteName} /></div>
+                                <div key={index} className="h-full"><NoteCard title={item.title} url={item.url} siteName={item.siteName || 'Brain'} /></div>
                             ))}
                         </div>
                         {(!data.brainItems || data.brainItems.length === 0) && <p className="text-center text-stone-500 py-12">まだBrain記事が登録されていません。</p>}

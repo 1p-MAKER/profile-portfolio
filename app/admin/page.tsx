@@ -5,24 +5,81 @@ import { ContentData, Product, TabItem, SketchMarkItem, OfficeItem } from '@/typ
 import Image from 'next/image';
 import DraggableList from '@/components/DraggableList';
 
-// Helper Component for Image Upload
+// Helper Component for Image Upload with Auto Resize
 interface ImageInputProps {
     currentImage?: string;
     onImageChange: (base64: string) => void;
     label?: string;
+    maxWidth?: number;
+    maxHeight?: number;
+    quality?: number;
 }
 
-const ImageInput = ({ currentImage, onImageChange, label = '画像をアップロード' }: ImageInputProps) => {
-    const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+const ImageInput = ({
+    currentImage,
+    onImageChange,
+    label = '画像をアップロード',
+    maxWidth = 800,
+    maxHeight = 800,
+    quality = 0.8
+}: ImageInputProps) => {
+    const resizeImage = (file: File): Promise<string> => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = document.createElement('img');
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
+
+                    // Calculate new dimensions while maintaining aspect ratio
+                    if (width > height) {
+                        if (width > maxWidth) {
+                            height = Math.round((height * maxWidth) / width);
+                            width = maxWidth;
+                        }
+                    } else {
+                        if (height > maxHeight) {
+                            width = Math.round((width * maxHeight) / height);
+                            height = maxHeight;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+
+                    const ctx = canvas.getContext('2d');
+                    if (!ctx) {
+                        reject(new Error('Canvas context not available'));
+                        return;
+                    }
+
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    // Convert to base64 with compression
+                    const base64 = canvas.toDataURL('image/jpeg', quality);
+                    resolve(base64);
+                };
+                img.onerror = reject;
+                img.src = e.target?.result as string;
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+    };
+
+    const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            const base64 = reader.result as string;
-            onImageChange(base64);
-        };
-        reader.readAsDataURL(file);
+        try {
+            const resizedBase64 = await resizeImage(file);
+            onImageChange(resizedBase64);
+        } catch (error) {
+            console.error('Image resize error:', error);
+            alert('画像の処理に失敗しました');
+        }
     };
 
     return (

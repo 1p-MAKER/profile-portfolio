@@ -1420,54 +1420,12 @@ export default function AdminPage() {
                                                         onChange={(e) => setNewBrainTitle(e.target.value)}
                                                     />
                                                 </div>
-                                                <div className="flex gap-4">
-                                                    <div className="flex gap-4 items-start">
-                                                        <div className="relative w-32 h-32 flex-shrink-0 group cursor-pointer bg-white border-2 border-dashed border-stone-300 rounded-lg hover:bg-stone-50 transition-colors flex items-center justify-center overflow-hidden">
-                                                            {newBrainImage ? (
-                                                                <>
-                                                                    <Image src={newBrainImage} alt="Preview" fill className="object-cover" />
-                                                                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white text-xs font-bold transition-opacity">
-                                                                        変更する
-                                                                    </div>
-                                                                </>
-                                                            ) : (
-                                                                <div className="text-center p-2 text-stone-400">
-                                                                    <span className="text-2xl block mb-1">📷</span>
-                                                                    <span className="text-[10px] font-bold">画像を選択</span>
-                                                                </div>
-                                                            )}
-                                                            <input
-                                                                type="file"
-                                                                accept="image/*"
-                                                                className="absolute inset-0 opacity-0 cursor-pointer"
-                                                                onChange={handleBrainImageSelect}
-                                                            />
-                                                        </div>
-                                                        <div className="flex-1 space-y-2">
-                                                            <div>
-                                                                <label className="text-xs font-bold text-stone-500">画像URL (Base64/URL)</label>
-                                                                <input
-                                                                    type="text"
-                                                                    className="w-full p-2 border rounded mt-1 text-sm bg-stone-100 text-stone-500"
-                                                                    value={newBrainImage ? (newBrainImage.length > 50 ? newBrainImage.substring(0, 50) + '...' : newBrainImage) : ''}
-                                                                    onChange={(e) => setNewBrainImage(e.target.value)}
-                                                                    placeholder="（ファイルを選択すると自動入力されます）"
-                                                                    readOnly={newBrainImage.startsWith('data:')}
-                                                                />
-                                                            </div>
-                                                            <p className="text-xs text-stone-400">
-                                                                ※ DNDまたはクリックで画像を選択できます。<br />
-                                                                ※ 自動取得やURL入力も可能です。
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                    <button
-                                                        onClick={addBrainItem}
-                                                        className="w-full mt-4 bg-blue-500 text-white font-bold py-2 rounded-lg hover:bg-blue-600"
-                                                    >
-                                                        リストに追加
-                                                    </button>
-                                                </div>
+                                                <button
+                                                    onClick={addBrainItem}
+                                                    className="w-full mt-4 bg-blue-500 text-white font-bold py-2 rounded-lg hover:bg-blue-600"
+                                                >
+                                                    リストに追加
+                                                </button>
                                             </div>
                                         )}
                                     </div>
@@ -1497,11 +1455,6 @@ export default function AdminPage() {
                                                             value={item.url}
                                                             onChange={(e) => updateBrainItem(index, 'url', e.target.value)}
                                                         />
-                                                    </div>
-                                                    <div className="relative w-20 h-20 flex-shrink-0 bg-stone-200 rounded overflow-hidden">
-                                                        {item.imageUrl && (
-                                                            <Image src={item.imageUrl} alt={item.title} fill className="object-cover" />
-                                                        )}
                                                     </div>
                                                     <div className="flex flex-col gap-2">
                                                         {/* Featured Toggle for Brain Items if needed (Optional) */}
@@ -2739,10 +2692,11 @@ export default function AdminPage() {
                         <div className="h-20"></div>
                     </div>
                 </main>
-            </div>
+            </div >
 
             {/* Mobile Fixed Save Button */}
-            <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-stone-900 border-t border-stone-200 dark:border-stone-700 p-2 z-50 shadow-lg" style={{ paddingBottom: 'max(0.5rem, env(safe-area-inset-bottom))' }}>
+            < div className="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-stone-900 border-t border-stone-200 dark:border-stone-700 p-2 z-50 shadow-lg" style={{ paddingBottom: 'max(0.5rem, env(safe-area-inset-bottom))' }
+            }>
                 <div className="flex gap-2">
                     <button
                         onClick={handleSave}
@@ -2758,8 +2712,8 @@ export default function AdminPage() {
                         {isDeploying ? '公開中' : '公開'}
                     </button>
                 </div>
-            </div>
-        </div>
+            </div >
+        </div >
 
 
     );

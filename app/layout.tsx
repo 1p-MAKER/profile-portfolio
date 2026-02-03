@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Noto_Sans_JP } from "next/font/google";
 import "./globals.css";
 import Link from 'next/link';
+import VisitorCounter from '@/components/VisitorCounter';
 
 const noto = Noto_Sans_JP({ subsets: ["latin"], variable: "--font-noto" });
 
@@ -27,6 +28,7 @@ export default function RootLayout({
               特定商取引法に基づく表記
             </Link>
             <p className="text-[10px] text-stone-300 mt-2">&copy; {new Date().getFullYear()} Dev cat&apos;s Studio & Office</p>
+            <div className="mt-2"><VisitorCounter /></div>
           </footer>
         </div>
       </body>

@@ -1,3 +1,6 @@
+import Link from 'next/link';
+import VisitorCounter from './VisitorCounter';
+
 export default function Footer() {
     return (
         <footer className="w-full bg-stone-100 border-t border-stone-200 py-8 mt-12">
@@ -20,13 +23,17 @@ export default function Footer() {
                         X (Twitter)
                     </a>
                 </div>
-                <p className="text-xs text-stone-400">
-                    © {new Date().getFullYear()} 1p-MAKER / Dev cat&apos;s Archive
+                <p className="text-xs text-stone-400 text-center leading-relaxed">
+                    © {new Date().getFullYear()} Dev cat&apos;s Studio & Office
+                    <br className="md:hidden" />
+                    <span className="hidden md:inline mx-2">|</span>
+                    <Link href="/privacy" className="hover:text-stone-600 transition-colors">Privacy Policy</Link>
                     <span className="mx-2">|</span>
-                    <a href="/privacy" className="hover:text-stone-600 transition-colors">Privacy Policy</a>
+                    <Link href="/legal" className="hover:text-stone-600 transition-colors">特定商取引法に基づく表記</Link>
                     <span className="mx-2">|</span>
-                    <a href="/contact" className="hover:text-stone-600 transition-colors">Contact</a>
+                    <Link href="/contact" className="hover:text-stone-600 transition-colors">Contact</Link>
                 </p>
+                <div className="mt-2"><VisitorCounter /></div>
             </div>
         </footer>
     );

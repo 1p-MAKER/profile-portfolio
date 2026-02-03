@@ -15,13 +15,15 @@ export default function VisitorCounter() {
         const KEY = 'visits';
 
         // APIを叩く（hit=カウントアップ, get=見るだけ）
-        // 本番環境ならhit、開発環境ならgetにする
-        const action = isDev ? 'get' : 'hit';
+        // counterapi.dev: get -> /v1/namespace/key, hit -> /v1/namespace/key/up
+        const url = isDev
+            ? `https://api.counterapi.dev/v1/${NAMESPACE}/${KEY}`
+            : `https://api.counterapi.dev/v1/${NAMESPACE}/${KEY}/up`;
 
-        fetch(`https://api.countapi.xyz/${action}/${NAMESPACE}/${KEY}`)
+        fetch(url)
             .then(res => res.json())
             .then(data => {
-                if (data.value) setCount(data.value);
+                if (typeof data.count === 'number') setCount(data.count);
             })
             .catch(err => {
                 console.error('Counter Error:', err);

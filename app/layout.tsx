@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Noto_Sans_JP } from "next/font/google";
-import "./globals.css";
 import Link from 'next/link';
-import VisitorCounter from '@/components/VisitorCounter';
+import Footer from '@/components/Footer';
 
 const noto = Noto_Sans_JP({ subsets: ["latin"], variable: "--font-noto" });
 
@@ -23,15 +22,9 @@ export default function RootLayout({
           <div className="flex-grow">
             {children}
           </div>
-          <footer className="py-10 text-center border-t border-stone-200 bg-white">
-            <Link href="/legal" className="text-[10px] text-stone-400 hover:text-stone-900 transition-colors">
-              特定商取引法に基づく表記
-            </Link>
-            <p className="text-[10px] text-stone-300 mt-2">&copy; {new Date().getFullYear()} Dev cat&apos;s Studio & Office</p>
-            <div className="mt-2"><VisitorCounter /></div>
-          </footer>
+          <Footer />
         </div>
-      </body>
-    </html>
+      </body >
+    </html >
   );
 }

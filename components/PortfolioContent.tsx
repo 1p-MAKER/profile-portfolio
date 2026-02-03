@@ -474,7 +474,7 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
                 </div>
             </main>
 
-            <Footer />
+
 
             {/* Helper Script for Stripe */}
             <script async src="https://js.stripe.com/v3/buy-button.js"></script>

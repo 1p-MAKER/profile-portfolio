@@ -36,9 +36,32 @@ export default function VisitorCounter() {
 
     if (count === null) return null; // 読み込み中は何も表示しない
 
+    // 6桁のゼロ埋め
+    const formattedCount = (count).toString().padStart(6, '0');
+
     return (
-        <span className="inline-block ml-4 pl-4 border-l border-stone-200 text-[10px] text-stone-300 font-mono tracking-widest">
-            TOTAL VISITS: {count.toLocaleString()}
-        </span>
+        <div className="flex flex-col items-center mt-4">
+            <div className="text-[10px] text-stone-400 mb-1 font-bold tracking-widest">TOTAL VISITS</div>
+            <div className="inline-flex bg-black p-1 rounded border-2 border-stone-300 shadow-inner">
+                {formattedCount.split('').map((digit, index) => (
+                    <span
+                        key={index}
+                        className="
+                            inline-flex items-center justify-center 
+                            w-4 h-6 mx-[1px]
+                            bg-gradient-to-b from-[#222] to-[#111]
+                            text-[#0f0] font-mono text-sm font-bold
+                            border border-[#333] rounded-[1px]
+                            shadow-[0_0_2px_#0f0]
+                            relative overflow-hidden
+                        "
+                    >
+                        {/* デジタル管のような走査線エフェクト */}
+                        <span className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0)_50%,rgba(0,0,0,0.2)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_2px,3px_100%] pointer-events-none z-10"></span>
+                        {digit}
+                    </span>
+                ))}
+            </div>
+        </div>
     );
 }

@@ -20,10 +20,13 @@ export default function VisitorCounter() {
             ? `https://api.counterapi.dev/v1/${NAMESPACE}/${KEY}`
             : `https://api.counterapi.dev/v1/${NAMESPACE}/${KEY}/up`;
 
+        // スタート地点を2600にするためのオフセット（ユーザー要望）
+        const INITIAL_OFFSET = 2600;
+
         fetch(url)
             .then(res => res.json())
             .then(data => {
-                if (typeof data.count === 'number') setCount(data.count);
+                if (typeof data.count === 'number') setCount(data.count + INITIAL_OFFSET);
             })
             .catch(err => {
                 console.error('Counter Error:', err);

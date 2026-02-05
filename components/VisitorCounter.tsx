@@ -50,9 +50,9 @@ export default function VisitorCounter() {
                             inline-flex items-center justify-center 
                             w-4 h-6 mx-[1px]
                             bg-gradient-to-b from-[#222] to-[#111]
-                            text-[#f00] font-mono text-sm font-bold
+                            text-[#0f0] font-mono text-sm font-bold
                             border border-[#333] rounded-[1px]
-                            shadow-[0_0_2px_#f00]
+                            shadow-[0_0_2px_#0f0]
                             relative overflow-hidden
                         "
                     >

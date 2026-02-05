@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import VisitorCounter from './VisitorCounter';
 
 interface HeroSectionProps {
     profileName?: string;
@@ -18,6 +19,7 @@ export default function HeroSection({ profileName, profileTagline, featuredIntro
                     <p className="text-xl text-accent font-medium">
                         {profileTagline || ""}
                     </p>
+                    <VisitorCounter />
                 </div>
 
                 {featuredIntro && (

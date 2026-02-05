@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import VisitorCounter from './VisitorCounter';
+
 
 export default function Footer() {
     return (
@@ -33,7 +33,7 @@ export default function Footer() {
                     <span className="mx-2">|</span>
                     <Link href="/contact" className="hover:text-stone-600 transition-colors">Contact</Link>
                 </p>
-                <div className="mt-2"><VisitorCounter /></div>
+
             </div>
         </footer>
     );

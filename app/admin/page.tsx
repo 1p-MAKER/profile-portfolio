@@ -1671,6 +1671,11 @@ export default function AdminPage() {
                                                 onChange={(e) => setNewTikTokUrl(e.target.value)}
                                                 placeholder="https://www.tiktok.com/@user/video/1234567890..."
                                             />
+                                            {newTikTokUrl && !newTikTokUrl.match(/video\/\d+/) && (
+                                                <p className="text-red-500 text-xs mt-1 font-bold">
+                                                    ※ 動画単体のURLを入力してください
+                                                </p>
+                                            )}
                                         </div>
                                         <div>
                                             <label className="block text-xs font-bold text-stone-700 mb-1">タイトル（任意）</label>

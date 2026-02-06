@@ -29,7 +29,7 @@
   "snsAccounts": [
     {
       "title": "Instagram",
-      "description": "日々の個人活動記録です。",
+      "description": "日々の個人活動記録です。SNSは孫への説明書",
       "url": "https://www.instagram.com/1pei_okinawa",
       "category": "SNS",
       "platformType": "instagram",
@@ -37,17 +37,26 @@
     },
     {
       "title": "X (Twitter)",
-      "description": "アプリの開発記録です。",
+      "description": "アプリの開発記録です。非エンジニア個人開発者の苦悩。いまのところ毎日ポストしています",
       "url": "https://x.com/DevCat123",
       "category": "SNS",
       "platformType": "x"
     },
     {
       "title": "Sora (Video Generation)",
-      "description": "AI動画を生成して遊んでいます。",
+      "description": "AI動画を生成して遊んでいます。恥ずかしいので見ないでください",
       "url": "https://sora.chatgpt.com/profile/1ppn",
       "category": "SNS",
       "platformType": "sora"
+    },
+    {
+      "title": "TikTok",
+      "description": "自作アプリを大ヒットさせるために毎日自撮り投稿しています。応援してください",
+      "url": "https://www.tiktok.com/@1pei_app",
+      "category": "SNS",
+      "platformType": "tiktok",
+      "tagline": "",
+      "isFeatured": true
     }
   ],
   "printImages": [

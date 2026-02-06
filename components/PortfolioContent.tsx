@@ -11,6 +11,7 @@ import ShopifyProductCard from '@/components/ShopifyProductCard';
 import AudioCard from '@/components/AudioCard';
 import NoteCard from '@/components/NoteCard';
 import SketchMarkTab from '@/components/SketchMarkTab';
+import TikTokEmbed from '@/components/TikTokEmbed';
 import Image from 'next/image';
 import { ContentData, FeaturedItem } from '@/types/content';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -379,6 +380,21 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
                 );
             case 'sketchMark':
                 return <SketchMarkTab />;
+            case 'tiktok':
+                return (
+                    <>
+                        {data.settings?.tiktokIntro && <p className="text-center text-stone-600 mb-8 whitespace-pre-wrap leading-relaxed">{data.settings.tiktokIntro}</p>}
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                            {data.tiktokItems && data.tiktokItems.map((item) => (
+                                <div key={item.id} className="space-y-2">
+                                    <TikTokEmbed url={item.url} />
+                                    <h3 className="text-xs font-bold text-stone-700 mt-2 line-clamp-2">{item.title}</h3>
+                                </div>
+                            ))}
+                        </div>
+                        {(!data.tiktokItems || data.tiktokItems.length === 0) && <p className="text-center text-stone-500 py-12">まだTikTok動画が登録されていません。</p>}
+                    </>
+                );
             case 'office':
                 return (
                     <>

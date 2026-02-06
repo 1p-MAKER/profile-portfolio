@@ -12,9 +12,17 @@ export interface ContentData {
     brainItems: NoteItem[];
     officeItems: OfficeItem[];
     sketchMarkItems: SketchMarkItem[];
+    tiktokItems: TikTokItem[];
     tabs: TabItem[];
     settings: Settings;
     legalInfo?: LegalInfo;
+}
+
+export interface TikTokItem {
+    id: string;
+    title: string;
+    url: string;
+    isFeatured?: boolean;
 }
 
 export interface LegalInfo {
@@ -95,7 +103,7 @@ export interface OfficeItem {
 }
 
 export interface TabItem {
-    id: 'home' | 'leather' | 'ios' | 'shopify' | 'sns' | '3d-printer' | 'furusato' | 'youtube' | 'videoProduction' | 'audio' | 'note' | 'sketchMark' | 'office';
+    id: 'home' | 'leather' | 'ios' | 'shopify' | 'sns' | '3d-printer' | 'furusato' | 'youtube' | 'videoProduction' | 'audio' | 'note' | 'sketchMark' | 'office' | 'tiktok';
     label: string;
 }
 
@@ -140,6 +148,7 @@ export interface Settings {
     brainIntro?: string;
     sketchMarkIntro?: string;
     officeIntro?: string;
+    tiktokIntro?: string;
 }
 
 export type FeaturedItem =

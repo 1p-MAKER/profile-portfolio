@@ -169,6 +169,10 @@ export default function AdminPage() {
     const [brainIntro, setBrainIntro] = useState('');
     const [officeIntro, setOfficeIntro] = useState(''); // New Office
 
+    // TikTok Input State
+    const [newTikTokUrl, setNewTikTokUrl] = useState('');
+    const [newTikTokTitle, setNewTikTokTitle] = useState('');
+
 
     // Sketch Mark State
     const [fetchedSketchMarkItems, setFetchedSketchMarkItems] = useState<SketchMarkItem[]>([]);
@@ -347,6 +351,35 @@ export default function AdminPage() {
         const newItems = [...data.brainItems];
         newItems.splice(index, 1);
         setData({ ...data, brainItems: newItems });
+    };
+
+    // TikTok Item Management
+    const addTikTokItem = () => {
+        if (!data || !newTikTokUrl.trim()) return;
+        const newItem = {
+            id: `tiktok_${Date.now()}`,
+            title: newTikTokTitle || 'TikTok Video',
+            url: newTikTokUrl
+        };
+        const newItems = [...(data.tiktokItems || []), newItem];
+        setData({ ...data, tiktokItems: newItems });
+        setNewTikTokUrl('');
+        setNewTikTokTitle('');
+    };
+
+    const updateTikTokItem = (index: number, field: string, value: string) => {
+        if (!data || !data.tiktokItems) return;
+        const newItems = [...data.tiktokItems];
+        newItems[index] = { ...newItems[index], [field]: value };
+        setData({ ...data, tiktokItems: newItems });
+    };
+
+    const removeTikTokItem = (index: number) => {
+        if (!data || !data.tiktokItems) return;
+        if (!confirm('削除しますか？')) return;
+        const newItems = [...data.tiktokItems];
+        newItems.splice(index, 1);
+        setData({ ...data, tiktokItems: newItems });
     };
 
     // Image Compression Helper
@@ -930,7 +963,7 @@ export default function AdminPage() {
     };
 
     // Featured Toggle Logic
-    const toggleFeatured = (listName: 'iosApps' | 'leatherProducts' | 'shopifyApps' | 'snsAccounts' | 'youtubeVideos' | 'furusatoItems' | 'noteItems' | 'audioTracks', index: number) => {
+    const toggleFeatured = (listName: 'iosApps' | 'leatherProducts' | 'shopifyApps' | 'snsAccounts' | 'youtubeVideos' | 'furusatoItems' | 'noteItems' | 'audioTracks' | 'brainItems' | 'tiktokItems', index: number) => {
         if (!data) return;
         const newList = [...data[listName]] as any[];
         newList[index] = { ...newList[index], isFeatured: !newList[index].isFeatured };
@@ -1594,6 +1627,108 @@ export default function AdminPage() {
                                 </div>
                             </section>
                         )}
+
+                        {/* TikTok Section */}
+                        {activeAdminTab === 'tiktok' && (
+                            <section>
+                                <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200 text-stone-900">TikTok動画</h2>
+
+                                {/* TikTok Intro */}
+                                <div className="bg-white p-6 rounded-xl shadow-sm mb-6">
+                                    <label className="block text-sm font-bold text-stone-700 mb-2">このタブの導入文</label>
+                                    <textarea
+                                        className="w-full p-3 border rounded-lg min-h-[80px]"
+                                        value={data.settings?.tiktokIntro || ''}
+                                        onChange={(e) => setData({ ...data, settings: { ...data.settings, tiktokIntro: e.target.value } })}
+                                        placeholder="TikTok動画の紹介文を入力..."
+                                    />
+                                </div>
+
+                                {/* Add TikTok Video */}
+                                <div className="bg-white p-6 rounded-xl shadow-sm mb-6">
+                                    <h3 className="text-lg font-bold mb-4 text-stone-900">動画を追加</h3>
+                                    <div className="grid gap-4">
+                                        <div>
+                                            <label className="block text-xs font-bold text-stone-700 mb-1">TikTok動画URL *</label>
+                                            <input
+                                                type="text"
+                                                className="w-full p-3 border rounded-lg"
+                                                value={newTikTokUrl}
+                                                onChange={(e) => setNewTikTokUrl(e.target.value)}
+                                                placeholder="https://www.tiktok.com/@user/video/1234567890..."
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold text-stone-700 mb-1">タイトル（任意）</label>
+                                            <input
+                                                type="text"
+                                                className="w-full p-3 border rounded-lg"
+                                                value={newTikTokTitle}
+                                                onChange={(e) => setNewTikTokTitle(e.target.value)}
+                                                placeholder="動画のタイトル"
+                                            />
+                                        </div>
+                                        <button
+                                            onClick={addTikTokItem}
+                                            className="w-full bg-blue-500 text-white font-bold py-2 rounded-lg hover:bg-blue-600"
+                                        >
+                                            リストに追加
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {/* TikTok List */}
+                                <div className="bg-white p-6 rounded-xl shadow-sm">
+                                    <h3 className="text-lg font-bold mb-4 text-stone-900">動画リスト</h3>
+                                    <DraggableList
+                                        items={data.tiktokItems || []}
+                                        onReorder={(newList) => setData({ ...data, tiktokItems: newList })}
+                                        renderItem={(item, index) => (
+                                            <div className="p-4 bg-stone-50 rounded-lg border border-stone-200">
+                                                <div className="grid gap-3">
+                                                    <input
+                                                        type="text"
+                                                        className="w-full p-2 border rounded font-bold"
+                                                        value={item.title}
+                                                        onChange={(e) => updateTikTokItem(index, 'title', e.target.value)}
+                                                        placeholder="タイトル"
+                                                    />
+                                                    <input
+                                                        type="text"
+                                                        className="w-full p-2 border rounded text-sm text-stone-600"
+                                                        value={item.url}
+                                                        onChange={(e) => updateTikTokItem(index, 'url', e.target.value)}
+                                                        placeholder="TikTok URL"
+                                                    />
+                                                    <div className="flex gap-2 justify-end">
+                                                        <button
+                                                            onClick={() => toggleFeatured('tiktokItems', index)}
+                                                            className={`px-3 py-1 rounded text-xs font-bold border ${item.isFeatured
+                                                                ? 'bg-yellow-100 text-yellow-800 border-yellow-300'
+                                                                : 'bg-white text-stone-400 border-stone-200'
+                                                                }`}
+                                                        >
+                                                            ★ Featured
+                                                        </button>
+                                                        <button
+                                                            onClick={() => removeTikTokItem(index)}
+                                                            className="px-3 py-1 bg-red-50 text-red-500 rounded text-xs font-bold hover:bg-red-100"
+                                                        >
+                                                            削除
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+                                        itemKey={(item) => item.id}
+                                    />
+                                    {(!data.tiktokItems || data.tiktokItems.length === 0) && (
+                                        <p className="text-center text-stone-400 py-8">まだ動画が登録されていません。</p>
+                                    )}
+                                </div>
+                            </section>
+                        )}
+
                         {activeAdminTab === 'leather' && (
                             <section>
                                 <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200 text-stone-900">革製品リスト</h2>

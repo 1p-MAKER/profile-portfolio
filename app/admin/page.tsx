@@ -216,6 +216,20 @@ export default function AdminPage() {
                 if (parsed.tabs && !parsed.tabs.find((t: any) => t.id === 'office')) {
                     parsed.tabs.push({ id: 'office', label: 'Office' });
                 }
+                // Migration: Ensure 'tiktok' tab exists if not present
+                if (parsed.tabs && !parsed.tabs.find((t: any) => t.id === 'tiktok')) {
+                    // Insert after 'office' tab if it exists, otherwise push at the end
+                    const officeIndex = parsed.tabs.findIndex((t: any) => t.id === 'office');
+                    if (officeIndex !== -1) {
+                        parsed.tabs.splice(officeIndex + 1, 0, { id: 'tiktok', label: 'TikTok' });
+                    } else {
+                        parsed.tabs.push({ id: 'tiktok', label: 'TikTok' });
+                    }
+                }
+                // Migration: Ensure 'tiktokItems' array exists
+                if (!parsed.tiktokItems) {
+                    parsed.tiktokItems = [];
+                }
 
                 setData(parsed);
                 return; // Skip server fetch if local data exists

@@ -1,5 +1,4 @@
 {
-  "tiktokItems": [],
   "leatherProducts": [
     {
       "handle": "cometr2",
@@ -170,7 +169,7 @@
     "siteTitle": "Dev cat's Studio & Office",
     "profileName": "Dev cat's Studio & Office",
     "profileTagline": "",
-    "featuredIntro": "ようこそ。私は Dev cat\n\nここは、沖縄に生息する\n「長嶺一平」\nというクリエイターの活動ログだ\n\n彼は「無駄はあっても無意味はない」を信条に\n 革職人として素材に触れ\nエンジニアとしてコードを書く\n\n一見バグのような多属性だが\n出力されるものは全て\n「シンプル」\nで統一されている\n\n彼が自分で語るのを嫌うので\nプロデューサーである私が案内しよう",
+    "featuredIntro": "ようこそ。私は Dev cat\n\nここは、沖縄に生息する\n「一平」\nというクリエイターの活動ログだ\n\n彼は「無駄はあっても無意味はない」を信条に\n 革職人として素材に触れ\nエンジニアとしてコードを書く\n\n一見バグのような多属性だが\n出力されるものは全て\n「シンプル」\nで統一されている\n\n彼が自分で語るのを嫌うので\nプロデューサーである私が案内しよう",
     "videoProductionIntro": "DaVinci Resolve を使用した動画編集アーカイブ\n提供された映像素材の構成、編集、整音まで\n一本の作品として仕上げるポストプロダクションを担当",
     "audioIntro": "お店の宣伝等のためにDTMで制作したBGM素材です\n楽器演奏と打ち込みを組み合わせて作成しています",
     "featuredOrder": [
@@ -533,5 +532,6 @@
       "isFeatured": false,
       "description": "忙しいと言えば忙しいのでスケジュール的にお断りする可能性もあります。あらかじめご了承ください。"
     }
-  ]
+  ],
+  "tiktokItems": []
 }

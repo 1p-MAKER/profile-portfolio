@@ -172,6 +172,7 @@ export default function AdminPage() {
     // TikTok Input State
     const [newTikTokUrl, setNewTikTokUrl] = useState('');
     const [newTikTokTitle, setNewTikTokTitle] = useState('');
+    const [newTikTokPlatform, setNewTikTokPlatform] = useState<'tiktok' | 'instagram'>('tiktok');
 
 
     // Sketch Mark State
@@ -371,14 +372,16 @@ export default function AdminPage() {
     const addTikTokItem = () => {
         if (!data || !newTikTokUrl.trim()) return;
         const newItem = {
-            id: `tiktok_${Date.now()}`,
-            title: newTikTokTitle || 'TikTok Video',
-            url: newTikTokUrl
+            id: `${newTikTokPlatform}_${Date.now()}`,
+            title: newTikTokTitle || (newTikTokPlatform === 'instagram' ? 'Instagram Post' : 'TikTok Video'),
+            url: newTikTokUrl,
+            platform: newTikTokPlatform
         };
         const newItems = [...(data.tiktokItems || []), newItem];
         setData({ ...data, tiktokItems: newItems });
         setNewTikTokUrl('');
         setNewTikTokTitle('');
+        setNewTikTokPlatform('tiktok');
     };
 
     const updateTikTokItem = (index: number, field: string, value: string) => {
@@ -1645,7 +1648,7 @@ export default function AdminPage() {
                         {/* TikTok Section */}
                         {activeAdminTab === 'tiktok' && (
                             <section>
-                                <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200 text-stone-900">TikTok動画</h2>
+                                <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200 text-stone-900">毎日投稿チャレンジ</h2>
 
                                 {/* TikTok Intro */}
                                 <div className="bg-white p-6 rounded-xl shadow-sm mb-6">
@@ -1654,28 +1657,34 @@ export default function AdminPage() {
                                         className="w-full p-3 border rounded-lg min-h-[80px]"
                                         value={data.settings?.tiktokIntro || ''}
                                         onChange={(e) => setData({ ...data, settings: { ...data.settings, tiktokIntro: e.target.value } })}
-                                        placeholder="TikTok動画の紹介文を入力..."
+                                        placeholder="毎日投稿チャレンジの紹介文を入力..."
                                     />
                                 </div>
 
-                                {/* Add TikTok Video */}
+                                {/* Add Post */}
                                 <div className="bg-white p-6 rounded-xl shadow-sm mb-6">
-                                    <h3 className="text-lg font-bold mb-4 text-stone-900">動画を追加</h3>
+                                    <h3 className="text-lg font-bold mb-4 text-stone-900">投稿を追加</h3>
                                     <div className="grid gap-4">
                                         <div>
-                                            <label className="block text-xs font-bold text-stone-700 mb-1">TikTok動画URL *</label>
+                                            <label className="block text-xs font-bold text-stone-700 mb-1">プラットフォーム *</label>
+                                            <select
+                                                className="w-full p-3 border rounded-lg"
+                                                value={newTikTokPlatform || 'tiktok'}
+                                                onChange={(e) => setNewTikTokPlatform(e.target.value as 'tiktok' | 'instagram')}
+                                            >
+                                                <option value="tiktok">TikTok</option>
+                                                <option value="instagram">Instagram</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold text-stone-700 mb-1">投稿URL *</label>
                                             <input
                                                 type="text"
                                                 className="w-full p-3 border rounded-lg"
                                                 value={newTikTokUrl}
                                                 onChange={(e) => setNewTikTokUrl(e.target.value)}
-                                                placeholder="https://www.tiktok.com/@user/video/1234567890..."
+                                                placeholder={newTikTokPlatform === 'instagram' ? "https://www.instagram.com/p/ABC123..." : "https://www.tiktok.com/@user/video/1234567890..."}
                                             />
-                                            {newTikTokUrl && !newTikTokUrl.match(/video\/\d+/) && (
-                                                <p className="text-red-500 text-xs mt-1 font-bold">
-                                                    ※ 動画単体のURLを入力してください
-                                                </p>
-                                            )}
                                         </div>
                                         <div>
                                             <label className="block text-xs font-bold text-stone-700 mb-1">タイトル（任意）</label>
@@ -1684,7 +1693,7 @@ export default function AdminPage() {
                                                 className="w-full p-3 border rounded-lg"
                                                 value={newTikTokTitle}
                                                 onChange={(e) => setNewTikTokTitle(e.target.value)}
-                                                placeholder="動画のタイトル"
+                                                placeholder="投稿のタイトル"
                                             />
                                         </div>
                                         <button
@@ -1696,22 +1705,27 @@ export default function AdminPage() {
                                     </div>
                                 </div>
 
-                                {/* TikTok List */}
+                                {/* Post List */}
                                 <div className="bg-white p-6 rounded-xl shadow-sm">
-                                    <h3 className="text-lg font-bold mb-4 text-stone-900">動画リスト</h3>
+                                    <h3 className="text-lg font-bold mb-4 text-stone-900">投稿リスト</h3>
                                     <DraggableList
                                         items={data.tiktokItems || []}
                                         onReorder={(newList) => setData({ ...data, tiktokItems: newList })}
                                         renderItem={(item, index) => (
                                             <div className="p-4 bg-stone-50 rounded-lg border border-stone-200">
                                                 <div className="grid gap-3">
-                                                    <input
-                                                        type="text"
-                                                        className="w-full p-2 border rounded font-bold"
-                                                        value={item.title}
-                                                        onChange={(e) => updateTikTokItem(index, 'title', e.target.value)}
-                                                        placeholder="タイトル"
-                                                    />
+                                                    <div className="flex items-center gap-2">
+                                                        <span className={`px-2 py-1 rounded text-xs font-bold text-white ${item.platform === 'instagram' ? 'bg-gradient-to-r from-purple-500 to-pink-500' : 'bg-black'}`}>
+                                                            {item.platform === 'instagram' ? 'Instagram' : 'TikTok'}
+                                                        </span>
+                                                        <input
+                                                            type="text"
+                                                            className="flex-1 p-2 border rounded font-bold"
+                                                            value={item.title}
+                                                            onChange={(e) => updateTikTokItem(index, 'title', e.target.value)}
+                                                            placeholder="タイトル"
+                                                        />
+                                                    </div>
                                                     <input
                                                         type="text"
                                                         className="w-full p-2 border rounded text-sm text-stone-600"

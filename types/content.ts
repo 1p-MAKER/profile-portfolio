@@ -23,6 +23,7 @@ export interface TikTokItem {
     title: string;
     url: string;
     thumbnailUrl?: string;
+    platform?: 'tiktok' | 'instagram';
     isFeatured?: boolean;
 }
 

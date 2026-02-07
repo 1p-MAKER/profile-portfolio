@@ -12,6 +12,7 @@ import AudioCard from '@/components/AudioCard';
 import NoteCard from '@/components/NoteCard';
 import SketchMarkTab from '@/components/SketchMarkTab';
 import TikTokEmbed from '@/components/TikTokEmbed';
+import InstagramEmbed from '@/components/InstagramEmbed';
 import Image from 'next/image';
 import { ContentData, FeaturedItem } from '@/types/content';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -428,12 +429,21 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
                         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                             {data.tiktokItems && data.tiktokItems.map((item) => (
                                 <div key={item.id} className="space-y-2">
-                                    <TikTokEmbed url={item.url} />
-                                    <h3 className="text-xs font-bold text-stone-700 mt-2 line-clamp-2">{item.title}</h3>
+                                    {item.platform === 'instagram' ? (
+                                        <InstagramEmbed url={item.url} />
+                                    ) : (
+                                        <TikTokEmbed url={item.url} />
+                                    )}
+                                    <div className="flex items-center gap-1">
+                                        <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold text-white ${item.platform === 'instagram' ? 'bg-gradient-to-r from-purple-500 to-pink-500' : 'bg-black'}`}>
+                                            {item.platform === 'instagram' ? 'IG' : 'TikTok'}
+                                        </span>
+                                        <h3 className="text-xs font-bold text-stone-700 line-clamp-2">{item.title}</h3>
+                                    </div>
                                 </div>
                             ))}
                         </div>
-                        {(!data.tiktokItems || data.tiktokItems.length === 0) && <p className="text-center text-stone-500 py-12">まだTikTok動画が登録されていません。</p>}
+                        {(!data.tiktokItems || data.tiktokItems.length === 0) && <p className="text-center text-stone-500 py-12">まだ投稿が登録されていません。</p>}
                     </>
                 );
             case 'office':

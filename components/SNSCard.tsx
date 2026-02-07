@@ -81,12 +81,17 @@ export default function SNSCard({ account }: SNSCardProps) {
             className={`group block bg-white dark:bg-stone-800 rounded-2xl overflow-hidden shadow-sm border border-stone-200 dark:border-stone-700 
                 hover:shadow-xl transition-all duration-300 h-full ${config.hoverBg}`}
         >
-            {/* Thumbnail Background (Optional) */}
+            {/* Thumbnail Image */}
             {account.thumbnailUrl && (
-                <div
-                    className="h-32 bg-cover bg-center opacity-20 group-hover:opacity-30 transition-opacity"
-                    style={{ backgroundImage: `url(${account.thumbnailUrl})` }}
-                />
+                <div className="relative aspect-video overflow-hidden">
+                    <img
+                        src={account.thumbnailUrl}
+                        alt={account.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+                    <IconComponent className={`absolute bottom-3 right-3 text-3xl text-white drop-shadow-lg`} />
+                </div>
             )}
 
             {/* Card Content */}

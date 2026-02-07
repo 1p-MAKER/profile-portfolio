@@ -1884,12 +1884,14 @@ export default function AdminPage() {
                                                         />
                                                     </div>
                                                     <input className="border p-2 rounded text-stone-900" value={item.url} onChange={(e) => updateGeneralProduct('snsAccounts', index, 'url', e.target.value)} placeholder="URL" />
-                                                    <input
-                                                        className="border p-2 rounded text-stone-900"
-                                                        value={item.thumbnailUrl || ''}
-                                                        onChange={(e) => updateGeneralProduct('snsAccounts', index, 'thumbnailUrl', e.target.value)}
-                                                        placeholder="サムネイルURL (任意)"
-                                                    />
+                                                    <div>
+                                                        <label className="block text-xs font-bold text-stone-700 mb-1">サムネイル画像 (任意)</label>
+                                                        <ImageInput
+                                                            currentImage={item.thumbnailUrl}
+                                                            onImageChange={(base64) => updateGeneralProduct('snsAccounts', index, 'thumbnailUrl', base64)}
+                                                            label="画像をアップロード"
+                                                        />
+                                                    </div>
                                                     <textarea className="border p-2 rounded text-stone-900 h-24" value={item.description} onChange={(e) => updateGeneralProduct('snsAccounts', index, 'description', e.target.value)} placeholder="説明" />
                                                     <div className="flex justify-end gap-2">
                                                         <button

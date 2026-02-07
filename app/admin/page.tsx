@@ -222,9 +222,9 @@ export default function AdminPage() {
                     // Insert after 'office' tab if it exists, otherwise push at the end
                     const officeIndex = parsed.tabs.findIndex((t: any) => t.id === 'office');
                     if (officeIndex !== -1) {
-                        parsed.tabs.splice(officeIndex + 1, 0, { id: 'tiktok', label: 'TikTok' });
+                        parsed.tabs.splice(officeIndex + 1, 0, { id: 'tiktok', label: '毎日投稿チャレンジ' });
                     } else {
-                        parsed.tabs.push({ id: 'tiktok', label: 'TikTok' });
+                        parsed.tabs.push({ id: 'tiktok', label: '毎日投稿チャレンジ' });
                     }
                 }
                 // Migration: Ensure 'tiktokItems' array exists
@@ -373,7 +373,7 @@ export default function AdminPage() {
         if (!data || !newTikTokUrl.trim()) return;
         const newItem = {
             id: `${newTikTokPlatform}_${Date.now()}`,
-            title: newTikTokTitle || (newTikTokPlatform === 'instagram' ? 'Instagram Post' : 'TikTok Video'),
+            title: newTikTokTitle || (newTikTokPlatform === 'instagram' ? 'Instagram Post' : '毎日投稿チャレンジ'),
             url: newTikTokUrl,
             platform: newTikTokPlatform
         };

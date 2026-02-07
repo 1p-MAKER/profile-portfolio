@@ -274,7 +274,7 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
                                                         </div>
                                                     )}
                                                     <span className="absolute top-2 right-2 text-xs font-bold px-2 py-1 rounded shadow-sm text-white bg-black">
-                                                        TikTok
+                                                        チャレンジ
                                                     </span>
                                                 </div>
                                                 <div className="p-4">
@@ -436,7 +436,7 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
                                     )}
                                     <div className="flex items-center gap-1">
                                         <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold text-white ${item.platform === 'instagram' ? 'bg-gradient-to-r from-purple-500 to-pink-500' : 'bg-black'}`}>
-                                            {item.platform === 'instagram' ? 'IG' : 'TikTok'}
+                                            {item.platform === 'instagram' ? 'IG' : 'チャレンジ'}
                                         </span>
                                         <h3 className="text-xs font-bold text-stone-700 line-clamp-2">{item.title}</h3>
                                     </div>

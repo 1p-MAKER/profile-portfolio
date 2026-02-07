@@ -217,8 +217,12 @@ export default function AdminPage() {
                 if (parsed.tabs && !parsed.tabs.find((t: any) => t.id === 'office')) {
                     parsed.tabs.push({ id: 'office', label: 'Office' });
                 }
-                // Migration: Ensure 'tiktok' tab exists if not present
-                if (parsed.tabs && !parsed.tabs.find((t: any) => t.id === 'tiktok')) {
+                // Migration: Ensure 'tiktok' tab exists and has correct label
+                const tiktokTab = parsed.tabs?.find((t: any) => t.id === 'tiktok');
+                if (tiktokTab) {
+                    // Force update label to '毎日投稿チャレンジ'
+                    tiktokTab.label = '毎日投稿チャレンジ';
+                } else if (parsed.tabs) {
                     // Insert after 'office' tab if it exists, otherwise push at the end
                     const officeIndex = parsed.tabs.findIndex((t: any) => t.id === 'office');
                     if (officeIndex !== -1) {

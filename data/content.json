@@ -87,6 +87,10 @@
       "label": "Home"
     },
     {
+      "id": "tiktok",
+      "label": "毎日投稿チャレンジ"
+    },
+    {
       "id": "ios",
       "label": "iOSアプリ"
     },
@@ -105,10 +109,6 @@
     {
       "id": "office",
       "label": "Office"
-    },
-    {
-      "id": "tiktok",
-      "label": "毎日投稿チャレンジ"
     },
     {
       "id": "youtube",

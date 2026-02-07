@@ -159,6 +159,11 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
             items.push({ type: 'sketchMark', data: item, id: item.id.toString() });
         });
 
+        // TikTok Items
+        data.tiktokItems?.filter(item => item.isFeatured).forEach(item => {
+            items.push({ type: 'tiktok', data: item, id: item.id });
+        });
+
         const order = data.settings?.featuredOrder || [];
         if (order.length > 0) {
             items.sort((a, b) => {
@@ -240,6 +245,42 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
                                                         ) : <span></span>}
                                                         <span className="text-stone-400 group-hover:text-stone-800 dark:group-hover:text-stone-200 transition-colors">View →</span>
                                                     </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    );
+                                }
+                                if (item.type === 'tiktok') {
+                                    return (
+                                        <div key={`f-tiktok-${index}`} className="h-full">
+                                            <a
+                                                href={item.data.url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="group block h-full bg-white dark:bg-stone-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-stone-200 dark:border-stone-700"
+                                            >
+                                                <div className="relative aspect-video overflow-hidden bg-gradient-to-br from-cyan-400 via-pink-500 to-black">
+                                                    {item.data.thumbnailUrl ? (
+                                                        <Image
+                                                            src={item.data.thumbnailUrl}
+                                                            alt={item.data.title}
+                                                            fill
+                                                            className="object-cover group-hover:scale-105 transition-transform duration-500"
+                                                        />
+                                                    ) : (
+                                                        <div className="flex items-center justify-center h-full text-white text-4xl">
+                                                            <span>🎵</span>
+                                                        </div>
+                                                    )}
+                                                    <span className="absolute top-2 right-2 text-xs font-bold px-2 py-1 rounded shadow-sm text-white bg-black">
+                                                        TikTok
+                                                    </span>
+                                                </div>
+                                                <div className="p-4">
+                                                    <h3 className="font-bold text-stone-900 dark:text-stone-100 line-clamp-2 mb-2">
+                                                        {item.data.title}
+                                                    </h3>
+                                                    <span className="text-stone-400 group-hover:text-stone-800 dark:group-hover:text-stone-200 transition-colors text-sm">View →</span>
                                                 </div>
                                             </a>
                                         </div>

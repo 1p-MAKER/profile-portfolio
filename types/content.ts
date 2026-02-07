@@ -22,6 +22,7 @@ export interface TikTokItem {
     id: string;
     title: string;
     url: string;
+    thumbnailUrl?: string;
     isFeatured?: boolean;
 }
 
@@ -162,4 +163,5 @@ export type FeaturedItem =
     | { type: 'audio'; data: AudioTrack; id: string }
     | { type: 'note'; data: NoteItem; id: string }
     | { type: 'sketchMark'; data: SketchMarkItem; id: string }
-    | { type: 'office'; data: OfficeItem; id: string };
+    | { type: 'office'; data: OfficeItem; id: string }
+    | { type: 'tiktok'; data: TikTokItem; id: string };

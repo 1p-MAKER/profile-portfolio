@@ -1719,6 +1719,14 @@ export default function AdminPage() {
                                                         onChange={(e) => updateTikTokItem(index, 'url', e.target.value)}
                                                         placeholder="TikTok URL"
                                                     />
+                                                    <div>
+                                                        <label className="block text-xs font-bold text-stone-700 mb-1">サムネイル画像 (TOP表示用)</label>
+                                                        <ImageInput
+                                                            currentImage={item.thumbnailUrl}
+                                                            onImageChange={(base64) => updateTikTokItem(index, 'thumbnailUrl', base64)}
+                                                            label="画像をアップロード"
+                                                        />
+                                                    </div>
                                                     <div className="flex gap-2 justify-end">
                                                         <button
                                                             onClick={() => toggleFeatured('tiktokItems', index)}

@@ -264,6 +264,9 @@ export default function AdminPage() {
                         parsed.tabs.push({ id: 'ai-tools', label: 'AIツール' });
                     }
                     console.log('Migrated: Added ai-tools tab');
+                    // Force update local storage immediately
+                    localStorage.setItem('portfolio_admin_data_v2', JSON.stringify(parsed));
+                    setStatus('システム更新: AIツールタブを自動追加しました。');
                 }
 
                 setData(parsed);
@@ -300,6 +303,8 @@ export default function AdminPage() {
                         } else {
                             fetchedData.tabs.push({ id: 'ai-tools', label: 'AIツール' });
                         }
+                        // Force save to local immediately to prevent revert
+                        localStorage.setItem('portfolio_admin_data_v2', JSON.stringify(fetchedData));
                     }
                 }
                 setData(fetchedData);

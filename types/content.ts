@@ -13,6 +13,7 @@ export interface ContentData {
     officeItems: OfficeItem[];
     sketchMarkItems: SketchMarkItem[];
     tiktokItems: TikTokItem[];
+    aiToolItems: AiToolItem[];
     tabs: TabItem[];
     settings: Settings;
     legalInfo?: LegalInfo;
@@ -104,8 +105,17 @@ export interface OfficeItem {
     isFeatured?: boolean;
 }
 
+export interface AiToolItem {
+    id: string;
+    title: string;
+    description: string;
+    imageUrl?: string;
+    url?: string; // Optional link
+    isFeatured?: boolean;
+}
+
 export interface TabItem {
-    id: 'home' | 'leather' | 'ios' | 'shopify' | 'sns' | '3d-printer' | 'furusato' | 'youtube' | 'videoProduction' | 'audio' | 'note' | 'sketchMark' | 'office' | 'tiktok';
+    id: 'home' | 'leather' | 'ios' | 'shopify' | 'sns' | '3d-printer' | 'furusato' | 'youtube' | 'videoProduction' | 'audio' | 'note' | 'sketchMark' | 'office' | 'tiktok' | 'ai-tools';
     label: string;
 }
 
@@ -151,6 +161,7 @@ export interface Settings {
     sketchMarkIntro?: string;
     officeIntro?: string;
     tiktokIntro?: string;
+    aiToolIntro?: string;
     sunoBgmUrl?: string;
 }
 
@@ -166,4 +177,5 @@ export type FeaturedItem =
     | { type: 'note'; data: NoteItem; id: string }
     | { type: 'sketchMark'; data: SketchMarkItem; id: string }
     | { type: 'office'; data: OfficeItem; id: string }
-    | { type: 'tiktok'; data: TikTokItem; id: string };
+    | { type: 'tiktok'; data: TikTokItem; id: string }
+    | { type: 'ai-tools'; data: AiToolItem; id: string };

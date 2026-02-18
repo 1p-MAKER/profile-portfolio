@@ -10,6 +10,7 @@ import YouTubeEmbed from './YouTubeEmbed';
 import ShopifyProductCard from '@/components/ShopifyProductCard';
 import AudioCard from '@/components/AudioCard';
 import NoteCard from '@/components/NoteCard';
+import AiToolCard from '@/components/AiToolCard';
 import SketchMarkTab from '@/components/SketchMarkTab';
 import TikTokEmbed from '@/components/TikTokEmbed';
 import InstagramEmbed from '@/components/InstagramEmbed';
@@ -315,6 +316,25 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
                                 <div key={app.id} className="h-full"><AppCard appId={app.id} /></div>
                             ))}
                         </div>
+                    </>
+                );
+            case 'ai-tools':
+                return (
+                    <>
+                        {data.settings?.aiToolIntro && <p className="text-center text-stone-600 mb-8 whitespace-pre-wrap leading-relaxed">{data.settings.aiToolIntro}</p>}
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {data.aiToolItems && data.aiToolItems.map((item, index) => (
+                                <div key={index} className="h-full">
+                                    <AiToolCard
+                                        title={item.title}
+                                        description={item.description}
+                                        url={item.url}
+                                        imageUrl={item.imageUrl}
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                        {(!data.aiToolItems || data.aiToolItems.length === 0) && <p className="text-center text-stone-500 py-12">まだAIツールが登録されていません。</p>}
                     </>
                 );
             case 'shopify':

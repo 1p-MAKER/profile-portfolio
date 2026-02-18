@@ -395,6 +395,19 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
                             {data.audioTracks && data.audioTracks.map((track) => <AudioCard key={track.id} track={track} />)}
                         </div>
                         {(!data.audioTracks || data.audioTracks.length === 0) && <p className="text-center text-stone-500 py-12">まだBGMが登録されていません。</p>}
+
+                        {/* Suno BGM Section */}
+                        {data.settings?.sunoBgmUrl && (
+                            <div className="mt-16 border-t border-stone-200 pt-8 text-center">
+                                <h3 className="text-2xl font-bold mb-4 text-stone-800 dark:text-stone-200">Suno 作業用BGM</h3>
+                                <p className="text-stone-600 dark:text-stone-400 mb-8 max-w-2xl mx-auto leading-relaxed">
+                                    Sunoを使い自分好みの音楽を生成し DaVinci Resolveで曲を繋げました
+                                </p>
+                                <div className="max-w-3xl mx-auto rounded-2xl overflow-hidden shadow-lg border border-stone-200 dark:border-stone-700 bg-black">
+                                    <YouTubeEmbed url={data.settings.sunoBgmUrl} />
+                                </div>
+                            </div>
+                        )}
                     </>
                 );
             case 'note':

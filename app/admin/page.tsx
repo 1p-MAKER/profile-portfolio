@@ -168,6 +168,7 @@ export default function AdminPage() {
     const [noteIntro, setNoteIntro] = useState('');
     const [brainIntro, setBrainIntro] = useState('');
     const [officeIntro, setOfficeIntro] = useState(''); // New Office
+    const [sunoBgmUrl, setSunoBgmUrl] = useState(''); // Suno BGM URL
 
     // TikTok Input State
     const [newTikTokUrl, setNewTikTokUrl] = useState('');
@@ -199,6 +200,7 @@ export default function AdminPage() {
                 if (parsed.settings?.noteIntro) setNoteIntro(parsed.settings.noteIntro);
                 if (parsed.settings?.brainIntro) setBrainIntro(parsed.settings.brainIntro);
                 if (parsed.settings?.officeIntro) setOfficeIntro(parsed.settings.officeIntro); // New Office
+                if (parsed.settings?.sunoBgmUrl) setSunoBgmUrl(parsed.settings.sunoBgmUrl);
 
 
                 // Migration: Ensure 'note' tab exists if not present
@@ -285,6 +287,9 @@ export default function AdminPage() {
                 }
                 if (fetchedData.settings?.officeIntro) {
                     setOfficeIntro(fetchedData.settings.officeIntro);
+                }
+                if (fetchedData.settings?.sunoBgmUrl) {
+                    setSunoBgmUrl(fetchedData.settings.sunoBgmUrl);
                 }
 
                 // Cleanup old data to free up space
@@ -2776,6 +2781,25 @@ export default function AdminPage() {
                                 </div>
 
                                 {/* Add New Audio Form */}
+                                <div className="bg-stone-50 p-6 rounded-xl mb-6 border border-stone-200">
+                                    <h3 className="font-bold mb-4 text-stone-700">🤖 Suno 作業用BGM設定</h3>
+                                    <div className="mb-4">
+                                        <label className="block text-sm font-bold text-stone-700 mb-2">YouTube URL</label>
+                                        <input
+                                            className="w-full border p-2 rounded"
+                                            value={sunoBgmUrl}
+                                            onChange={(e) => {
+                                                setSunoBgmUrl(e.target.value);
+                                                setData({ ...data!, settings: { ...data!.settings, sunoBgmUrl: e.target.value } });
+                                            }}
+                                            placeholder="https://www.youtube.com/watch?v=..."
+                                        />
+                                        <p className="mt-1 text-xs text-stone-600">
+                                            ここにURLを入力すると、BGMタブの下部に「Suno 作業用BGM」セクションが表示されます。
+                                        </p>
+                                    </div>
+                                </div>
+
                                 <div className="bg-stone-100 p-6 rounded-xl mb-8 border border-stone-200">
                                     <h3 className="font-bold mb-4 text-stone-700">新規BGM追加</h3>
 

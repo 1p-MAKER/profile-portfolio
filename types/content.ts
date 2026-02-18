@@ -151,6 +151,7 @@ export interface Settings {
     sketchMarkIntro?: string;
     officeIntro?: string;
     tiktokIntro?: string;
+    sunoBgmUrl?: string;
 }
 
 export type FeaturedItem =

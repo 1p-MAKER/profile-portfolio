@@ -2445,52 +2445,61 @@ export default function AdminPage() {
                                 </div>
 
                                 {/* AI Tools List */}
-                                <div className="grid grid-cols-1 gap-4">
-                                    {data.aiToolItems && data.aiToolItems.map((item, index) => (
-                                        <div key={item.id} className="bg-white p-4 rounded-xl shadow-sm flex gap-4 border border-stone-100">
-                                            <div className="relative w-24 h-24 bg-stone-100 rounded overflow-hidden flex-shrink-0">
-                                                {item.imageUrl ? (
-                                                    <Image src={item.imageUrl} alt={item.title} fill className="object-cover" />
-                                                ) : (
-                                                    <div className="flex items-center justify-center h-full text-xs text-stone-600">No Image</div>
-                                                )}
+                                {/* AI Tools List */}
+                                <div className="bg-white p-6 rounded-xl shadow-sm mb-4">
+                                    <h3 className="text-lg font-bold mb-4 text-stone-900">AIツールリスト</h3>
+                                    <p className="text-xs text-stone-700 mb-4">ドラッグ&ドロップで並び替えられます</p>
+
+                                    <DraggableList
+                                        items={data.aiToolItems || []}
+                                        onReorder={(newList) => setData({ ...data, aiToolItems: newList })}
+                                        renderItem={(item, index) => (
+                                            <div className="bg-white p-4 rounded-xl shadow-sm flex gap-4 border border-stone-100">
+                                                <div className="relative w-24 h-24 bg-stone-100 rounded overflow-hidden flex-shrink-0">
+                                                    {item.imageUrl ? (
+                                                        <Image src={item.imageUrl} alt={item.title} fill className="object-cover" />
+                                                    ) : (
+                                                        <div className="flex items-center justify-center h-full text-xs text-stone-600">No Image</div>
+                                                    )}
+                                                </div>
+                                                <div className="flex-grow grid gap-2">
+                                                    <input
+                                                        className="border p-2 rounded text-sm font-bold"
+                                                        value={item.title}
+                                                        onChange={(e) => updateAiToolItem(index, 'title', e.target.value)}
+                                                        placeholder="タイトル"
+                                                    />
+                                                    <input
+                                                        className="border p-2 rounded text-xs text-stone-700"
+                                                        value={item.url || ''}
+                                                        onChange={(e) => updateAiToolItem(index, 'url', e.target.value)}
+                                                        placeholder="URL"
+                                                    />
+                                                    <textarea
+                                                        className="border p-2 rounded text-xs text-stone-700 h-16"
+                                                        value={item.description}
+                                                        onChange={(e) => updateAiToolItem(index, 'description', e.target.value)}
+                                                        placeholder="説明"
+                                                    />
+                                                </div>
+                                                <div className="flex flex-col gap-2">
+                                                    <button
+                                                        onClick={() => toggleFeatured('aiToolItems', index)}
+                                                        className={`px-3 py-1 rounded text-sm font-bold ${item.isFeatured ? 'bg-yellow-500 text-white' : 'bg-gray-200 text-gray-600'}`}
+                                                    >
+                                                        ★
+                                                    </button>
+                                                    <button
+                                                        onClick={() => removeAiToolItem(index)}
+                                                        className="text-red-500 hover:bg-red-50 p-2 rounded"
+                                                    >
+                                                        ✕
+                                                    </button>
+                                                </div>
                                             </div>
-                                            <div className="flex-grow grid gap-2">
-                                                <input
-                                                    className="border p-2 rounded text-sm font-bold"
-                                                    value={item.title}
-                                                    onChange={(e) => updateAiToolItem(index, 'title', e.target.value)}
-                                                    placeholder="タイトル"
-                                                />
-                                                <input
-                                                    className="border p-2 rounded text-xs text-stone-700"
-                                                    value={item.url || ''}
-                                                    onChange={(e) => updateAiToolItem(index, 'url', e.target.value)}
-                                                    placeholder="URL"
-                                                />
-                                                <textarea
-                                                    className="border p-2 rounded text-xs text-stone-700 h-16"
-                                                    value={item.description}
-                                                    onChange={(e) => updateAiToolItem(index, 'description', e.target.value)}
-                                                    placeholder="説明"
-                                                />
-                                            </div>
-                                            <div className="flex flex-col gap-2">
-                                                <button
-                                                    onClick={() => toggleFeatured('aiToolItems', index)}
-                                                    className={`px-3 py-1 rounded text-sm font-bold ${item.isFeatured ? 'bg-yellow-500 text-white' : 'bg-gray-200 text-gray-600'}`}
-                                                >
-                                                    ★
-                                                </button>
-                                                <button
-                                                    onClick={() => removeAiToolItem(index)}
-                                                    className="text-red-500 hover:bg-red-50 p-2 rounded"
-                                                >
-                                                    ✕
-                                                </button>
-                                            </div>
-                                        </div>
-                                    ))}
+                                        )}
+                                        itemKey={(item, idx) => item.id || `ai-tool-${idx}`}
+                                    />
                                 </div>
                             </section>
                         )}

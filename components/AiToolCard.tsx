@@ -7,13 +7,23 @@ interface AiToolCardProps {
     description: string;
     url?: string;
     imageUrl?: string;
+    onImageClick?: () => void;
 }
 
-export default function AiToolCard({ title, description, url, imageUrl }: AiToolCardProps) {
+export default function AiToolCard({ title, description, url, imageUrl, onImageClick }: AiToolCardProps) {
     const CardContent = () => (
         <div className="bg-white dark:bg-stone-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border border-stone-200 dark:border-stone-700 h-full flex flex-col group hover:-translate-y-1">
             {imageUrl ? (
-                <div className="relative w-full aspect-[1.91/1] bg-stone-100 dark:bg-stone-900 overflow-hidden">
+                <div
+                    className="relative w-full aspect-[1.91/1] bg-stone-100 dark:bg-stone-900 overflow-hidden cursor-pointer"
+                    onClick={(e) => {
+                        if (onImageClick) {
+                            e.preventDefault(); // Prevent link navigation if inside an anchor
+                            e.stopPropagation(); // Stop event bubbling
+                            onImageClick();
+                        }
+                    }}
+                >
                     <Image
                         src={imageUrl}
                         alt={title}
@@ -21,6 +31,9 @@ export default function AiToolCard({ title, description, url, imageUrl }: AiTool
                         className="object-cover group-hover:scale-105 transition-transform duration-500"
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
+                    <div className="absolute inset-0 bg-black/0 hover:bg-black/10 transition-colors flex items-center justify-center opacity-0 hover:opacity-100">
+                        <span className="text-white font-bold text-shadow bg-black/30 px-2 py-1 rounded">拡大</span>
+                    </div>
                 </div>
             ) : (
                 <div className="relative w-full aspect-[3/1] bg-stone-100 dark:bg-stone-900 flex items-center justify-center">

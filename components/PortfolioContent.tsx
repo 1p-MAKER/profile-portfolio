@@ -330,6 +330,7 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
                                         description={item.description}
                                         url={item.url}
                                         imageUrl={item.imageUrl}
+                                        onImageClick={() => setSelectedImage(item.imageUrl || null)}
                                     />
                                 </div>
                             ))}

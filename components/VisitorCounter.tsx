@@ -109,18 +109,18 @@ export default function VisitorCounter() {
     );
 
     return (
-        <div className="flex flex-col items-center md:items-start mt-4 gap-2">
+        <div className="flex flex-row items-end gap-3 mt-4 select-none">
             {/* TOTAL */}
-            <div className="flex flex-col items-center md:items-start">
-                <div className="text-[10px] text-stone-400 mb-1 font-bold tracking-widest">TOTAL VISITS</div>
+            <div className="flex flex-col items-center md:items-start text-[10px] text-stone-400 font-bold tracking-widest">
+                <div className="mb-1">TOTAL</div>
                 <div className="inline-flex bg-black p-1 rounded border-2 border-stone-300 shadow-inner">
                     {formattedCount.split('').map((d, i) => renderDigit(d, i))}
                 </div>
             </div>
 
             {/* YESTERDAY */}
-            <div className="flex flex-col items-center md:items-start">
-                <div className="text-[9px] text-stone-500 mb-1 font-bold tracking-widest">YESTERDAY</div>
+            <div className="flex flex-col items-center md:items-start text-[9px] text-stone-500 font-bold tracking-widest mb-0.5">
+                <div className="mb-0.5">YESTERDAY</div>
                 <div className="inline-flex bg-black p-0.5 rounded border border-stone-400 shadow-inner opacity-80">
                     {formattedYesterday.split('').map((d, i) => renderDigit(d, i, true))}
                 </div>

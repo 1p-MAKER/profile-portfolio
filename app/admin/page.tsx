@@ -2583,6 +2583,25 @@ export default function AdminPage() {
                                 <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200 text-stone-900">サイト設定</h2>
                                 <div className="bg-white p-6 rounded-xl shadow-sm space-y-6">
 
+                                    {/* Data Reset Button */}
+                                    <div className="p-4 border border-yellow-200 bg-yellow-50 rounded-lg">
+                                        <h3 className="font-bold text-yellow-800 mb-2">データ修復・リセット</h3>
+                                        <p className="text-sm text-yellow-700 mb-3">
+                                            表示がおかしい場合や、新しいタブが表示されない場合は、このボタンを押してデータをリセット・再取得してください。
+                                        </p>
+                                        <button
+                                            onClick={() => {
+                                                if (confirm('ローカルデータを削除し、サーバーから最新データを再取得しますか？（未保存の変更は失われます）')) {
+                                                    localStorage.removeItem('portfolio_admin_data_v2');
+                                                    window.location.reload();
+                                                }
+                                            }}
+                                            className="bg-yellow-600 text-white px-4 py-2 rounded font-bold hover:bg-yellow-700 transition-colors"
+                                        >
+                                            データをリセットして再読み込み
+                                        </button>
+                                    </div>
+
                                     {/* Profile Image Upload */}
                                     <div className="p-4 border border-stone-200 rounded-lg bg-stone-50">
                                         <h3 className="font-bold mb-4">プロフィール写真 (Hero Section)</h3>

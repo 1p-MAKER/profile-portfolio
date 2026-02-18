@@ -169,6 +169,7 @@ export default function AdminPage() {
     const [brainIntro, setBrainIntro] = useState('');
     const [officeIntro, setOfficeIntro] = useState(''); // New Office
     const [sunoBgmUrl, setSunoBgmUrl] = useState(''); // Suno BGM URL
+    const [yesterdayVisitors, setYesterdayVisitors] = useState<number | null>(null); // Yesterday's Visitors Count
 
     // TikTok Input State
     const [newTikTokUrl, setNewTikTokUrl] = useState('');
@@ -295,6 +296,45 @@ export default function AdminPage() {
                 // Cleanup old data to free up space
                 localStorage.removeItem('portfolio_admin_data');
             });
+
+        // Fetch Yesterday's Visitor Count
+        const fetchYesterdayVisitors = async () => {
+            const NAMESPACE = 'devcats-portfolio-v1';
+
+            // Generate JST Yesterday Key
+            const getJstDate = (offsetDays = 0) => {
+                const now = new Date();
+                const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+                const jstTime = utc + (9 * 60 * 60 * 1000) + (offsetDays * 24 * 60 * 60 * 1000);
+                return new Date(jstTime);
+            };
+
+            const formatDateKey = (date: Date) => {
+                const y = date.getFullYear();
+                const m = String(date.getMonth() + 1).padStart(2, '0');
+                const d = String(date.getDate()).padStart(2, '0');
+                return `visits_${y}-${m}-${d}`;
+            };
+
+            const yesterdayJst = getJstDate(-1);
+            const KEY_YESTERDAY = formatDateKey(yesterdayJst);
+            const urlYesterday = `https://api.counterapi.dev/v1/${NAMESPACE}/${KEY_YESTERDAY}`;
+
+            try {
+                const res = await fetch(urlYesterday);
+                const data = await res.json();
+                if (typeof data.count === 'number') {
+                    setYesterdayVisitors(data.count);
+                } else {
+                    setYesterdayVisitors(0);
+                }
+            } catch (error) {
+                console.error('Failed to fetch yesterday visitors:', error);
+                setYesterdayVisitors(0);
+            }
+        };
+
+        fetchYesterdayVisitors();
     }, []);
 
     // --- Brain Item Management ---
@@ -1151,6 +1191,20 @@ export default function AdminPage() {
                         {/* HOME Tab */}
                         {activeAdminTab === 'home' && (
                             <section className="space-y-8">
+                                {/* Dashboard Stats */}
+                                <div className="bg-white p-6 rounded-xl shadow-sm border border-stone-200 mb-8 flex items-center justify-between">
+                                    <div>
+                                        <h2 className="text-lg font-bold text-stone-700">昨日の訪問者数</h2>
+                                        <p className="text-3xl font-mono font-bold text-stone-900 mt-1">
+                                            {yesterdayVisitors !== null ? yesterdayVisitors.toLocaleString() : '---'}
+                                            <span className="text-sm font-normal text-stone-500 ml-2">visits</span>
+                                        </p>
+                                    </div>
+                                    <div className="text-stone-400 text-xs text-right">
+                                        <p>集計期間: 日本時間 昨日 0:00 - 23:59</p>
+                                    </div>
+                                </div>
+
                                 <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-stone-200 text-stone-900">HOMEページ設定</h2>
 
                                 {/* Tab Display Order with DND */}

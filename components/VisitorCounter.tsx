@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 
 export default function VisitorCounter() {
     const [count, setCount] = useState<number | null>(null);
-    const [yesterdayCount, setYesterdayCount] = useState<number | null>(null);
 
     useEffect(() => {
         const isDev = process.env.NODE_ENV === 'development';
@@ -12,7 +11,7 @@ export default function VisitorCounter() {
         const KEY_TOTAL = 'visits';
         const INITIAL_OFFSET = 2600;
 
-        // JSTで今日と昨日の日付キーを生成
+        // JSTで今日の日付キーを生成
         const getJstDate = (offsetDays = 0) => {
             const now = new Date();
             // UTC時刻を取得
@@ -30,10 +29,7 @@ export default function VisitorCounter() {
         };
 
         const todayJst = getJstDate(0);
-        const yesterdayJst = getJstDate(-1);
-
         const KEY_TODAY = formatDateKey(todayJst);
-        const KEY_YESTERDAY = formatDateKey(yesterdayJst);
 
         // API URL生成
         // Total: dev環境以外ならカウントアップ
@@ -45,9 +41,6 @@ export default function VisitorCounter() {
         const urlToday = isDev
             ? `https://api.counterapi.dev/v1/${NAMESPACE}/${KEY_TODAY}`
             : `https://api.counterapi.dev/v1/${NAMESPACE}/${KEY_TODAY}/up`;
-
-        // Yesterday: 取得のみ (カウントアップしない)
-        const urlYesterday = `https://api.counterapi.dev/v1/${NAMESPACE}/${KEY_YESTERDAY}`;
 
 
         // Total Fetch
@@ -66,28 +59,11 @@ export default function VisitorCounter() {
                 console.error('Today Counter Error:', err);
             });
 
-        // Yesterday Fetch
-        fetch(urlYesterday)
-            .then(res => res.json())
-            .then(data => {
-                if (typeof data.count === 'number') {
-                    setYesterdayCount(data.count);
-                } else {
-                    setYesterdayCount(0); // キーがない場合は0
-                }
-            })
-            .catch(err => {
-                console.error('Yesterday Counter Error:', err);
-                setYesterdayCount(0);
-            });
-
     }, []);
 
     if (count === null) return null;
 
     const formattedCount = (count).toString().padStart(6, '0');
-    // 昨日が0やnullの場合も0を表示
-    const formattedYesterday = (yesterdayCount ?? 0).toString().padStart(4, '0');
 
     // デジタル数字のレンダリング関数
     const renderDigit = (digit: string, index: number, small = false) => (
@@ -109,20 +85,12 @@ export default function VisitorCounter() {
     );
 
     return (
-        <div className="flex flex-row items-end gap-3 mt-4 select-none">
+        <div className="flex flex-col items-center md:items-start mt-4 select-none">
             {/* TOTAL */}
             <div className="flex flex-col items-center md:items-start text-[10px] text-stone-400 font-bold tracking-widest">
                 <div className="mb-1">TOTAL</div>
                 <div className="inline-flex bg-black p-1 rounded border-2 border-stone-300 shadow-inner">
                     {formattedCount.split('').map((d, i) => renderDigit(d, i))}
-                </div>
-            </div>
-
-            {/* YESTERDAY */}
-            <div className="flex flex-col items-center md:items-start text-[9px] text-stone-500 font-bold tracking-widest mb-0.5">
-                <div className="mb-0.5">YESTERDAY</div>
-                <div className="inline-flex bg-black p-0.5 rounded border border-stone-400 shadow-inner opacity-80">
-                    {formattedYesterday.split('').map((d, i) => renderDigit(d, i, true))}
                 </div>
             </div>
         </div>

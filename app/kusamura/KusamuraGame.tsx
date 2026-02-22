@@ -49,6 +49,23 @@ export default function KusamuraGame() {
     }]);
     const logIdCounter = useRef(1);
 
+    // --- BGM Settings ---
+    const [isBgmPlaying, setIsBgmPlaying] = useState(false);
+    const audioRef = useRef<HTMLAudioElement>(null);
+
+    const toggleBgm = () => {
+        if (!audioRef.current) return;
+        if (isBgmPlaying) {
+            audioRef.current.pause();
+            setIsBgmPlaying(false);
+        } else {
+            audioRef.current.play().catch((err) => {
+                console.error("BGM Playback failed", err);
+            });
+            setIsBgmPlaying(true);
+        }
+    };
+
     // --- Helpers ---
     const addLog = (message: string, timeOverride?: number) => {
         const timeToUse = timeOverride !== undefined ? timeOverride : gameState.time;
@@ -183,6 +200,14 @@ export default function KusamuraGame() {
         <div className={styles.gameContainer}>
             <header className={styles.header}>
                 <h1>草むらセンベロ創世記</h1>
+                <button
+                    className={`${styles.bgmToggle} ${isBgmPlaying ? styles.bgmToggleActive : ''}`}
+                    onClick={toggleBgm}
+                    title="BGMのON/OFFを切り替えます"
+                >
+                    {isBgmPlaying ? '🔊 BGM: ON' : '🔈 BGM: OFF'}
+                </button>
+                <audio ref={audioRef} src="/audio/kusamura_bgm.mp3" loop />
             </header>
 
             {/* --- Earth Visual Panel --- */}

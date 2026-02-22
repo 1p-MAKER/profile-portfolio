@@ -141,6 +141,19 @@
     {
       "id": "shopify",
       "label": "Shopifyアプリ"
+    },
+    {
+      "id": "games",
+      "label": "Games"
+    }
+  ],
+  "gameItems": [
+    {
+      "id": "kusamura",
+      "title": "草むらセンベロ創世記",
+      "description": "リソースを管理して地球の質量を100%にするブラウザゲーム",
+      "url": "/kusamura",
+      "isFeatured": true
     }
   ],
   "audioTracks": [
@@ -201,7 +214,8 @@
     "officeIntro": "Dev cat's Studio & Office の職人\n一平への聞き込みができる雑談のための1時間です\n立派なアドバイスは期待しないでください\n\n革の話、アプリの話、お酒の話など、テーマは何でもOKです。\n沖縄県内での対面またはオンラインをお選びいただけます\nコーヒー片手にどうぞ",
     "tiktokIntro": "スマホアプリ12個リリースしたけど\n全然使ってもらえません。\n編集もマーケも素人ですが\n人生変えるために毎日投稿します",
     "sunoBgmUrl": "https://youtu.be/8YSzG1K5b3s",
-    "aiToolIntro": "AIを使って作ったツールたちです\n趣味に本業に大活躍しています"
+    "aiToolIntro": "AIを使って作ったツールたちです\n趣味に本業に大活躍しています",
+    "gamesIntro": "自作のブラウザゲーム集です。"
   },
   "furusatoItems": [
     {

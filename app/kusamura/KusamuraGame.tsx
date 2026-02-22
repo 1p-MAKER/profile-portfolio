@@ -210,6 +210,21 @@ export default function KusamuraGame() {
                 <audio ref={audioRef} src="/audio/kusamura_bgm.mp3" loop />
             </header>
 
+            {/* --- Instructions Panel --- */}
+            <details className={styles.instructions}>
+                <summary>遊び方・用語解説</summary>
+                <div className={styles.instructionsContent}>
+                    <p><strong>目指せ地球創生！</strong> タイムリミットの24:00までに、地球の質量を100%にしましょう。</p>
+                    <ul>
+                        <li><strong>体力:</strong> 「探索」で消費、「仮眠」で回復します。なくなると何もできません。</li>
+                        <li><strong>お金:</strong> 「探索」で拾い、「せんべろ」に1000円使います。</li>
+                        <li><strong>野草:</strong> 「探索」で採取。「せんべろ」時のツマミになり、満足度ボーナスが付きます（実行時に全消費）。</li>
+                        <li><strong>満足度:</strong> 「せんべろ」で獲得。これを「創生エネルギー」に変換することで地球の質量が増えます。</li>
+                        <li><strong>ギャル:</strong> 「せんべろ」中にランダム(30%)で遭遇。「オタクに優しいギャル」と盛り上がると、その回の獲得満足度がなんと<strong>2倍</strong>になります！</li>
+                    </ul>
+                </div>
+            </details>
+
             {/* --- Earth Visual Panel --- */}
             <div className={styles.earthPanel}>
                 <div className={styles.earthEmojiWrapper}>

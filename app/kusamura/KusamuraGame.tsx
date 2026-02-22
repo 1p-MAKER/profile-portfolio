@@ -289,16 +289,29 @@ export default function KusamuraGame() {
 
             {/* --- Instructions Panel --- */}
             <details className={styles.instructions}>
-                <summary>遊び方・用語解説</summary>
+                <summary>遊び方</summary>
                 <div className={styles.instructionsContent}>
-                    <p><strong>目指せ地球創生！</strong> タイムリミットの24:00までに、地球の質量を100%にしましょう。</p>
+                    <p><strong>24:00までに地球の質量を100%にすれば勝利！</strong></p>
+
+                    <p className={styles.flowTitle}>基本の流れ</p>
+                    <p className={styles.flowChart}>
+                        探索（お金・野草を入手）<br />
+                        → せんべろ（お金と野草で満足度を獲得）<br />
+                        → 創生エネルギー（満足度を質量%に変換）
+                    </p>
+
+                    <p className={styles.flowTitle}>4つの行動</p>
                     <ul>
-                        <li><strong>探索ボーナス:</strong> まれに10000円の大穴フィーバーや、紫色の「ヤバそうな草」を拾うことも。また、職質を受けると時間をロスします。</li>
-                        <li><strong>体力:</strong> 「探索」で消費、「仮眠」で回復します。なくなると何もできません。</li>
-                        <li><strong>お金:</strong> 「探索」で拾い、「せんべろ」に1000円使います。</li>
-                        <li><strong>野草 & ヤバ草:</strong> 「せんべろ」時に<strong>おつまみ</strong>として自動で全消費され、満足度にボーナスが付きます。ヤバ草は強力ですが、運が悪いとお腹を壊します。</li>
-                        <li><strong>せんべろ:</strong> 連続で行くと「連続飲みボーナス」で満足度に倍率がかかりますが、体力がガンガン削られます。</li>
-                        <li><strong>ギャル:</strong> 「せんべろ」中にランダム(30%)で遭遇。「オタクに優しいギャル」と盛り上がると、その回の獲得満足度がなんと<strong>2倍</strong>になります！</li>
+                        <li><strong>🔍 探索する</strong>（体力-10 / 15分）<br />草むらでお金か野草を拾う。まれに1万円や「ヤバ草」も。職質に遭うと時間ロス。</li>
+                        <li><strong>🚰 仮眠をとる</strong>（30分）<br />体力を50回復。体力が尽きると探索できなくなるので注意。</li>
+                        <li><strong>🍻 せんべろ</strong>（1000円 / 30分）<br />お金を払って飲みに行き、満足度を獲得。持っている野草は自動でおつまみに。連続で行くとボーナス倍率UP（ただし体力も削られる）。</li>
+                        <li><strong>🌌 創生エネルギー</strong>（15分）<br />満足度を全消費して質量%に変換。満足度1pt = 質量1%。</li>
+                    </ul>
+
+                    <p className={styles.flowTitle}>ランダムイベント</p>
+                    <ul>
+                        <li><strong>ギャル遭遇</strong>（せんべろ時30%）: 満足度が2倍に！</li>
+                        <li><strong>ヤバ草</strong>（探索時まれに入手）: せんべろ時に使うと満足度5倍 or 体力半減のギャンブル。</li>
                     </ul>
                 </div>
             </details>

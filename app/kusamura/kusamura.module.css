@@ -320,6 +320,22 @@
     margin: 0 0 10px 0;
 }
 
+.flowTitle {
+    font-weight: bold;
+    color: #ffd700;
+    margin: 12px 0 4px;
+    font-size: 0.95rem;
+}
+
+.flowChart {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-left: 3px solid var(--text-main);
+    padding: 8px 12px;
+    margin: 0 0 10px;
+    line-height: 1.8;
+    font-size: 0.9rem;
+}
+
 .instructionsContent ul {
     margin: 0;
     padding-left: 20px;

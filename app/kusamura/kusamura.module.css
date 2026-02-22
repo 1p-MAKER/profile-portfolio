@@ -66,11 +66,40 @@
     padding: 20px 0;
 }
 
-.earthEmojiWrapper {
+/* --- Visual Row --- */
+.visualRow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
     height: 120px;
+    width: 100%;
+    padding: 0 10px;
+}
+
+.eventImageWrapper {
+    height: 100%;
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.eventImage {
+    height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+    border-radius: 8px;
+    border: 2px solid var(--border-color);
+    background-color: white;
+    /* 透過なし白背景画像のなじませ用 */
+}
+
+.earthEmojiWrapper {
+    height: 100%;
+    flex: 1;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
 }
 
 .earthEmoji {

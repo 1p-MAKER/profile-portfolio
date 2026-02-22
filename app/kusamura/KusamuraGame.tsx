@@ -13,6 +13,11 @@ interface GameState {
     satisfaction: number;
     isGameOver: boolean;
     gameStatus: 'playing' | 'win' | 'lose';
+    consecutiveSenberoCount: number;
+    yabaKusa: number;
+    gyaruEncounterCount: number;
+    totalHerbConsumed: number;
+    currentImage: string | null;
 }
 
 interface LogEntry {
@@ -31,6 +36,11 @@ const INITIAL_STATE: GameState = {
     satisfaction: 0,
     isGameOver: false,
     gameStatus: 'playing',
+    consecutiveSenberoCount: 0,
+    yabaKusa: 0,
+    gyaruEncounterCount: 0,
+    totalHerbConsumed: 0,
+    currentImage: null,
 };
 
 // --- Format Helper ---
@@ -83,7 +93,17 @@ export default function KusamuraGame() {
         if (newState.mass >= 100) {
             newState.isGameOver = true;
             newState.gameStatus = 'win';
-            addLog('地球の質量が100%に達し、新たな草むらが創生された！【クリア】', newState.time);
+            if (newState.gyaruEncounterCount >= 3) {
+                addLog('【ギャル男エンド】地球質量が100%に達し、全てがギャル語で話す新世界が創生された！', newState.time);
+            } else if (newState.totalHerbConsumed >= 50) {
+                addLog('【草食系エンド】地球質量が100%に達し、見渡す限り大自然の世界が創生された！', newState.time);
+            } else if (newState.money >= 10000) {
+                addLog('【成金エンド】地球質量が100%に達し、黄金に輝くVIP専用の世界が創生された！', newState.time);
+            } else if (newState.time === 23 * 60 + 45) {
+                addLog('【ギリギリ創生】地球質量が100%に達し、ギリギリで滅亡を回避した奇跡の世界が創生された！', newState.time);
+            } else {
+                addLog('【ノーマルエンド】地球の質量が100%に達し、新たな草むらが普通に創生された！', newState.time);
+            }
         } else if (newState.time >= 24 * 60) {
             newState.isGameOver = true;
             newState.gameStatus = 'lose';
@@ -104,18 +124,42 @@ export default function KusamuraGame() {
             let next = { ...prev };
             next.time += 15;
             next.stamina -= 10;
+            next.consecutiveSenberoCount = 0; // Reset
 
-            const isMoney = Math.random() < 0.6;
+            const rand = Math.random();
             let logMsg = '';
-            if (isMoney) {
-                const amount = Math.floor(Math.random() * 401) + 100;
-                next.money += amount;
-                logMsg = `草むらを探索し、小銭を ${amount}円 見つけた！`;
-            } else {
+
+            if (rand < 0.40) {
+                const amount = Math.floor(Math.random() * 301);
+                if (amount === 0) {
+                    logMsg = `草むらを探索したが、何も見つからなかった...`;
+                } else {
+                    next.money += amount;
+                    logMsg = `草むらを探索し、小銭を ${amount}円 見つけた！`;
+                }
+                next.currentImage = '/images/kusamura/ojisan.png';
+            } else if (rand < 0.70) {
                 const count = Math.floor(Math.random() * 3) + 1;
                 next.herb += count;
                 logMsg = `草むらを探索し、野草を ${count}個 摘んだ！`;
+                next.currentImage = '/images/kusamura/ojisan.png';
+            } else if (rand < 0.80) {
+                next.time += 30;
+                logMsg = `【ハプニング】警察の職務質問に遭遇！ 対応で30分ロスした...`;
+                next.currentImage = '/images/kusamura/police.png';
+            } else if (rand < 0.90) {
+                logMsg = `草むらを隅々まで探したが、ただ虚無の時間が流れた...`;
+                next.currentImage = '/images/kusamura/ojisan.png';
+            } else if (rand < 0.95) {
+                next.yabaKusa += 1;
+                logMsg = `【奇跡】ヤバそうな紫色の草を1個手に入れた...嫌な予感がする。`;
+                next.currentImage = '/images/kusamura/yaba.png';
+            } else {
+                next.money += 10000;
+                logMsg = `【大穴フィーバー】10000円札が落ちていた！！ラッキー！`;
+                next.currentImage = '/images/kusamura/jackpot.png';
             }
+
             addLog(logMsg, next.time);
             return checkGameOver(next);
         });
@@ -127,6 +171,9 @@ export default function KusamuraGame() {
         setGameState((prev) => {
             let next = { ...prev };
             next.time += 30;
+            next.consecutiveSenberoCount = 0; // Reset
+            next.currentImage = '/images/kusamura/ojisan.png';
+
             const oldStamina = next.stamina;
             next.stamina = Math.min(100, next.stamina + 50);
             const recovered = next.stamina - oldStamina;
@@ -138,31 +185,62 @@ export default function KusamuraGame() {
 
     const handleSenbero = () => {
         if (gameState.isGameOver) return;
-        if (gameState.money < 1000) {
-            addLog(`資金が足りない！（所持金: ${gameState.money} / 1000）`);
+
+        const isLateNight = gameState.time >= 22 * 60;
+        const senberoCost = isLateNight ? 2000 : 1000;
+
+        if (gameState.money < senberoCost) {
+            addLog(`資金が足りない！（所持金: ${gameState.money} / ${senberoCost}）${isLateNight ? ' ※22時以降は深夜料金' : ''}`);
             return;
         }
 
         setGameState((prev) => {
             let next = { ...prev };
             next.time += 30;
-            next.money -= 1000;
+            next.money -= senberoCost;
+
+            next.consecutiveSenberoCount += 1;
+            const consecutiveBonus = 1 + (next.consecutiveSenberoCount * 0.2);
+            const consecutiveStaminaDamage = next.consecutiveSenberoCount > 1 ? (next.consecutiveSenberoCount * 5) : 0;
+            if (consecutiveStaminaDamage > 0) {
+                next.stamina = Math.max(0, next.stamina - consecutiveStaminaDamage);
+                addLog(`【連続飲み】酔いが回って体力が ${consecutiveStaminaDamage} 削られた...。`, next.time);
+            }
 
             let baseSat = Math.floor(Math.random() * 21) + 10;
             let herbBonus = next.herb * 5;
             const isGalEvent = Math.random() < 0.3;
-            let satGained = baseSat + herbBonus;
+
+            let satGained = Math.floor((baseSat + herbBonus) * consecutiveBonus);
 
             if (isGalEvent) {
                 satGained *= 2;
-                addLog(`【発生】オタクに優しいギャルが現れ、オタク会話が弾んだ！満足度が2倍！`, next.time);
+                next.gyaruEncounterCount += 1;
+                addLog(`【発生】オタクに優しいギャルが現れ、会話が弾んだ！満足度がさらに2倍！`, next.time);
+                next.currentImage = '/images/kusamura/gyaru.png';
+            } else {
+                next.currentImage = '/images/kusamura/senbero.png';
+            }
+
+            if (next.yabaKusa > 0) {
+                next.yabaKusa--;
+                if (Math.random() < 0.5) {
+                    satGained *= 5;
+                    addLog(`【ヤバ草覚醒】ヤバそうな草をツマミにしたら、脳内物質が溢れて満足度が5倍に！！`, next.time);
+                } else {
+                    next.stamina = Math.floor(next.stamina / 2);
+                    next.time += 30;
+                    addLog(`【ヤバ草中毒】体調を崩してトイレに篭った...体力半減＆30分ロス...`, next.time);
+                }
             }
 
             next.satisfaction += satGained;
             const usedHerbs = next.herb;
+            next.totalHerbConsumed += usedHerbs;
             next.herb = 0;
 
-            addLog(`せんべろを実行！(野草 ${usedHerbs}個消費) 満足度を ${satGained} 獲得！`, next.time);
+            const baseLog = isLateNight ? '深夜の豪華せんべろを実行！' : 'せんべろを実行！';
+            addLog(`${baseLog}(野草 ${usedHerbs}個消費) 満足度を ${satGained} 獲得！`, next.time);
             return checkGameOver(next);
         });
     };
@@ -216,10 +294,11 @@ export default function KusamuraGame() {
                 <div className={styles.instructionsContent}>
                     <p><strong>目指せ地球創生！</strong> タイムリミットの24:00までに、地球の質量を100%にしましょう。</p>
                     <ul>
+                        <li><strong>探索ボーナス:</strong> まれに10000円の大穴フィーバーや、紫色の「ヤバそうな草」を拾うことも。また、職質を受けると時間をロスします。</li>
                         <li><strong>体力:</strong> 「探索」で消費、「仮眠」で回復します。なくなると何もできません。</li>
-                        <li><strong>お金:</strong> 「探索」で拾い、「せんべろ」に1000円使います。</li>
-                        <li><strong>野草:</strong> 「探索」で採取。「せんべろ」時のツマミになり、満足度ボーナスが付きます（実行時に全消費）。</li>
-                        <li><strong>満足度:</strong> 「せんべろ」で獲得。これを「創生エネルギー」に変換することで地球の質量が増えます。</li>
+                        <li><strong>お金:</strong> 「探索」で拾い、「せんべろ」に使います。22:00以降は深夜料金になり2000円必要です。</li>
+                        <li><strong>野草 & ヤバ草:</strong> せんべろ時に全消費し、満足度にボーナス。ヤバ草は強力ですが、運が悪いとお腹を壊します。</li>
+                        <li><strong>せんべろ:</strong> 連続で行くと「連続飲みボーナス」で満足度に倍率がかかりますが、体力がガンガン削られます。</li>
                         <li><strong>ギャル:</strong> 「せんべろ」中にランダム(30%)で遭遇。「オタクに優しいギャル」と盛り上がると、その回の獲得満足度がなんと<strong>2倍</strong>になります！</li>
                     </ul>
                 </div>
@@ -227,12 +306,19 @@ export default function KusamuraGame() {
 
             {/* --- Earth Visual Panel --- */}
             <div className={styles.earthPanel}>
-                <div className={styles.earthEmojiWrapper}>
-                    <div
-                        className={styles.earthEmoji}
-                        style={{ transform: `scale(${1 + (gameState.mass / 100) * 0.5})` }}
-                    >
-                        🌎
+                <div className={styles.visualRow}>
+                    {gameState.currentImage && (
+                        <div className={styles.eventImageWrapper}>
+                            <img src={gameState.currentImage} alt="Event Visual" className={styles.eventImage} />
+                        </div>
+                    )}
+                    <div className={styles.earthEmojiWrapper}>
+                        <div
+                            className={styles.earthEmoji}
+                            style={{ transform: `scale(${1 + (gameState.mass / 100) * 0.5})` }}
+                        >
+                            🌎
+                        </div>
                     </div>
                 </div>
                 <div className={styles.massDisplay}>
@@ -247,6 +333,12 @@ export default function KusamuraGame() {
                 <div className={styles.statusBox}>所持金: <span>{gameState.money}</span>円</div>
                 <div className={styles.statusBox}>野草: <span>{gameState.herb}</span>個</div>
                 <div className={styles.statusBox}>満足度: <span>{gameState.satisfaction}</span>pt</div>
+                {gameState.yabaKusa > 0 && (
+                    <div className={styles.statusBox}>ヤバ草: <span style={{ color: '#c175ff' }}>{gameState.yabaKusa}</span>個</div>
+                )}
+                {gameState.consecutiveSenberoCount > 1 && (
+                    <div className={styles.statusBox}>連続飲み: <span style={{ color: '#ffb347' }}>x{(1 + (gameState.consecutiveSenberoCount * 0.2)).toFixed(1)}</span></div>
+                )}
             </div>
 
             {/* --- Action Panel --- */}

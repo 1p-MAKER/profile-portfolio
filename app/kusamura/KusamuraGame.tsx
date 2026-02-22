@@ -130,7 +130,7 @@ export default function KusamuraGame() {
             let logMsg = '';
 
             if (rand < 0.40) {
-                const amount = Math.floor(Math.random() * 301);
+                const amount = Math.floor(Math.random() * 601);
                 if (amount === 0) {
                     logMsg = `草むらを探索したが、何も見つからなかった...`;
                     next.currentImage = '/images/kusamura/ojisan.png';

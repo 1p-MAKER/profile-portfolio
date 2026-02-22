@@ -340,6 +340,13 @@ export default function KusamuraGame() {
                 )}
             </div>
 
+            {/* --- Latest Log Panel --- */}
+            {logs.length > 0 && (
+                <div key={logs[0].id} className={styles.latestLogWrapper}>
+                    💬 {logs[0].message}
+                </div>
+            )}
+
             {/* --- Action Panel --- */}
             <div className={styles.actionPanel}>
                 <button className={styles.btnAction} disabled={gameState.isGameOver} onClick={handleExplore}>

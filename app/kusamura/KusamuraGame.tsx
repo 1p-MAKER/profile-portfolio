@@ -133,11 +133,12 @@ export default function KusamuraGame() {
                 const amount = Math.floor(Math.random() * 301);
                 if (amount === 0) {
                     logMsg = `草むらを探索したが、何も見つからなかった...`;
+                    next.currentImage = '/images/kusamura/ojisan.png';
                 } else {
                     next.money += amount;
                     logMsg = `草むらを探索し、小銭を ${amount}円 見つけた！`;
+                    next.currentImage = '/images/kusamura/coins.png';
                 }
-                next.currentImage = '/images/kusamura/ojisan.png';
             } else if (rand < 0.70) {
                 const count = Math.floor(Math.random() * 3) + 1;
                 next.herb += count;
@@ -150,7 +151,7 @@ export default function KusamuraGame() {
             } else if (rand < 0.90) {
                 logMsg = `草むらを隅々まで探したが、ただ虚無の時間が流れた...`;
                 next.currentImage = '/images/kusamura/ojisan.png';
-            } else if (rand < 0.95) {
+            } else if (rand < 0.99) {
                 next.yabaKusa += 1;
                 logMsg = `【奇跡】ヤバそうな紫色の草を1個手に入れた...嫌な予感がする。`;
                 next.currentImage = '/images/kusamura/yaba.png';
@@ -186,11 +187,10 @@ export default function KusamuraGame() {
     const handleSenbero = () => {
         if (gameState.isGameOver) return;
 
-        const isLateNight = gameState.time >= 22 * 60;
-        const senberoCost = isLateNight ? 2000 : 1000;
+        const senberoCost = 1000;
 
         if (gameState.money < senberoCost) {
-            addLog(`資金が足りない！（所持金: ${gameState.money} / ${senberoCost}）${isLateNight ? ' ※22時以降は深夜料金' : ''}`);
+            addLog(`資金が足りない！（所持金: ${gameState.money} / 1000）`);
             return;
         }
 
@@ -239,8 +239,7 @@ export default function KusamuraGame() {
             next.totalHerbConsumed += usedHerbs;
             next.herb = 0;
 
-            const baseLog = isLateNight ? '深夜の豪華せんべろを実行！' : 'せんべろを実行！';
-            addLog(`${baseLog}(野草 ${usedHerbs}個消費) 満足度を ${satGained} 獲得！`, next.time);
+            addLog(`せんべろを実行！(野草 ${usedHerbs}個消費) 満足度を ${satGained} 獲得！`, next.time);
             return checkGameOver(next);
         });
     };
@@ -296,8 +295,8 @@ export default function KusamuraGame() {
                     <ul>
                         <li><strong>探索ボーナス:</strong> まれに10000円の大穴フィーバーや、紫色の「ヤバそうな草」を拾うことも。また、職質を受けると時間をロスします。</li>
                         <li><strong>体力:</strong> 「探索」で消費、「仮眠」で回復します。なくなると何もできません。</li>
-                        <li><strong>お金:</strong> 「探索」で拾い、「せんべろ」に使います。22:00以降は深夜料金になり2000円必要です。</li>
-                        <li><strong>野草 & ヤバ草:</strong> せんべろ時に全消費し、満足度にボーナス。ヤバ草は強力ですが、運が悪いとお腹を壊します。</li>
+                        <li><strong>お金:</strong> 「探索」で拾い、「せんべろ」に1000円使います。</li>
+                        <li><strong>野草 & ヤバ草:</strong> 「せんべろ」時に<strong>おつまみ</strong>として自動で全消費され、満足度にボーナスが付きます。ヤバ草は強力ですが、運が悪いとお腹を壊します。</li>
                         <li><strong>せんべろ:</strong> 連続で行くと「連続飲みボーナス」で満足度に倍率がかかりますが、体力がガンガン削られます。</li>
                         <li><strong>ギャル:</strong> 「せんべろ」中にランダム(30%)で遭遇。「オタクに優しいギャル」と盛り上がると、その回の獲得満足度がなんと<strong>2倍</strong>になります！</li>
                     </ul>

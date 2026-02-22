@@ -79,9 +79,9 @@
 
 .eventImageWrapper {
     height: 100%;
-    flex: 1;
+    width: 120px;
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
 }
 
 .eventImage {
@@ -96,10 +96,10 @@
 
 .earthEmojiWrapper {
     height: 100%;
-    flex: 1;
+    width: 120px;
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;
 }
 
 .earthEmoji {

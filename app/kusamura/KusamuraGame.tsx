@@ -142,7 +142,7 @@ export default function KusamuraGame() {
             } else if (rand < 0.70) {
                 const count = Math.floor(Math.random() * 3) + 1;
                 next.herb += count;
-                logMsg = `草むらを探索し、野草を ${count}個 摘んだ！`;
+                logMsg = `草むらを探索し、野草を ${count}個 摘んだ！あとでつまみにしよう🌿`;
                 next.currentImage = '/images/kusamura/ojisan.png';
             } else if (rand < 0.80) {
                 next.time += 30;
@@ -320,14 +320,12 @@ export default function KusamuraGame() {
                         </div>
                     </div>
                 </div>
-                <div className={styles.massDisplay}>
-                    地球の質量: <span>{gameState.mass}%</span>
-                </div>
             </div>
 
             {/* --- Status Panel --- */}
             <div className={styles.statusPanel}>
                 <div className={styles.statusBox}>時間: <span>{formatTime(gameState.time)}</span></div>
+                <div className={`${styles.statusBox} ${styles.statusMass}`}>質量: <span>{gameState.mass}%</span></div>
                 <div className={styles.statusBox}>体力: <span>{gameState.stamina}</span> / 100</div>
                 <div className={styles.statusBox}>所持金: <span>{gameState.money}</span>円</div>
                 <div className={styles.statusBox}>野草: <span>{gameState.herb}</span>個</div>
@@ -349,18 +347,20 @@ export default function KusamuraGame() {
 
             {/* --- Action Panel --- */}
             <div className={styles.actionPanel}>
-                <button className={styles.btnAction} disabled={gameState.isGameOver} onClick={handleExplore}>
-                    草むらを探索する<br /><span className={styles.costInfo}>(体力-10 / 15分)</span>
-                </button>
-                <button className={styles.btnAction} disabled={gameState.isGameOver} onClick={handleNap}>
-                    水を飲んで仮眠<br /><span className={styles.costInfo}>(体力回復 / 30分)</span>
-                </button>
-                <button className={styles.btnAction} disabled={gameState.isGameOver} onClick={handleSenbero}>
-                    せんべろを実行<br /><span className={styles.costInfo}>(金-1000, 野草全消費 / 30分)</span>
-                </button>
-                <button className={`${styles.btnAction} ${styles.btnSpecial}`} disabled={gameState.isGameOver} onClick={handleConvert}>
-                    創生エネルギーに変換<br /><span className={styles.costInfo}>(満足度全消費 / 15分)</span>
-                </button>
+                <div className={styles.actionGrid}>
+                    <button className={styles.btnAction} disabled={gameState.isGameOver} onClick={handleExplore}>
+                        探索する<br /><span className={styles.costInfo}>(体力-10 / 15分)</span>
+                    </button>
+                    <button className={styles.btnAction} disabled={gameState.isGameOver} onClick={handleNap}>
+                        仮眠をとる<br /><span className={styles.costInfo}>(体力回復 / 30分)</span>
+                    </button>
+                    <button className={styles.btnAction} disabled={gameState.isGameOver} onClick={handleSenbero}>
+                        せんべろ<br /><span className={styles.costInfo}>(金-1000 / 30分)</span>
+                    </button>
+                    <button className={`${styles.btnAction} ${styles.btnSpecial}`} disabled={gameState.isGameOver} onClick={handleConvert}>
+                        創生エネルギー<br /><span className={styles.costInfo}>(満足度全消費 / 15分)</span>
+                    </button>
+                </div>
             </div>
 
             {/* --- Result Message --- */}

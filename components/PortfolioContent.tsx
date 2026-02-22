@@ -18,6 +18,7 @@ import Image from "next/image";
 import { ContentData, FeaturedItem } from "@/types/content";
 import { motion, AnimatePresence } from "framer-motion";
 import { useDrag } from "@use-gesture/react";
+import KusamuraGame from "@/app/kusamura/KusamuraGame";
 
 type TabType = string;
 
@@ -814,24 +815,9 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
                 {data.settings.gamesIntro}
               </p>
             )}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {data.gameItems &&
-                data.gameItems.map((item, index) => (
-                  <div key={index} className="h-full">
-                    <SimpleCard
-                      title={item.title}
-                      description={item.description}
-                      url={item.url}
-                      category="Game"
-                    />
-                  </div>
-                ))}
+            <div className="flex justify-center w-full">
+              <KusamuraGame />
             </div>
-            {(!data.gameItems || data.gameItems.length === 0) && (
-              <p className="text-center text-stone-500 py-12">
-                まだゲームが登録されていません。
-              </p>
-            )}
           </>
         );
       default:
@@ -856,8 +842,8 @@ export default function PortfolioContent({ data }: { data: ContentData }) {
                   window.scrollTo({ top: 0, behavior: "smooth" });
                 }}
                 className={`py-2 md:py-2 text-xs md:text-sm font-bold border-b-2 transition-all duration-300 px-3 md:px-4 ${activeTab === tab.id
-                    ? "border-accent text-accent"
-                    : "border-transparent text-subtext hover:text-foreground"
+                  ? "border-accent text-accent"
+                  : "border-transparent text-subtext hover:text-foreground"
                   }`}
               >
                 {tab.label}
